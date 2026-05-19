@@ -1,0 +1,316 @@
+---
+alwaysApply: true
+---
+# Frontend Architecture — Namly
+
+## Core Stack
+
+- Next.js 16+ App Router
+- React 19
+- TypeScript strict mode
+- Tailwind CSS
+- TanStack Query
+- React Hook Form
+- Zod
+- shadcn/ui
+- Motion
+- Vaul
+- Sonner
+
+---
+
+## Product Context
+
+Namly is a mobile-first food continuity and meal planning platform.
+
+The product goal is NOT calorie tracking obsession.
+
+The goal is:
+- continuity
+- low friction
+- emotional clarity
+- habit support
+- simple daily food organization
+
+The UX must feel:
+- soft
+- calm
+- lightweight
+- highly scannable
+- emotionally friendly
+
+Avoid:
+- dashboard feeling
+- dense enterprise UI
+- spreadsheet UX
+- overly clinical flows
+
+---
+
+## Architecture Rules
+
+Use feature-first architecture.
+
+Structure:
+
+src/
+├── app/
+├── features/
+├── components/
+├── components/ui/
+├── lib/
+├── providers/
+├── hooks/
+├── styles/
+├── types/
+└── constants/
+
+Feature structure:
+
+features/
+└── feature-name/
+    ├── components/
+    ├── hooks/
+    ├── services/
+    ├── queries/
+    ├── types/
+    ├── utils/
+    ├── constants/
+    └── schemas/
+
+---
+
+## App Router Rules
+
+- Use Server Components by default
+- Use Client Components only when necessary
+- Avoid unnecessary "use client"
+- Keep routing logic inside app/
+- Keep business logic inside features/
+
+Do NOT use outdated Pages Router patterns.
+
+---
+
+## Data Fetching Rules
+
+Use:
+- TanStack Query
+- centralized API client
+- query hooks
+- invalidation patterns
+
+Avoid:
+- direct fetch inside UI components
+- duplicated loading states
+- prop drilling refresh logic
+
+---
+
+## Global State Rules
+
+Context API is ONLY allowed for:
+- auth
+- theme
+- language
+- lightweight app preferences
+
+Do NOT use Context for server state.
+
+Avoid Redux and Zustand unless absolutely necessary.
+
+---
+
+## Forms
+
+Always use:
+- React Hook Form
+- Zod
+
+Requirements:
+- reusable field components
+- accessible inputs
+- mobile-friendly interactions
+- progressive disclosure
+
+Avoid giant forms.
+
+---
+
+## API Rules
+
+Backend:
+- NestJS REST API
+- JWT Bearer auth
+- Supabase Auth Google OAuth
+
+Frontend rules:
+- centralized API client
+- centralized token handling
+- centralized refresh handling
+- no duplicated auth validation
+
+---
+
+## Component Rules
+
+- Keep components small
+- Separate UI from logic
+- Prefer composition
+- Avoid giant props interfaces
+- Avoid god components
+
+Split:
+- visual components
+- hooks
+- services
+- state logic
+
+---
+
+## Mobile-First Rules
+
+This product is primarily mobile.
+
+Prioritize:
+- thumb-friendly interactions
+- bottom sheets
+- low tap count
+- strong hierarchy
+- quick scanning
+- smooth transitions
+
+Avoid:
+- hover interactions
+- dense tables
+- desktop-first layouts
+- modal-heavy UX
+
+---
+
+## Calendar System
+
+IMPORTANT:
+
+The calendar system must be reusable across:
+- planner
+- history
+- future analytics
+
+Do NOT create:
+- planner-specific calendars
+- history-specific calendars
+
+Instead create reusable primitives:
+- date navigation
+- day indicators
+- weekly rendering
+- monthly rendering
+- swipe navigation
+- temporal state logic
+
+Calendar architecture should support:
+- weekly views
+- monthly views
+- timeline views
+- activity indicators
+- meal states
+
+---
+
+## Rendering Philosophy
+
+Build:
+- reusable primitives
+- reusable cards
+- reusable timeline items
+
+Avoid:
+- screen-specific duplicated components
+
+Good:
+calendar/
+timeline/
+meal/
+feedback/
+
+Bad:
+home-components/
+planner-components/
+history-components/
+
+---
+
+## TypeScript Rules
+
+- strict mode
+- no any
+- explicit domain types
+- avoid unsafe casting
+- use import type where possible
+
+---
+
+## Styling Rules
+
+Use Tailwind only.
+
+Avoid:
+- CSS modules
+- styled-components
+- inline random styles
+
+Use:
+- semantic spacing
+- reusable utility patterns
+- composable variants
+
+---
+
+## UX Philosophy
+
+Each screen must have ONE primary purpose.
+
+Home:
+- daily continuity
+- next actions
+- progress visibility
+
+History:
+- temporal review
+
+Planner:
+- future organization
+
+Recipes:
+- inspiration + organization
+
+Settings:
+- low-frequency configuration
+
+Avoid mixing multiple mental models in the same screen.
+
+---
+
+## Performance Rules
+
+- Prefer server rendering for initial data
+- Lazy load heavy interactions
+- Avoid unnecessary re-renders
+- Keep client boundaries small
+- Optimize lists and timelines
+
+---
+
+## AI Assistant Behavior
+
+When generating code:
+- prioritize maintainability
+- challenge poor architecture decisions
+- avoid overengineering
+- avoid premature abstractions
+- think long-term product scalability
+- optimize for readability
+- optimize for mobile UX consistency
+
+Never generate massive files when smaller composable files are better.

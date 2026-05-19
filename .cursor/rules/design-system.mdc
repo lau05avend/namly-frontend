@@ -1,0 +1,220 @@
+---
+alwaysApply: true
+---
+# Design System — Namly
+
+## Visual Identity
+
+Namly should feel:
+- calm
+- soft
+- lightweight
+- emotionally friendly
+- organic
+- clean
+- airy
+
+Avoid:
+- harsh enterprise UI
+- dense dashboards
+- rigid grids
+- noisy interfaces
+
+---
+
+## Typography
+
+Primary font:
+- Plus Jakarta Sans
+
+Weights:
+- 400
+- 500
+- 600
+- 700
+
+Use strong hierarchy.
+
+Avoid excessive font-size variation.
+
+---
+
+## Color Palette
+
+Primary:
+- #2D9E64 — Verde Palma
+
+CTA:
+- #F28D52 — Mamey Cálido
+
+Highlights:
+- #FFD166 — Amarillo Polen
+
+Background contrast:
+- #EAF4EC — Menta Aire
+
+Card surfaces:
+- #F7F6EE
+
+Main background:
+- #FDFCF5
+
+Text:
+- #1E2D22 — Bosque Profundo
+
+---
+
+## UI Principles
+
+- large touch targets
+- soft corners
+- subtle shadows
+- comfortable spacing
+- low cognitive load
+- progressive disclosure
+
+---
+
+## Cards
+
+Cards are core primitives.
+
+Rules:
+- soft borders
+- lightweight shadows
+- generous padding
+- avoid visual noise
+- clear hierarchy
+
+Cards should feel breathable.
+
+---
+
+## Buttons
+
+Primary CTA:
+- warm
+- visible
+- thumb-friendly
+
+Avoid:
+- too many button variants
+- excessive outlined buttons
+
+---
+
+## Bottom Sheets
+
+Prefer bottom sheets over modals for mobile interactions.
+
+Use:
+- quick actions
+- meal details
+- planner details
+- contextual editing
+
+Avoid stacked modals.
+
+---
+
+## Motion
+
+Use subtle motion only.
+
+Good:
+- fade
+- slide
+- expand
+- soft transitions
+
+Bad:
+- bouncy excessive animations
+- dramatic motion
+- long transitions
+
+Animations should support clarity.
+
+---
+
+## Navigation
+
+Use bottom navigation as primary mobile navigation.
+
+Navigation should:
+- stay predictable
+- avoid nesting complexity
+- maintain spatial consistency
+
+---
+
+## Calendars
+
+Calendars should:
+- feel lightweight
+- avoid enterprise scheduler feeling
+- support swipe navigation
+- support progressive density
+
+Avoid:
+- spreadsheet layouts
+- rigid calendar grids
+
+---
+
+## Empty States
+
+Empty states should:
+- feel encouraging
+- avoid guilt
+- guide next action
+
+Never punish the user visually.
+
+---
+
+## Data Visualization
+
+Insights should feel:
+- lightweight
+- friendly
+- motivational
+
+Inspired by:
+- Duolingo
+- Finch
+- GitHub contribution graph
+- Clue
+
+Avoid:
+- PowerBI aesthetics
+- corporate analytics dashboards
+- overly numerical experiences
+
+---
+
+## Interaction Density
+
+Keep interfaces lightweight.
+
+Hide complexity progressively.
+
+Do NOT expose:
+- too many filters
+- too many controls
+- too many simultaneous actions
+
+---
+
+## UX Priority
+
+Always prioritize:
+1. continuity
+2. clarity
+3. low friction
+4. emotional softness
+5. speed of interaction
+
+Over:
+- feature density
+- configurability
+- advanced controls
