@@ -1,0 +1,31 @@
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type PlannerDashedAddButtonProps = {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  className?: string;
+};
+
+export function PlannerDashedAddButton({
+  label,
+  onClick,
+  disabled = false,
+  className,
+}: PlannerDashedAddButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-foreground/15 bg-card/50 px-4 py-3 text-sm font-medium text-foreground/55 transition-colors hover:border-primary/25 hover:bg-mint/30 hover:text-primary disabled:opacity-40",
+        className,
+      )}
+    >
+      <Plus className="size-4" aria-hidden />
+      {label}
+    </button>
+  );
+}

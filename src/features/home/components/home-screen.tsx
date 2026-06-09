@@ -1,0 +1,71 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { BottomNav } from "@/components/navigation/bottom-nav";
+import { TabBar } from "@/components/navigation/tab-bar";
+import { FloatingActionButton } from "@/components/ui/floating-action-button";
+import { HomeHeader } from "@/features/home/components/home-header";
+import { HomeLoading } from "@/features/home/components/home-loading";
+import { HomeTodayView } from "@/features/home/components/home-today-view";
+import { HOME_COPY } from "@/features/home/constants/home-copy";
+import { useHomeSummary } from "@/features/home/queries/use-home-summary";
+import type { HomeTabId } from "@/features/home/types/home.types";
+
+const HOME_TABS = [
+  { id: "today" as const, label: HOME_COPY.tabs.today },
+  { id: "rhythm" as const, label: HOME_COPY.tabs.rhythm },
+];
+
+export function HomeScreen() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<HomeTabId>("today");
+  const { data, isPending, isError } = useHomeSummary();
+
+  const handleFabClick = () => {
+    router.push("/meals/register");
+  };
+
+  return (
+    <div className="relative min-h-dvh bg-background pb-28">
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4">
+        {isPending ? <HomeLoading /> : null}
+
+        {isError ? (
+          <p className="pt-8 text-center text-sm text-foreground/60">
+            No pudimos cargar tu día. Intenta de nuevo.
+          </p>
+        ) : null}
+
+        {data ? (
+          <>
+            <HomeHeader
+              displayDate={data.displayDate}
+              greeting={data.greeting}
+            />
+
+            <TabBar
+              items={HOME_TABS}
+              activeId={activeTab}
+              onChange={setActiveTab}
+            />
+
+            {activeTab === "today" ? (
+              <HomeTodayView summary={data} />
+            ) : (
+              <p className="py-12 text-center text-sm text-foreground/50">
+                {HOME_COPY.rhythmPlaceholder}
+              </p>
+            )}
+          </>
+        ) : null}
+      </main>
+
+      <FloatingActionButton
+        label={HOME_COPY.fabLabel}
+        onClick={handleFabClick}
+      />
+      <BottomNav activeId="home" />
+    </div>
+  );
+}
