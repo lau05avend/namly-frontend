@@ -11,7 +11,7 @@ import { useAuthActions } from "@/features/auth/hooks/use-auth-actions";
 export function WelcomeForm() {
   const nameFieldId = useId();
   const [name, setName] = useState("");
-  const { signInWithGoogle, continueAsGuest } = useAuthActions();
+  const { signInWithGoogle, continueAsGuest, isSigningIn } = useAuthActions();
 
   return (
     <section className="flex w-full flex-col gap-5">
@@ -36,6 +36,7 @@ export function WelcomeForm() {
       <Button
         variant="outline"
         onClick={() => signInWithGoogle(name)}
+        disabled={isSigningIn}
         aria-label={WELCOME_COPY.googleCta}
         className="justify-start gap-3 px-5"
       >

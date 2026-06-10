@@ -23,7 +23,7 @@ const DEFAULT_ITEMS: BottomNavItem[] = [
   { id: "planner", href: "/planner", label: "Plan", icon: BookOpen },
   { id: "home", href: "/home", label: "Inicio", icon: Home },
   { id: "calendar", href: "/planner", label: "Calendario", icon: CalendarDays },
-  { id: "profile", href: "/home", label: "Perfil", icon: UserRound },
+  { id: "profile", href: "/profile", label: "Perfil", icon: UserRound },
 ];
 
 type BottomNavProps = {
@@ -50,7 +50,7 @@ export function BottomNav({
               <Link
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 transition-colors",
+                  "flex cursor-pointer flex-col items-center gap-1 px-3 py-2 transition-colors",
                   isActive ? "text-primary" : "text-foreground/40",
                 )}
                 aria-current={isActive ? "page" : undefined}

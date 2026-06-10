@@ -22,7 +22,7 @@ export function HomeHeader({
         <button
           type="button"
           aria-label={HOME_COPY.notifications}
-          className="flex size-10 items-center justify-center justify-self-end rounded-full bg-card text-foreground/60"
+          className="flex size-10 cursor-pointer items-center justify-center justify-self-end rounded-full bg-card text-foreground/60 transition-colors hover:bg-mint/50"
         >
           <Bell className="size-5" aria-hidden="true" />
         </button>

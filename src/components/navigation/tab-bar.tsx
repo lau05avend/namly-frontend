@@ -31,7 +31,7 @@ export function TabBar<T extends string>({
             type="button"
             onClick={() => onChange(item.id)}
             className={cn(
-              "relative pb-3 text-sm font-medium transition-colors",
+              "relative cursor-pointer pb-3 text-sm font-medium transition-colors",
               isActive
                 ? "font-semibold text-primary"
                 : "text-foreground/45",
