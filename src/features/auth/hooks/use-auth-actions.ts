@@ -1,18 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
-/**
- * Placeholder auth actions until Supabase Google OAuth is wired.
- */
 export function useAuthActions() {
   const router = useRouter();
+  const { signInWithGoogle } = useAuth();
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
-  const signInWithGoogle = useCallback((displayName?: string) => {
-    // TODO: integrate Supabase Auth Google OAuth
-    console.info("[auth] signInWithGoogle", { displayName });
-  }, []);
+  const handleSignInWithGoogle = useCallback(
+    async (_displayName?: string) => {
+      if (isSigningIn) {
+        return;
+      }
+
+      setIsSigningIn(true);
+
+      try {
+        await signInWithGoogle();
+      } catch (error) {
+        console.error("[auth] signInWithGoogle failed", error);
+        setIsSigningIn(false);
+      }
+    },
+    [isSigningIn, signInWithGoogle],
+  );
 
   const continueAsGuest = useCallback(
     (displayName?: string) => {
@@ -23,5 +36,9 @@ export function useAuthActions() {
     [router],
   );
 
-  return { signInWithGoogle, continueAsGuest };
+  return {
+    signInWithGoogle: handleSignInWithGoogle,
+    continueAsGuest,
+    isSigningIn,
+  };
 }

@@ -31,7 +31,7 @@ export function FloatingActionButton({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "fixed right-5 bottom-24 z-50 flex size-14 items-center justify-center rounded-full bg-cta text-white shadow-lg shadow-cta/30 transition-transform active:scale-95",
+        "fixed right-5 bottom-24 z-50 flex size-14 cursor-pointer items-center justify-center rounded-full bg-cta text-white shadow-lg shadow-cta/30 transition-transform active:scale-95",
         className,
       )}
     >

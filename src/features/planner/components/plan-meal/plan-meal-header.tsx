@@ -21,7 +21,7 @@ export function PlanMealHeader({
         type="button"
         onClick={() => router.back()}
         aria-label={PLAN_MEAL_COPY.back}
-        className="flex size-10 items-center justify-center rounded-full text-foreground/70"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-mint/50"
       >
         <ArrowLeft className="size-5" />
       </button>
@@ -33,7 +33,7 @@ export function PlanMealHeader({
         onClick={onSave}
         disabled={isSaving}
         aria-label={PLAN_MEAL_COPY.save}
-        className="flex size-10 items-center justify-center rounded-full bg-primary text-white disabled:opacity-50"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Check className="size-5" strokeWidth={2.5} />
       </button>

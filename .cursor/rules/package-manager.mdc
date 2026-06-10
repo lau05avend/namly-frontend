@@ -1,0 +1,24 @@
+---
+description: Always use pnpm as the package manager for this project
+alwaysApply: true
+---
+
+# Package Manager — pnpm
+
+This project uses **pnpm** exclusively. Never use `npm` or `yarn` for installs, scripts, or tooling.
+
+## Commands
+
+Use pnpm equivalents:
+
+- `pnpm install` — not `npm install`
+- `pnpm add <pkg>` — not `npm install <pkg>`
+- `pnpm remove <pkg>` — not `npm uninstall <pkg>`
+- `pnpm run dev` / `pnpm dev` — not `npm run dev`
+- `pnpm run build` / `pnpm build` — not `npm run build`
+- `pnpm run lint` / `pnpm lint` — not `npm run lint`
+- `pnpm dlx` — not `npx`
+
+## When running terminal commands
+
+Always prefix scripts with `pnpm`. If a lockfile is needed, rely on `pnpm-lock.yaml`, not `package-lock.json`.

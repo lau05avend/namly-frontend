@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
+import { AuthProvider } from "@/providers/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import "./globals.css";
 
@@ -32,7 +34,12 @@ export default function RootLayout({
       className={`${plusJakarta.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AuthProvider>
+            {children}
+            <Toaster position="top-center" richColors closeButton />
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
