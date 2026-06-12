@@ -53,10 +53,3 @@ export async function saveDisplayName(displayName: string): Promise<Profile> {
     avatarUrl: profile.avatarUrl,
   });
 }
-
-export async function bootstrapAndFetchProfile(
-  displayName?: string,
-): Promise<Profile> {
-  await bootstrapUser(displayName ? { displayName } : {});
-  return fetchProfile();
-}

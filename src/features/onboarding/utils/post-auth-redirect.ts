@@ -23,8 +23,10 @@ export function resolvePostAuthDestinationFromContext(
   return "/onboarding/welcome";
 }
 
-export async function resolvePostAuthDestination(): Promise<PostAuthDestination> {
-  const bootstrap = await bootstrapUser();
+export async function resolvePostAuthDestination(
+  displayName?: string,
+): Promise<PostAuthDestination> {
+  const bootstrap = await bootstrapUser(displayName ? { displayName } : {});
   const profile = await fetchProfile();
 
   return resolvePostAuthDestinationFromContext(bootstrap, profile);
