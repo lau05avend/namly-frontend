@@ -3,27 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { profileQueryKeys } from "@/features/profile/constants/query-keys";
 import { bootstrapAndFetchProfile } from "@/features/profile/services/profile.service";
+import { resolveGoogleDisplayName } from "@/features/profile/utils/resolve-google-display-name";
 import { useAuth } from "@/hooks/use-auth";
-
-function resolveBootstrapDisplayName(
-  metadata: Record<string, unknown> | undefined,
-): string | undefined {
-  if (!metadata) {
-    return undefined;
-  }
-
-  const fullName = metadata.full_name;
-  if (typeof fullName === "string" && fullName.trim().length > 0) {
-    return fullName.trim();
-  }
-
-  const name = metadata.name;
-  if (typeof name === "string" && name.trim().length > 0) {
-    return name.trim();
-  }
-
-  return undefined;
-}
 
 export function useProfile() {
   const { user, isAuthenticated } = useAuth();
@@ -32,7 +13,7 @@ export function useProfile() {
     queryKey: profileQueryKeys.detail(),
     queryFn: () =>
       bootstrapAndFetchProfile(
-        resolveBootstrapDisplayName(user?.user_metadata),
+        resolveGoogleDisplayName(user?.user_metadata) || undefined,
       ),
     enabled: isAuthenticated,
   });
