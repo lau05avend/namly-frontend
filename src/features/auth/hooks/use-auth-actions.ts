@@ -9,32 +9,26 @@ export function useAuthActions() {
   const { signInWithGoogle } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  const handleSignInWithGoogle = useCallback(
-    async (_displayName?: string) => {
-      if (isSigningIn) {
-        return;
-      }
+  const handleSignInWithGoogle = useCallback(async () => {
+    if (isSigningIn) {
+      return;
+    }
 
-      setIsSigningIn(true);
+    setIsSigningIn(true);
 
-      try {
-        await signInWithGoogle();
-      } catch (error) {
-        console.error("[auth] signInWithGoogle failed", error);
-        setIsSigningIn(false);
-      }
-    },
-    [isSigningIn, signInWithGoogle],
-  );
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("[auth] signInWithGoogle failed", error);
+      setIsSigningIn(false);
+    }
+  }, [isSigningIn, signInWithGoogle]);
 
-  const continueAsGuest = useCallback(
-    (displayName?: string) => {
-      // TODO: persist guest session / route guard
-      console.info("[auth] continueAsGuest", { displayName });
-      router.push("/home");
-    },
-    [router],
-  );
+  const continueAsGuest = useCallback(() => {
+    // TODO: persist guest session / route guard
+    console.info("[auth] continueAsGuest");
+    router.push("/home");
+  }, [router]);
 
   return {
     signInWithGoogle: handleSignInWithGoogle,

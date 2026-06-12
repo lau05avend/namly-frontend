@@ -7,6 +7,7 @@ export const PROTECTED_ROUTE_PREFIXES = [
   "/history",
   "/meals",
   "/profile",
+  "/onboarding",
 ] as const;
 
 export function isPublicRoute(pathname: string): boolean {

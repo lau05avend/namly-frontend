@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { AuthLoading } from "@/components/auth/auth-loading";
+import { clearOnboardingFlow } from "@/features/onboarding/constants/onboarding-flow-storage";
+import { resolvePostAuthDestination } from "@/features/onboarding/utils/post-auth-redirect";
 import { supabase } from "@/lib/supabase/client";
 
 function redirectTo(path: string) {
@@ -59,7 +61,13 @@ function AuthCallbackHandler() {
       }
 
       if (session) {
-        redirectTo("/home");
+        try {
+          clearOnboardingFlow();
+          const destination = await resolvePostAuthDestination();
+          redirectTo(destination);
+        } catch {
+          redirectTo("/home");
+        }
         return;
       }
 
