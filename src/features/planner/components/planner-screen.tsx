@@ -18,7 +18,8 @@ import { toActivityByDate } from "@/features/planner/utils/activity-map";
 
 export function PlannerScreen() {
   const router = useRouter();
-  const navigation = useTemporalNavigation();
+  const today = useMemo(() => new Date(), []);
+  const navigation = useTemporalNavigation(today);
   const { isExpanded, toggle: toggleCalendar } = useCalendarExpansion();
 
   const { data: monthActivity } = usePlannerMonthActivity(

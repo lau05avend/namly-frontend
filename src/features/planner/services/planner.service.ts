@@ -1,35 +1,35 @@
-import { simulateLatency } from "@/lib/api/simulate-latency";
+import { toMonthKey } from "@/features/planner/constants/query-keys";
 import {
-  getMockPlannerDay,
-  getMockPlannerMonthActivity,
-} from "@/features/planner/services/mock-planner-data";
+  mapCalendarResponse,
+  mapDayResponse,
+} from "@/features/planner/mappers/planner.mapper";
+import type {
+  ScheduledMealApiDto,
+  ScheduledMealsCalendarApiResponse,
+} from "@/features/planner/types/planner-api.types";
 import type {
   PlannerDayPlan,
   PlannerMonthActivity,
 } from "@/features/planner/types/planner.types";
+import { apiClient } from "@/lib/api/api-client";
 
 export async function fetchPlannerDay(
   dateKey: string,
 ): Promise<PlannerDayPlan> {
-  await simulateLatency();
+  const meals = await apiClient<ScheduledMealApiDto[]>(
+    `/api/v1/scheduled-meals?date=${dateKey}`,
+  );
 
-  // TODO: Replace mocked response with real API integration
-  // Example:
-  // return apiClient.get<PlannerDayPlan>(`/planner/days/${dateKey}`);
-
-  return getMockPlannerDay(dateKey);
+  return mapDayResponse(meals, dateKey);
 }
 
 export async function fetchPlannerMonthActivity(
   month: Date,
 ): Promise<PlannerMonthActivity> {
-  await simulateLatency(250);
+  const monthKey = toMonthKey(month);
+  const raw = await apiClient<ScheduledMealsCalendarApiResponse>(
+    `/api/v1/scheduled-meals/calendar?month=${monthKey}`,
+  );
 
-  // TODO: Replace mocked response with real API integration
-  // Example:
-  // return apiClient.get<PlannerMonthActivity>("/planner/month", {
-  //   params: { month: format(month, "yyyy-MM") },
-  // });
-
-  return getMockPlannerMonthActivity(month);
+  return mapCalendarResponse(raw, monthKey);
 }
