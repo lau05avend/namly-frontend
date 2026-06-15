@@ -6,7 +6,7 @@ export function WeekdayHeader() {
       {WEEKDAY_LABELS_SHORT.map((label) => (
         <span
           key={label}
-          className="py-1 text-center text-[10px] font-medium tracking-wide text-foreground/45"
+          className="py-1 text-center text-[11px] font-medium tracking-wide text-foreground/45"
         >
           {label}
         </span>

@@ -15,6 +15,15 @@ function buildDayPlan(dateKey: string): PlannerDayPlan | null {
         count: 1,
         label: "1 comida registrada",
         hint: "Toca para ver el detalle",
+        meals: [
+          {
+            id: "registered-breakfast",
+            mealTypeName: "Desayuno",
+            timeLabel: "08:00 AM",
+            detail: "Huevos con arepa",
+            isExpress: false,
+          },
+        ],
       },
       sections: [
         {

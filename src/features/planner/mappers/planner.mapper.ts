@@ -8,6 +8,7 @@ import type {
   PlannerDayPlan,
   PlannerEntry,
   PlannerMonthActivity,
+  PlannerRegisteredMeal,
   PlannerSection,
 } from "@/features/planner/types/planner.types";
 
@@ -97,6 +98,30 @@ function mapMealToEntry(
   };
 }
 
+function mapCompletedMealToRegistered(
+  meal: ScheduledMealApiDto,
+): PlannerRegisteredMeal {
+  const recipes = meal.recipes ?? [];
+
+  let detail: string;
+
+  if (meal.isExpress) {
+    detail = meal.expressNote?.trim() ?? "";
+  } else if (recipes.length > 0) {
+    detail = recipes.map((recipe) => recipe.title).join(", ");
+  } else {
+    detail = meal.mealType.name;
+  }
+
+  return {
+    id: meal.id,
+    mealTypeName: meal.mealType.name,
+    timeLabel: formatPlannedTimeLabel(meal.plannedTime),
+    detail,
+    isExpress: meal.isExpress,
+  };
+}
+
 function sortByPlannedTime(
   left: ScheduledMealApiDto,
   right: ScheduledMealApiDto,
@@ -122,9 +147,10 @@ export function mapDayResponse(
   meals: ScheduledMealApiDto[],
   dateKey: string,
 ): PlannerDayPlan {
-  const completedCount = meals.filter(
-    (meal) => meal.status === "completed",
-  ).length;
+  const completedMeals = meals
+    .filter((meal) => meal.status === "completed")
+    .sort(sortByPlannedTime);
+  const completedCount = completedMeals.length;
   const nextMeals = meals
     .filter((meal) => meal.status === "next")
     .sort(sortByPlannedTime);
@@ -161,6 +187,7 @@ export function mapDayResponse(
           ? "1 comida registrada"
           : `${completedCount} comidas registradas`,
       hint: "Toca para ver el detalle",
+      meals: completedMeals.map(mapCompletedMealToRegistered),
     };
   }
 

@@ -26,10 +26,19 @@ export type PlannerSection = {
   entries: PlannerEntry[];
 };
 
+export type PlannerRegisteredMeal = {
+  id: string;
+  mealTypeName: string;
+  timeLabel: string;
+  detail: string;
+  isExpress: boolean;
+};
+
 export type PlannerRegisteredSummary = {
   count: number;
   label: string;
   hint: string;
+  meals: PlannerRegisteredMeal[];
 };
 
 export type PlannerDayPlan = {
