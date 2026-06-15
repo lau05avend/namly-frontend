@@ -1,35 +1,40 @@
-import { simulateLatency } from "@/lib/api/simulate-latency";
-import { getMockPlanMealDefaults } from "@/features/planner/services/mock-plan-meal-data";
+import type { CreateScheduledMealApiPayload } from "@/features/planner/types/plan-meal-api.types";
 import type {
-  PlanMealDefaults,
-  PlanMealDefaultsParams,
   SavePlanMealPayload,
   SavePlanMealResponse,
 } from "@/features/planner/types/plan-meal.types";
+import { apiClient } from "@/lib/api/api-client";
 
-export async function fetchPlanMealDefaults(
-  params?: PlanMealDefaultsParams,
-): Promise<PlanMealDefaults> {
-  await simulateLatency(200);
+function toCreateScheduledMealPayload(
+  payload: SavePlanMealPayload,
+): CreateScheduledMealApiPayload {
+  const isExpress = payload.entryMode === "express";
 
-  // TODO: Replace mocked response with real API integration
-  // Example:
-  // return apiClient.get<PlanMealDefaults>("/planner/plan/defaults", { params });
+  if (isExpress) {
+    return {
+      mealTypeId: payload.mealTypeId,
+      entryDate: payload.date,
+      plannedTime: payload.time,
+      isExpress: true,
+      expressNote: payload.expressNote.trim(),
+      recipeIds: [],
+    };
+  }
 
-  return getMockPlanMealDefaults(params);
+  return {
+    mealTypeId: payload.mealTypeId,
+    entryDate: payload.date,
+    plannedTime: payload.time,
+    isExpress: false,
+    recipeIds: payload.recipes.map((recipe) => recipe.id),
+  };
 }
 
 export async function savePlanMeal(
   payload: SavePlanMealPayload,
 ): Promise<SavePlanMealResponse> {
-  await simulateLatency(400);
-
-  // TODO: Replace mocked response with real API integration
-  // Example:
-  // return apiClient.post<SavePlanMealResponse>("/planner/plan", payload);
-
-  return {
-    id: `plan-${payload.date}-${payload.mealSlot}`,
-    date: payload.date,
-  };
+  return apiClient<SavePlanMealResponse>("/api/v1/scheduled-meals", {
+    method: "POST",
+    body: toCreateScheduledMealPayload(payload),
+  });
 }

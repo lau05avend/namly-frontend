@@ -1,31 +1,39 @@
 "use client";
 
-import { MEAL_SLOTS, type MealSlot } from "@/constants/meal-slots";
-import { MEAL_SLOT_LABELS } from "@/features/planner/constants/meal-slot-labels";
 import { cn } from "@/lib/utils";
 
-type MealTypeSelectorProps = {
-  value: MealSlot;
-  onChange: (slot: MealSlot) => void;
+export type MealTypeSelectorOption = {
+  id: string;
+  label: string;
 };
 
-export function MealTypeSelector({ value, onChange }: MealTypeSelectorProps) {
+type MealTypeSelectorProps = {
+  options: MealTypeSelectorOption[];
+  value: string;
+  onChange: (id: string) => void;
+};
+
+export function MealTypeSelector({
+  options,
+  value,
+  onChange,
+}: MealTypeSelectorProps) {
   return (
     <div
       className="flex flex-wrap gap-2"
       role="radiogroup"
       aria-label="Tipo de comida"
     >
-      {MEAL_SLOTS.map((slot) => {
-        const selected = value === slot;
+      {options.map((option) => {
+        const selected = value === option.id;
 
         return (
           <button
-            key={slot}
+            key={option.id}
             type="button"
             role="radio"
             aria-checked={selected}
-            onClick={() => onChange(slot)}
+            onClick={() => onChange(option.id)}
             className={cn(
               "rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
               selected
@@ -33,7 +41,7 @@ export function MealTypeSelector({ value, onChange }: MealTypeSelectorProps) {
                 : "bg-mint/50 text-foreground/70 hover:bg-mint",
             )}
           >
-            {MEAL_SLOT_LABELS[slot]}
+            {option.label}
           </button>
         );
       })}

@@ -2,10 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import {
+  addDays,
   addMonths,
   getMonthCalendarDays,
   getWeekDaysForDate,
-  getWeekStart,
   isSameDay,
   startOfMonth,
   subMonths,
@@ -39,6 +39,22 @@ export function useTemporalNavigation(initialDate = new Date()) {
     setVisibleMonth(startOfMonth(today));
   }, []);
 
+  const goToPreviousWeek = useCallback(() => {
+    setSelectedDate((current) => {
+      const next = addDays(current, -7);
+      setVisibleMonth(startOfMonth(next));
+      return next;
+    });
+  }, []);
+
+  const goToNextWeek = useCallback(() => {
+    setSelectedDate((current) => {
+      const next = addDays(current, 7);
+      setVisibleMonth(startOfMonth(next));
+      return next;
+    });
+  }, []);
+
   const goToPreviousMonth = useCallback(() => {
     setVisibleMonth((current) => subMonths(current, 1));
   }, []);
@@ -62,6 +78,8 @@ export function useTemporalNavigation(initialDate = new Date()) {
     monthDays,
     selectDate,
     goToToday,
+    goToPreviousWeek,
+    goToNextWeek,
     goToPreviousMonth,
     goToNextMonth,
     isSelected,

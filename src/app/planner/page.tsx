@@ -5,6 +5,14 @@ export const metadata = {
   description: "Organiza tus comidas con calma y continuidad.",
 };
 
-export default function PlannerPage() {
-  return <PlannerScreen />;
+type PlannerPageProps = {
+  searchParams: Promise<{
+    date?: string;
+  }>;
+};
+
+export default async function PlannerPage({ searchParams }: PlannerPageProps) {
+  const params = await searchParams;
+
+  return <PlannerScreen initialDate={params.date} />;
 }

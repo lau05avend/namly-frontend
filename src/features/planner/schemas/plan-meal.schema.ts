@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { MEAL_SLOTS } from "@/constants/meal-slots";
 
 export const PLAN_ENTRY_MODES = ["recipe", "express"] as const;
 
@@ -19,7 +18,7 @@ export const planMealFormSchema = z
   .object({
     date: z.string().min(1),
     time: z.string().min(1),
-    mealSlot: z.enum(MEAL_SLOTS),
+    mealTypeId: z.string().uuid("Selecciona un tipo de comida"),
     entryMode: z.enum(PLAN_ENTRY_MODES),
     expressNote: z.string(),
     recipes: z.array(planRecipeSchema),

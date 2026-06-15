@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from "motion/react";
 import { format, isToday } from "date-fns";
 import type { DayActivity } from "@/features/calendar/types/calendar.types";
+import { CALENDAR_LAYOUT_SPRING } from "@/features/calendar/constants/motion";
 import { cn } from "@/lib/utils";
 
 type DayCellProps = {
@@ -9,7 +11,7 @@ type DayCellProps = {
   selected?: boolean;
   isCurrentMonth?: boolean;
   activity?: DayActivity;
-  compact?: boolean;
+  layoutId?: string;
   onSelect: (date: Date) => void;
 };
 
@@ -18,61 +20,52 @@ export function DayCell({
   selected = false,
   isCurrentMonth = true,
   activity,
-  compact = false,
+  layoutId,
   onSelect,
 }: DayCellProps) {
   const today = isToday(date);
   const hasPlanned = activity?.hasPlanned;
-  const hasCompleted = activity?.hasCompleted;
 
   return (
-    <button
+    <motion.button
       type="button"
+      layoutId={layoutId}
+      layout="position"
+      transition={CALENDAR_LAYOUT_SPRING}
       onClick={() => onSelect(date)}
       aria-pressed={selected}
       aria-label={format(date, "EEEE d MMMM")}
       className={cn(
-        "flex flex-col items-center gap-1 rounded-2xl transition-colors",
-        compact ? "min-w-0 flex-1 px-0.5 py-1" : "px-1 py-1.5",
+        "flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5 transition-colors",
         !isCurrentMonth && "opacity-35",
       )}
     >
-      {!compact ? (
-        <span className="text-[10px] font-medium tracking-wide text-foreground/45 uppercase">
-          {format(date, "EEE", { locale: undefined }).slice(0, 3).toUpperCase()}
-        </span>
-      ) : null}
-
-      <span
+      <motion.span
+        layout
         className={cn(
-          "flex items-center justify-center rounded-full font-semibold transition-colors",
-          compact ? "size-8 text-xs" : "size-9 text-sm",
+          "flex size-9 items-center justify-center rounded-full text-sm font-semibold",
           selected && "bg-primary text-white shadow-sm",
           !selected && today && "bg-mint text-primary",
           !selected && !today && "text-foreground/75",
         )}
+        transition={CALENDAR_LAYOUT_SPRING}
       >
         {format(date, "d")}
-      </span>
+      </motion.span>
 
-      <span
-        className="flex h-1.5 items-center justify-center gap-0.5"
-        aria-hidden
-      >
-        {hasPlanned ? (
-          <span
-            className={cn(
-              "size-1.5 rounded-full",
-              selected ? "bg-highlight" : "bg-primary",
-            )}
-          />
-        ) : (
-          <span className="size-1.5 rounded-full bg-foreground/15" />
-        )}
-        {hasCompleted && !compact ? (
-          <span className="size-1 rounded-full bg-cta/80" />
-        ) : null}
-      </span>
-    </button>
+      {hasPlanned ? (
+        <motion.span
+          layout
+          className={cn(
+            "size-1.5 rounded-full",
+            selected ? "bg-highlight" : "bg-primary",
+          )}
+          aria-hidden
+          transition={CALENDAR_LAYOUT_SPRING}
+        />
+      ) : (
+        <span className="size-1.5" aria-hidden />
+      )}
+    </motion.button>
   );
 }

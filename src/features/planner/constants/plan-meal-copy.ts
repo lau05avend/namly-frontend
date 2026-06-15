@@ -36,4 +36,8 @@ export const PLAN_MEAL_COPY = {
     maxReached: "Máximo 3 recordatorios",
     collapsedHint: "Recordatorios opcionales",
   },
+  errors: {
+    loadForm: "No pudimos preparar el formulario. Intenta de nuevo.",
+    save: "No pudimos guardar tu plan. Revisa los datos e intenta de nuevo.",
+  },
 } as const;
