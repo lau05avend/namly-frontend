@@ -2,11 +2,13 @@ import type { MealSlot } from "@/constants/meal-slots";
 import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import type {
   ScheduledMealApiDto,
+  ScheduledMealStatusApi,
   ScheduledMealsCalendarApiResponse,
 } from "@/features/planner/types/planner-api.types";
 import type {
   PlannerDayPlan,
   PlannerEntry,
+  PlannerEntryStatus,
   PlannerMonthActivity,
   PlannerRegisteredMeal,
   PlannerSection,
@@ -66,6 +68,18 @@ function formatCountdown(
   return `En ${diffHours} h ${remainingMinutes} min`;
 }
 
+function toEntryStatus(status: ScheduledMealStatusApi): PlannerEntryStatus {
+  switch (status) {
+    case "next":
+      return "next";
+    case "missed":
+      return "missed";
+    case "upcoming":
+    case "completed":
+      return "upcoming";
+  }
+}
+
 function mapMealToEntry(
   meal: ScheduledMealApiDto,
   variant: PlannerEntry["variant"],
@@ -73,6 +87,7 @@ function mapMealToEntry(
   const slot = resolveMealSlot(meal.mealType.name);
   const isExpress = meal.isExpress;
   const recipes = meal.recipes ?? [];
+  const status = toEntryStatus(meal.status);
 
   return {
     id: meal.id,
@@ -90,11 +105,12 @@ function mapMealToEntry(
           label: recipe.title,
         })),
     countdownLabel:
-      meal.status === "next"
+      status === "next"
         ? formatCountdown(meal.entryDate, meal.plannedTime)
         : undefined,
     badge: isExpress ? PLANNER_COPY.quickNoteBadge : undefined,
-    variant: isExpress ? "note" : variant,
+    status,
+    variant: isExpress ? (variant === "featured" ? "featured" : "note") : variant,
   };
 }
 
@@ -155,7 +171,10 @@ export function mapDayResponse(
     .filter((meal) => meal.status === "next")
     .sort(sortByPlannedTime);
   const upcomingMeals = meals
-    .filter((meal) => meal.status === "upcoming" || meal.status === "missed")
+    .filter((meal) => meal.status === "upcoming")
+    .sort(sortByPlannedTime);
+  const missedMeals = meals
+    .filter((meal) => meal.status === "missed")
     .sort(sortByPlannedTime);
 
   const sections: PlannerSection[] = [];
@@ -168,11 +187,21 @@ export function mapDayResponse(
     });
   }
 
-  sections.push({
-    id: "upcoming",
-    title: PLANNER_COPY.sections.upcoming,
-    entries: upcomingMeals.map((meal) => mapMealToEntry(meal, "default")),
-  });
+  if (upcomingMeals.length > 0) {
+    sections.push({
+      id: "upcoming",
+      title: PLANNER_COPY.sections.upcoming,
+      entries: upcomingMeals.map((meal) => mapMealToEntry(meal, "default")),
+    });
+  }
+
+  if (missedMeals.length > 0) {
+    sections.push({
+      id: "missed",
+      title: PLANNER_COPY.sections.incomplete.title,
+      entries: missedMeals.map((meal) => mapMealToEntry(meal, "default")),
+    });
+  }
 
   const dayPlan: PlannerDayPlan = {
     date: dateKey,
@@ -182,11 +211,7 @@ export function mapDayResponse(
   if (completedCount > 0) {
     dayPlan.registeredSummary = {
       count: completedCount,
-      label:
-        completedCount === 1
-          ? "1 comida registrada"
-          : `${completedCount} comidas registradas`,
-      hint: "Toca para ver el detalle",
+      subtitle: PLANNER_COPY.sections.completed.subtitle(completedCount),
       meals: completedMeals.map(mapCompletedMealToRegistered),
     };
   }
