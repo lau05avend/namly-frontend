@@ -25,29 +25,46 @@ export function CollapsiblePlannerCard({
   children,
   className,
 }: CollapsiblePlannerCardProps) {
+  const chevron = (
+    <ChevronDown
+      className={cn(
+        "size-4 shrink-0 text-foreground/40 transition-transform",
+        expanded && "rotate-180",
+      )}
+      aria-hidden
+    />
+  );
+
   return (
     <SurfaceCard className={cn("overflow-hidden p-0", className)}>
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
-        aria-expanded={expanded}
-      >
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-foreground">{title}</p>
-          {!expanded && hint ? (
-            <p className="text-xs text-foreground/45">{hint}</p>
-          ) : null}
-        </div>
+      <div className="flex w-full items-center gap-3 px-4 py-3.5">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+          aria-expanded={expanded}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-foreground">{title}</p>
+            {!expanded && hint ? (
+              <p className="text-xs text-foreground/45">{hint}</p>
+            ) : null}
+          </div>
+          {!trailing ? chevron : null}
+        </button>
         {trailing}
-        <ChevronDown
-          className={cn(
-            "size-4 shrink-0 text-foreground/40 transition-transform",
-            expanded && "rotate-180",
-          )}
-          aria-hidden
-        />
-      </button>
+        {trailing ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            className="shrink-0"
+            aria-expanded={expanded}
+            aria-label={expanded ? "Contraer sección" : "Expandir sección"}
+          >
+            {chevron}
+          </button>
+        ) : null}
+      </div>
 
       <AnimatePresence initial={false}>
         {expanded ? (

@@ -3,6 +3,6 @@ export const PLANNER_COPY = {
     nextMeal: "Próxima comida",
     upcoming: "Lo que sigue",
   },
-  fabLabel: "Añadir al plan",
+  fabLabel: "Agregar al plan",
   quickNoteBadge: "Nota rápida",
 } as const;

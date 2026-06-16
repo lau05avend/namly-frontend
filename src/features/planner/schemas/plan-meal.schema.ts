@@ -6,6 +6,7 @@ export const planRecipeSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Añade un nombre de receta"),
   subtitle: z.string().optional(),
+  coverUrl: z.string().nullable().optional(),
 });
 
 export const planReminderSchema = z.object({
@@ -37,7 +38,7 @@ export const planMealFormSchema = z
     if (values.entryMode === "recipe" && values.recipes.length === 0) {
       ctx.addIssue({
         code: "custom",
-        message: "Añade al menos una receta",
+        message: "Agrega al menos una receta",
         path: ["recipes"],
       });
     }

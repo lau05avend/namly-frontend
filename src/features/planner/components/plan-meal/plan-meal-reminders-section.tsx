@@ -43,10 +43,7 @@ export function PlanMealRemindersSection() {
           type="button"
           role="switch"
           aria-checked={remindersEnabled}
-          onClick={(event) => {
-            event.stopPropagation();
-            setValue("remindersEnabled", !remindersEnabled);
-          }}
+          onClick={() => setValue("remindersEnabled", !remindersEnabled)}
           className={cn(
             "relative h-7 w-12 shrink-0 rounded-full transition-colors",
             remindersEnabled ? "bg-primary" : "bg-foreground/15",

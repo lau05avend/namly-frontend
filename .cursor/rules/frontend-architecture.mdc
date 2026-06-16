@@ -292,6 +292,24 @@ Avoid mixing multiple mental models in the same screen.
 
 ---
 
+## User-Facing Terminology
+
+Use warm, everyday language in the UI. Keep technical names in code, APIs and DTOs only.
+
+### Quick note meals (`isExpress`)
+
+- **Internal:** `isExpress`, `expressNote`, `entryMode: "express"`, Express-related component/file names in code.
+- **User-facing:** always **"Nota rápida"** — never expose the word **"Express"** in labels, titles, hints, badges, empty states, or accessibility text.
+- **Planner entry mode section:** use **"¿Cómo quieres registrarla?"** instead of technical labels like "Tipo de entrada".
+- **Recipe option copy:** title **"Recetas"**, description **"Elige una o varias recetas para esta comida"**.
+- **Quick note option copy:** title **"Nota rápida"**, description **"Anota lo que te gustaría comer"**.
+
+Apply consistently across Planner, Home, Analytics, History, and any future meal-related flows.
+
+When adding new meal UI, centralize copy in feature `constants/*-copy.ts` files and follow this terminology.
+
+---
+
 ## Performance Rules
 
 - Prefer server rendering for initial data
