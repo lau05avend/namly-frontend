@@ -146,6 +146,7 @@ Avoid:
 - excessive modals
 - complex flows
 - heavy forms
+- exposing internal terminology (e.g. **"Express"**) in user-facing copy — use **"Nota rápida"** instead
 
 ---
 

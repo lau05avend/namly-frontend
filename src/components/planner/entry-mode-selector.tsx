@@ -3,7 +3,7 @@
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import type { PlanEntryMode } from "@/features/planner/schemas/plan-meal.schema";
 import { cn } from "@/lib/utils";
-import { NotebookPen, UtensilsCrossed } from "lucide-react";
+import { Check, NotebookPen, UtensilsCrossed } from "lucide-react";
 
 type EntryModeSelectorProps = {
   value: PlanEntryMode;
@@ -35,7 +35,7 @@ export function EntryModeSelector({ value, onChange }: EntryModeSelectorProps) {
     <div
       className="grid grid-cols-2 gap-2"
       role="radiogroup"
-      aria-label="Tipo de entrada"
+      aria-label={PLAN_MEAL_COPY.sections.entryMode}
     >
       {MODES.map((mode) => {
         const selected = value === mode.id;
@@ -49,22 +49,18 @@ export function EntryModeSelector({ value, onChange }: EntryModeSelectorProps) {
             aria-checked={selected}
             onClick={() => onChange(mode.id)}
             className={cn(
-              "flex flex-col items-start gap-2 rounded-2xl border p-3 text-left transition-colors",
+              "relative flex flex-col items-start gap-2 rounded-2xl border p-3 text-left transition-colors",
               selected
                 ? "border-primary/30 bg-mint/40"
                 : "border-foreground/8 bg-card hover:bg-mint/20",
             )}
           >
-            <span
-              className={cn(
-                "flex size-5 items-center justify-center rounded-full border-2",
-                selected ? "border-primary bg-primary" : "border-foreground/20",
-              )}
-            >
-              {selected ? (
-                <span className="size-2 rounded-full bg-white" aria-hidden />
-              ) : null}
-            </span>
+            {selected ? (
+              <Check
+                className="absolute top-3 right-3 size-4 text-primary/70"
+                aria-hidden
+              />
+            ) : null}
             <Icon className="size-4 text-primary" aria-hidden />
             <span className="text-sm font-semibold text-foreground">
               {mode.label}

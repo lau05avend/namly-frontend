@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { MEAL_SLOTS } from "@/constants/meal-slots";
 
 export const PLAN_ENTRY_MODES = ["recipe", "express"] as const;
 
@@ -7,6 +6,7 @@ export const planRecipeSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Añade un nombre de receta"),
   subtitle: z.string().optional(),
+  coverUrl: z.string().nullable().optional(),
 });
 
 export const planReminderSchema = z.object({
@@ -19,7 +19,7 @@ export const planMealFormSchema = z
   .object({
     date: z.string().min(1),
     time: z.string().min(1),
-    mealSlot: z.enum(MEAL_SLOTS),
+    mealTypeId: z.string().uuid("Selecciona un tipo de comida"),
     entryMode: z.enum(PLAN_ENTRY_MODES),
     expressNote: z.string(),
     recipes: z.array(planRecipeSchema),
@@ -38,7 +38,7 @@ export const planMealFormSchema = z
     if (values.entryMode === "recipe" && values.recipes.length === 0) {
       ctx.addIssue({
         code: "custom",
-        message: "Añade al menos una receta",
+        message: "Agrega al menos una receta",
         path: ["recipes"],
       });
     }

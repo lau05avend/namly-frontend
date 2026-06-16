@@ -6,6 +6,7 @@ import { BottomNav } from "@/components/navigation/bottom-nav";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import {
   ExpandableCalendar,
+  parseDateKey,
   useCalendarExpansion,
   useTemporalNavigation,
 } from "@/features/calendar";
@@ -16,9 +17,11 @@ import { usePlannerDay } from "@/features/planner/queries/use-planner-day";
 import { usePlannerMonthActivity } from "@/features/planner/queries/use-planner-month-activity";
 import { toActivityByDate } from "@/features/planner/utils/activity-map";
 
-export function PlannerScreen() {
+export function PlannerScreen({ initialDate }: { initialDate?: string } = {}) {
   const router = useRouter();
-  const navigation = useTemporalNavigation();
+  const navigation = useTemporalNavigation(
+    useMemo(() => parseDateKey(initialDate) ?? new Date(), [initialDate]),
+  );
   const { isExpanded, toggle: toggleCalendar } = useCalendarExpansion();
 
   const { data: monthActivity } = usePlannerMonthActivity(
@@ -53,6 +56,15 @@ export function PlannerScreen() {
           isExpanded={isExpanded}
           activityByDate={activityByDate}
           onToggleExpand={toggleCalendar}
+          onGoToToday={navigation.goToToday}
+          onPreviousPeriod={
+            isExpanded
+              ? navigation.goToPreviousMonth
+              : navigation.goToPreviousWeek
+          }
+          onNextPeriod={
+            isExpanded ? navigation.goToNextMonth : navigation.goToNextWeek
+          }
           onSelectDate={navigation.selectDate}
         />
 

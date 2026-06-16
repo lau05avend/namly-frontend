@@ -28,11 +28,14 @@ function lookupIcon(name: string): LucideIcon | null {
   return null;
 }
 
-export function resolveLucideIcon(iconName?: string | null): LucideIcon {
+export function resolveLucideIcon(
+  iconName?: string | null,
+  fallback: LucideIcon = Circle,
+): LucideIcon {
   const normalized = iconName?.trim() ?? "";
   if (!normalized) {
-    return Circle;
+    return fallback;
   }
 
-  return lookupIcon(normalized) ?? Circle;
+  return lookupIcon(normalized) ?? fallback;
 }

@@ -1,88 +1,89 @@
 "use client";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import type { PlanRecipeFormValue } from "@/features/planner/schemas/plan-meal.schema";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
-import { SurfaceCard } from "@/components/ui/surface-card";
-import { ChevronDown, ChevronUp, GripVertical, X } from "lucide-react";
+import { RecipeCoverThumb } from "@/features/recipes/components/recipe-cover-thumb";
+import { cn } from "@/lib/utils";
+import { GripVertical, X } from "lucide-react";
 
-type RecipePlanCardProps = {
+const SORTABLE_TRANSITION = "transform 520ms cubic-bezier(0.22, 0.03, 0.26, 1)";
+
+type RecipePlanListItemProps = {
+  sortableId: string;
   recipe: PlanRecipeFormValue;
-  index: number;
-  total: number;
-  onTitleChange: (value: string) => void;
-  onSubtitleChange: (value: string) => void;
+  isFirst?: boolean;
+  isLast?: boolean;
   onRemove: () => void;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
 };
 
 export function RecipePlanCard({
+  sortableId,
   recipe,
-  index,
-  total,
-  onTitleChange,
-  onSubtitleChange,
+  isFirst = false,
+  isLast = false,
   onRemove,
-  onMoveUp,
-  onMoveDown,
-}: RecipePlanCardProps) {
+}: RecipePlanListItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: sortableId,
+    transition: {
+      duration: 480,
+      easing: "cubic-bezier(0.22, 0.03, 0.26, 1)",
+    },
+  });
+
   return (
-    <SurfaceCard className="flex flex-row items-start gap-2 p-3">
+    <li
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition: isDragging ? undefined : (transition ?? SORTABLE_TRANSITION),
+      }}
+      className={cn(
+        "relative flex cursor-grab touch-none items-center gap-2.5 border-b border-foreground/6 bg-card px-2.5 py-2.5 active:cursor-grabbing last:border-b-0",
+        isDragging && "z-50 shadow-[0_10px_28px_-10px_rgba(30,45,34,0.14)]",
+        isFirst && isLast && "rounded-2xl border-b-0",
+        isFirst && !isLast && "rounded-t-2xl",
+        isLast && !isFirst && "rounded-b-2xl border-b-0",
+      )}
+      {...attributes}
+      {...listeners}
+    >
       <GripVertical
-        className="mt-2 size-4 shrink-0 text-foreground/25"
+        className="size-4 shrink-0 text-foreground/25"
         aria-hidden
       />
 
-      <span
-        className="mt-1.5 flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint/60 text-xs font-semibold text-primary"
-        aria-hidden
+      <RecipeCoverThumb coverUrl={recipe.coverUrl} />
+
+      <div className="min-w-0 flex-1 select-none">
+        <p className="line-clamp-2 text-sm font-medium text-foreground">
+          {recipe.title}
+        </p>
+        {recipe.subtitle ? (
+          <p className="line-clamp-1 text-xs text-foreground/50">
+            {recipe.subtitle}
+          </p>
+        ) : null}
+      </div>
+
+      <button
+        type="button"
+        onPointerDown={(event) => event.stopPropagation()}
+        onClick={onRemove}
+        aria-label={PLAN_MEAL_COPY.recipes.remove}
+        className="shrink-0 cursor-pointer rounded-md p-1 text-foreground/35 transition-colors hover:text-cta"
       >
-        {index + 1}
-      </span>
-
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <input
-          value={recipe.title}
-          onChange={(event) => onTitleChange(event.target.value)}
-          placeholder={PLAN_MEAL_COPY.recipes.titlePlaceholder}
-          className="w-full bg-transparent text-sm font-semibold text-foreground outline-none placeholder:text-foreground/35"
-        />
-        <input
-          value={recipe.subtitle ?? ""}
-          onChange={(event) => onSubtitleChange(event.target.value)}
-          placeholder={PLAN_MEAL_COPY.recipes.subtitlePlaceholder}
-          className="w-full bg-transparent text-xs text-foreground/60 outline-none placeholder:text-foreground/35"
-        />
-      </div>
-
-      <div className="flex shrink-0 flex-col gap-1">
-        <button
-          type="button"
-          onClick={onMoveUp}
-          disabled={index === 0}
-          aria-label={PLAN_MEAL_COPY.recipes.moveUp}
-          className="rounded-lg p-1 text-foreground/40 disabled:opacity-30"
-        >
-          <ChevronUp className="size-4" />
-        </button>
-        <button
-          type="button"
-          onClick={onMoveDown}
-          disabled={index === total - 1}
-          aria-label={PLAN_MEAL_COPY.recipes.moveDown}
-          className="rounded-lg p-1 text-foreground/40 disabled:opacity-30"
-        >
-          <ChevronDown className="size-4" />
-        </button>
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label={PLAN_MEAL_COPY.recipes.remove}
-          className="rounded-lg p-1 text-foreground/40 hover:text-cta"
-        >
-          <X className="size-4" />
-        </button>
-      </div>
-    </SurfaceCard>
+        <X className="size-4" aria-hidden />
+      </button>
+    </li>
   );
 }

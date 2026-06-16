@@ -1,5 +1,7 @@
 import type { MealSlot } from "@/constants/meal-slots";
 
+export type PlannerEntryStatus = "next" | "upcoming" | "missed";
+
 export type PlannerEntryKind = "meal" | "note";
 
 export type PlannerEntryItem = {
@@ -17,19 +19,31 @@ export type PlannerEntry = {
   items?: PlannerEntryItem[];
   countdownLabel?: string;
   badge?: string;
+  status: PlannerEntryStatus;
   variant: "featured" | "default" | "note";
 };
 
+export type PlannerSectionId = "next" | "upcoming" | "missed";
+
 export type PlannerSection = {
-  id: string;
+  id: PlannerSectionId;
   title: string;
+  subtitle?: string;
   entries: PlannerEntry[];
+};
+
+export type PlannerRegisteredMeal = {
+  id: string;
+  mealTypeName: string;
+  timeLabel: string;
+  detail: string;
+  isExpress: boolean;
 };
 
 export type PlannerRegisteredSummary = {
   count: number;
-  label: string;
-  hint: string;
+  subtitle: string;
+  meals: PlannerRegisteredMeal[];
 };
 
 export type PlannerDayPlan = {
