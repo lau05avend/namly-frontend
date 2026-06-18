@@ -16,15 +16,13 @@ import type { HistoryMonthTimeline } from "@/features/history/types/history.type
 type HistoryTimelineMonthProps = {
   monthKey: string;
   timeline: HistoryMonthTimeline;
-  selectedDateKey: string;
-  onSelectDate: (date: Date) => void;
+  onDayPress: (date: Date) => void;
 };
 
 export function HistoryTimelineMonth({
   monthKey,
   timeline,
-  selectedDateKey,
-  onSelectDate,
+  onDayPress,
 }: HistoryTimelineMonthProps) {
   const monthDate = useMemo(() => {
     const parsed = parseDateKey(`${monthKey}-01`);
@@ -32,15 +30,15 @@ export function HistoryTimelineMonth({
     return parsed ?? new Date();
   }, [monthKey]);
 
-  const monthDays = useMemo(
-    () => getMonthCalendarDays(monthDate),
-    [monthDate],
-  );
+  const monthDays = useMemo(() => getMonthCalendarDays(monthDate), [monthDate]);
   const weekRows = useMemo(() => getMonthWeekRows(monthDays), [monthDays]);
 
   return (
-    <section className="flex flex-col gap-3" aria-label={formatMonthYear(monthDate)}>
-      <h2 className="text-xl font-bold text-foreground">
+    <section
+      className="flex flex-col gap-3"
+      aria-label={formatMonthYear(monthDate)}
+    >
+      <h2 className="text-base font-semibold tracking-tight text-foreground/85">
         {formatMonthYear(monthDate)}
       </h2>
 
@@ -60,9 +58,8 @@ export function HistoryTimelineMonth({
                     key={dayKey}
                     date={day}
                     isCurrentMonth={isSameMonth(day, monthDate)}
-                    selected={dayKey === selectedDateKey}
                     preview={timeline.previewByDate[dayKey]}
-                    onSelect={onSelectDate}
+                    onPress={onDayPress}
                   />
                 );
               })}

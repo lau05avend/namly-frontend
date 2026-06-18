@@ -15,7 +15,7 @@ export const REGISTER_MEAL_COPY = {
   photo: {
     add: "Tomar foto",
     change: "Cambiar foto",
-    emptyHint: "Opcional — ayuda a recordar el momento",
+    emptyHint: "La foto es obligatoria para guardar el registro",
   },
   note: {
     placeholder: "Descripción opcional…",
@@ -30,6 +30,7 @@ export const REGISTER_MEAL_COPY = {
     linked: "Vinculado a tu plan",
     noMatch: "Sin coincidencia automática",
     searchPlan: "Buscar en tu plan",
+    expressDetail: "Nota rápida",
   },
   recipes: {
     add: "Añadir receta",
@@ -37,6 +38,22 @@ export const REGISTER_MEAL_COPY = {
     remove: "Quitar",
   },
   tags: {
-    add: "Añadir etiqueta",
+    browse: "Etiquetas",
+    sheetTitle: "Etiquetas",
+    sheetDescription: "Busca una etiqueta o crea una nueva para este registro.",
+    searchPlaceholder: "Buscar etiqueta…",
+    create: "Crear etiqueta",
+    createNamed: (name: string) => `Crear "${name}"`,
+    done: "Listo",
+    clear: "Quitar todas",
+    remove: (name: string) => `Quitar ${name}`,
+    emptySearch: "No encontramos esa etiqueta",
+    loading: "Cargando etiquetas…",
+    loadError: "No pudimos cargar las etiquetas.",
+  },
+  errors: {
+    load: "No pudimos abrir el registro. Intenta de nuevo.",
+    save: "No pudimos guardar tu comida. Intenta de nuevo.",
+    photoRequired: "Añade una foto antes de guardar.",
   },
 } as const;

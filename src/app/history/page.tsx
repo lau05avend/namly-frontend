@@ -2,13 +2,12 @@ import { HistoryScreen } from "@/features/history/components/history-screen";
 import type { HistoryViewMode } from "@/features/history/types/history.types";
 
 export const metadata = {
-  title: "Historial · Namly",
+  title: "Mis comidas · Namly",
   description: "Revisa tus comidas registradas con calma y claridad.",
 };
 
 type HistoryPageProps = {
   searchParams: Promise<{
-    date?: string;
     view?: HistoryViewMode;
   }>;
 };
@@ -21,9 +20,6 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   const params = await searchParams;
 
   return (
-    <HistoryScreen
-      initialDate={params.date}
-      initialView={resolveViewMode(params.view)}
-    />
+    <HistoryScreen initialView={resolveViewMode(params.view)} />
   );
 }

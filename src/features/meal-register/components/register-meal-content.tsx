@@ -7,23 +7,43 @@ import { RegisterPlanSection } from "@/features/meal-register/components/section
 import { RegisterRecipesSection } from "@/features/meal-register/components/sections/register-recipes-section";
 import { RegisterTagsSection } from "@/features/meal-register/components/sections/register-tags-section";
 import { RegisterTypeSection } from "@/features/meal-register/components/sections/register-type-section";
-import { RegisterWhenSection } from "@/features/meal-register/components/sections/register-when-section";
-import type { PlanMatchSuggestion } from "@/features/meal-register/types/register-meal.types";
+import {
+  RegisterWhenSection,
+  type RegisterWhenChangePayload,
+} from "@/features/meal-register/components/sections/register-when-section";
+import type { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
+import type { PlanLinkStatus } from "@/features/meal-register/schemas/register-meal.schema";
+import type { ScheduledMealSuggestion } from "@/features/meal-register/types/register-meal.types";
 
 type RegisterMealContentProps = {
-  planSuggestion?: PlanMatchSuggestion;
+  photoPicker: ReturnType<typeof useMealPhotoPicker>;
+  planSuggestion?: ScheduledMealSuggestion;
+  planStatus: PlanLinkStatus;
+  onLinkSuggestion: (suggestion: ScheduledMealSuggestion) => void;
+  onDismissSuggestion?: () => void;
+  onWhenChange?: (when: RegisterWhenChangePayload) => void;
 };
 
 export function RegisterMealContent({
+  photoPicker,
   planSuggestion,
+  planStatus,
+  onLinkSuggestion,
+  onDismissSuggestion,
+  onWhenChange,
 }: RegisterMealContentProps) {
   return (
     <div className="flex flex-col gap-6 px-4 pb-10">
-      <RegisterPhotoSection />
+      <RegisterPhotoSection photoPicker={photoPicker} />
       <RegisterNoteSection />
       <RegisterMoodSection />
-      <RegisterWhenSection />
-      <RegisterPlanSection planSuggestion={planSuggestion} />
+      <RegisterWhenSection onWhenChange={onWhenChange} />
+      <RegisterPlanSection
+        suggestion={planSuggestion}
+        planStatus={planStatus}
+        onLinkSuggestion={onLinkSuggestion}
+        onDismissSuggestion={onDismissSuggestion}
+      />
       <RegisterTypeSection />
       <RegisterRecipesSection />
       <RegisterTagsSection />

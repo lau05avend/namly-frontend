@@ -29,7 +29,16 @@ function formatWhenLabel(date: string, time: string): string {
   return `${dayLabel} · ${hour12}:${minutes} ${ampm}`;
 }
 
-export function RegisterWhenSection() {
+export type RegisterWhenChangePayload = {
+  date: string;
+  time: string;
+};
+
+type RegisterWhenSectionProps = {
+  onWhenChange?: (when: RegisterWhenChangePayload) => void;
+};
+
+export function RegisterWhenSection({ onWhenChange }: RegisterWhenSectionProps) {
   const { control, watch } = useFormContext<RegisterMealFormValues>();
   const [editing, setEditing] = useState(false);
   const date = watch("date");
@@ -48,7 +57,7 @@ export function RegisterWhenSection() {
           <button
             type="button"
             onClick={() => setEditing((value) => !value)}
-            className="text-sm font-semibold text-primary"
+            className="cursor-pointer text-sm font-semibold text-primary"
           >
             {REGISTER_MEAL_COPY.when.edit}
           </button>
@@ -63,6 +72,11 @@ export function RegisterWhenSection() {
                 <input
                   type="date"
                   {...field}
+                  onChange={(event) => {
+                    const nextDate = event.target.value;
+                    field.onChange(event);
+                    onWhenChange?.({ date: nextDate, time });
+                  }}
                   className="flex-1 rounded-2xl border border-foreground/10 bg-background px-3 py-2 text-sm"
                 />
               )}
@@ -74,6 +88,11 @@ export function RegisterWhenSection() {
                 <input
                   type="time"
                   {...field}
+                  onChange={(event) => {
+                    const nextTime = event.target.value;
+                    field.onChange(event);
+                    onWhenChange?.({ date, time: nextTime });
+                  }}
                   className="w-28 rounded-2xl border border-foreground/10 bg-background px-3 py-2 text-sm"
                 />
               )}

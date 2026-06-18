@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { HistoryTimelineMonth } from "@/features/history/components/history-timeline-month";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { useHistoryTimeline } from "@/features/history/queries/use-history-timeline";
@@ -8,8 +8,11 @@ import { cn } from "@/lib/utils";
 
 type HistoryTimelineCalendarProps = {
   initialMonth: Date;
-  selectedDateKey: string;
-  onSelectDate: (date: Date) => void;
+  onDayPress: (date: Date) => void;
+};
+
+export type HistoryTimelineCalendarHandle = {
+  scrollToToday: () => void;
 };
 
 function TimelineSentinel({
@@ -45,14 +48,26 @@ function TimelineSentinel({
   return <div ref={ref} className={cn("h-px w-full", className)} aria-hidden />;
 }
 
-export function HistoryTimelineCalendar({
-  initialMonth,
-  selectedDateKey,
-  onSelectDate,
-}: HistoryTimelineCalendarProps) {
+export const HistoryTimelineCalendar = forwardRef<
+  HistoryTimelineCalendarHandle,
+  HistoryTimelineCalendarProps
+>(function HistoryTimelineCalendar({ initialMonth, onDayPress }, ref) {
   const bottomAnchorRef = useRef<HTMLDivElement>(null);
   const didInitialScrollRef = useRef(false);
   const scrollHeightBeforeOlderRef = useRef(0);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToToday: () => {
+        bottomAnchorRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      },
+    }),
+    [],
+  );
 
   const {
     data,
@@ -101,7 +116,7 @@ export function HistoryTimelineCalendar({
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-4 pt-2">
+    <div className="flex flex-col gap-5 pb-4 pt-2">
       {hasNextPage ? <TimelineSentinel onVisible={loadOlderMonths} /> : null}
 
       {isFetchingNextPage ? (
@@ -110,7 +125,7 @@ export function HistoryTimelineCalendar({
 
       {isPending ? (
         <div className="flex flex-col gap-8">
-          <div className="h-6 w-32 animate-pulse rounded-lg bg-foreground/8" />
+          <div className="h-5 w-28 animate-pulse rounded-md bg-foreground/8" />
           <div className="grid grid-cols-7 gap-1">
             {Array.from({ length: 28 }).map((_, index) => (
               <div
@@ -136,12 +151,11 @@ export function HistoryTimelineCalendar({
           key={month.monthKey}
           monthKey={month.monthKey}
           timeline={month}
-          selectedDateKey={selectedDateKey}
-          onSelectDate={onSelectDate}
+          onDayPress={onDayPress}
         />
       ))}
 
       <div ref={bottomAnchorRef} aria-hidden className="h-px w-full" />
     </div>
   );
-}
+});

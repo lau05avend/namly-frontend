@@ -58,14 +58,14 @@ export function PlanMatchCard({
           <button
             type="button"
             onClick={onLink}
-            className="flex-1 rounded-full bg-primary py-2.5 text-sm font-semibold text-white"
+            className="flex-1 cursor-pointer rounded-full bg-primary py-2.5 text-sm font-semibold text-white"
           >
             {REGISTER_MEAL_COPY.plan.link}
           </button>
           <button
             type="button"
             onClick={onDismiss}
-            className="flex-1 rounded-full bg-mint py-2.5 text-sm font-semibold text-primary"
+            className="flex-1 cursor-pointer rounded-full bg-mint py-2.5 text-sm font-semibold text-primary"
           >
             {REGISTER_MEAL_COPY.plan.seeOthers}
           </button>
@@ -83,7 +83,7 @@ export function PlanMatchCard({
         type="button"
         onClick={onSearchPlans}
         className={cn(
-          "w-full rounded-full border border-dashed border-primary/30 py-2.5 text-sm font-semibold text-primary",
+          "w-full cursor-pointer rounded-full border border-dashed border-primary/30 py-2.5 text-sm font-semibold text-primary",
         )}
       >
         {REGISTER_MEAL_COPY.plan.searchPlan}

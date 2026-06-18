@@ -1,4 +1,7 @@
+"use client";
+
 import { SurfaceCard } from "@/components/ui/surface-card";
+import { MealPhotoImage } from "@/features/meal-register/components/meal-photo-image";
 import type { HistoryMealLog } from "@/features/history/types/history.types";
 import { cn } from "@/lib/utils";
 import { ChevronRight, ImageIcon } from "lucide-react";
@@ -18,8 +21,11 @@ export function HistoryLogCard({ log, className }: HistoryLogCardProps) {
     >
       <div className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.03]">
         {log.mediaUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={log.mediaUrl} alt="" className="size-full object-cover" />
+          <MealPhotoImage
+            mediaRef={log.mediaUrl}
+            className="size-full"
+            imageClassName="size-full"
+          />
         ) : (
           <span className="flex size-full items-center justify-center text-foreground/20">
             <ImageIcon

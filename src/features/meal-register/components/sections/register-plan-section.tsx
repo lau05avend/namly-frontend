@@ -4,34 +4,47 @@ import { useFormContext } from "react-hook-form";
 import { PlanMatchCard } from "@/components/meal-register/plan-match-card";
 import { PlannerSection } from "@/components/planner/planner-section";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
-import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
-import type { PlanMatchSuggestion } from "@/features/meal-register/types/register-meal.types";
+import { toPlanMatchSuggestion } from "@/features/meal-register/mappers/register-meal.mapper";
+import type {
+  PlanLinkStatus,
+  RegisterMealFormValues,
+} from "@/features/meal-register/schemas/register-meal.schema";
+import type { ScheduledMealSuggestion } from "@/features/meal-register/types/register-meal.types";
 
 type RegisterPlanSectionProps = {
-  planSuggestion?: PlanMatchSuggestion;
+  suggestion?: ScheduledMealSuggestion;
+  planStatus: PlanLinkStatus;
+  onLinkSuggestion: (suggestion: ScheduledMealSuggestion) => void;
+  onDismissSuggestion?: () => void;
 };
 
 export function RegisterPlanSection({
-  planSuggestion,
+  suggestion,
+  planStatus,
+  onLinkSuggestion,
+  onDismissSuggestion,
 }: RegisterPlanSectionProps) {
-  const { watch, setValue } = useFormContext<RegisterMealFormValues>();
-  const planLinkStatus = watch("planLinkStatus");
+  const { setValue } = useFormContext<RegisterMealFormValues>();
+  const planMatchSuggestion = suggestion
+    ? toPlanMatchSuggestion(suggestion)
+    : undefined;
 
   return (
     <PlannerSection label={REGISTER_MEAL_COPY.sections.plan}>
       <PlanMatchCard
-        status={planLinkStatus}
-        suggestion={planSuggestion}
+        status={planStatus}
+        suggestion={planMatchSuggestion}
         onLink={() => {
-          setValue("planLinkStatus", "linked", { shouldDirty: true });
-          setValue("linkedPlanId", planSuggestion?.id, { shouldDirty: true });
+          if (suggestion) {
+            onLinkSuggestion(suggestion);
+          }
         }}
         onDismiss={() => {
           setValue("planLinkStatus", "dismissed", { shouldDirty: true });
+          onDismissSuggestion?.();
         }}
         onSearchPlans={() => {
-          // TODO: open plan picker sheet
-          console.info("[register-meal] search plans");
+          // TODO: open plan picker modal
         }}
       />
     </PlannerSection>

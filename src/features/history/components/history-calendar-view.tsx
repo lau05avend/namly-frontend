@@ -1,19 +1,25 @@
 "use client";
 
+import { forwardRef } from "react";
 import { startOfMonth } from "date-fns";
-import { HistoryTimelineCalendar } from "@/features/history/components/history-timeline-calendar";
-import type { useTemporalNavigation } from "@/features/calendar";
+import {
+  HistoryTimelineCalendar,
+  type HistoryTimelineCalendarHandle,
+} from "@/features/history/components/history-timeline-calendar";
 
 type HistoryCalendarViewProps = {
-  navigation: ReturnType<typeof useTemporalNavigation>;
+  onDayPress: (date: Date) => void;
 };
 
-export function HistoryCalendarView({ navigation }: HistoryCalendarViewProps) {
+export const HistoryCalendarView = forwardRef<
+  HistoryTimelineCalendarHandle,
+  HistoryCalendarViewProps
+>(function HistoryCalendarView({ onDayPress }, ref) {
   return (
     <HistoryTimelineCalendar
+      ref={ref}
       initialMonth={startOfMonth(new Date())}
-      selectedDateKey={navigation.selectedDateKey}
-      onSelectDate={navigation.selectDate}
+      onDayPress={onDayPress}
     />
   );
-}
+});

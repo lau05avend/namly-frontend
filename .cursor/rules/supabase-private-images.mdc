@@ -1,0 +1,70 @@
+---
+description: Supabase private image storage — persist object URLs, sign only for display
+alwaysApply: true
+---
+
+# Private Image Storage — Supabase
+
+Namly stores user images in **private Supabase buckets**. The NestJS backend must receive a **stable object URL without a signed token**. Signed URLs are generated **only at display time** in the frontend.
+
+---
+
+## Persist (upload → backend)
+
+1. Upload file to the private bucket via `supabase.storage.from(bucket).upload(path, file)`.
+2. Build and return the **canonical object URL** (no `?token=`, no `/sign/`):
+
+```
+https://{project}.supabase.co/storage/v1/object/{bucket}/{userId}/{file}.ext
+```
+
+3. Send that URL to the backend in DTO fields (`avatarUrl`, `mediaUrl`, etc.).
+4. **Never** persist `createSignedUrl` output in the database.
+5. **Never** persist bare storage paths unless legacy — prefer the full object URL format above.
+
+Use env buckets from `src/lib/env/supabase.ts`:
+- `SUPABASE_AVATAR_BUCKET` (default `avatars`)
+- `SUPABASE_MEAL_PHOTO_BUCKET` (default `meal-logs-photos`)
+
+Reference builders:
+- `buildAvatarObjectUrl()` — `src/features/profile/utils/avatar-storage.utils.ts`
+- `buildMealPhotoObjectUrl()` — `src/features/meal-register/utils/meal-photo-storage.utils.ts`
+
+---
+
+## Display (read → UI)
+
+1. Parse `avatarRef` / `mediaRef` with `extract*StoragePath()` — supports:
+   - object URL (`/object/{bucket}/{path}`)
+   - legacy signed URL (`/object/sign/{bucket}/{path}?token=…`)
+   - legacy bare path (`{userId}/file.ext`)
+2. If a storage path is resolved → `createSignedUrl(path)` via Supabase client.
+3. Cache signed URLs with TanStack Query (`staleTime` ≈ TTL − 5 min).
+4. Use resolver hooks/components — do **not** render private object URLs directly in `<img>`:
+   - `useResolvedAvatarUrl` + `ProfileAvatar`
+   - `useResolvedMealPhotoUrl` + `MealPhotoImage`
+5. Local `blob:` previews (before submit) are fine in `<img>`; upload happens only on form save.
+
+---
+
+## New image types
+
+When adding a new private bucket/image flow:
+
+```
+features/{feature}/
+├── utils/{name}-storage.utils.ts   # buildObjectUrl, extractStoragePath
+├── services/{name}-storage.service.ts  # upload, createSignedUrl, resolveDisplayUrl
+├── hooks/use-resolved-{name}-url.ts
+└── components/{name}-image.tsx       # optional display wrapper
+```
+
+Reuse `validateAvatarFile` for image validation unless requirements differ.
+
+---
+
+## Do not
+
+- Double-stringify API bodies (`apiClient` already calls `JSON.stringify`).
+- Upload to Supabase before the user submits the form (picker = local preview only).
+- Expose signed tokens in persisted backend fields.

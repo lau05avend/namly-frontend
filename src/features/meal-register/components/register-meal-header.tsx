@@ -21,7 +21,7 @@ export function RegisterMealHeader({
         type="button"
         onClick={() => router.back()}
         aria-label={REGISTER_MEAL_COPY.back}
-        className="flex size-10 items-center justify-center rounded-full bg-mint text-primary"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-mint text-primary"
       >
         <ArrowLeft className="size-5" />
       </button>
@@ -33,7 +33,7 @@ export function RegisterMealHeader({
         onClick={onSave}
         disabled={isSaving}
         aria-label={REGISTER_MEAL_COPY.save}
-        className="flex size-10 items-center justify-center rounded-full bg-primary text-white disabled:opacity-50"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Check className="size-5" strokeWidth={2.5} />
       </button>
