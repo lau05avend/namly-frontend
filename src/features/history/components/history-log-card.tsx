@@ -19,14 +19,14 @@ export function HistoryLogCard({ log, className }: HistoryLogCardProps) {
       <div className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.03]">
         {log.mediaUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={log.mediaUrl}
-            alt=""
-            className="size-full object-cover"
-          />
+          <img src={log.mediaUrl} alt="" className="size-full object-cover" />
         ) : (
           <span className="flex size-full items-center justify-center text-foreground/20">
-            <ImageIcon className="size-5" strokeWidth={1.5} aria-hidden="true" />
+            <ImageIcon
+              className="size-5"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
           </span>
         )}
       </div>

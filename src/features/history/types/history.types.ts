@@ -1,3 +1,14 @@
+export type HistoryDayPreview = {
+  date: string;
+  mealCount: number;
+  thumbnailUrl: string | null;
+};
+
+export type HistoryMonthTimeline = {
+  monthKey: string;
+  previewByDate: Record<string, HistoryDayPreview>;
+};
+
 export type HistoryMealLog = {
   id: string;
   mediaUrl: string | null;

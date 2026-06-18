@@ -4,6 +4,7 @@ import {
 } from "@/features/history/constants/query-keys";
 import {
   mapCalendarResponse,
+  mapDayPreview,
   mapDayResponse,
 } from "@/features/history/mappers/history.mapper";
 import type {
@@ -13,13 +14,16 @@ import type {
 import type {
   HistoryDay,
   HistoryMonthActivity,
+  HistoryMonthTimeline,
 } from "@/features/history/types/history.types";
 import { apiClient } from "@/lib/api/api-client";
 
+async function fetchDayLogs(dateKey: string): Promise<MealLogApiDto[]> {
+  return apiClient<MealLogApiDto[]>(`/api/v1/meal-logs?entryDate=${dateKey}`);
+}
+
 export async function fetchHistoryDay(dateKey: string): Promise<HistoryDay> {
-  const logs = await apiClient<MealLogApiDto[]>(
-    `/api/v1/meal-logs?entryDate=${dateKey}`,
-  );
+  const logs = await fetchDayLogs(dateKey);
 
   return mapDayResponse(logs, dateKey);
 }
@@ -34,4 +38,26 @@ export async function fetchHistoryMonthActivity(
   );
 
   return mapCalendarResponse(raw, monthKey);
+}
+
+export async function fetchHistoryMonthTimeline(
+  month: Date,
+): Promise<HistoryMonthTimeline> {
+  const monthKey = toMonthKey(month);
+  const activity = await fetchHistoryMonthActivity(month);
+  const previews = await Promise.all(
+    activity.days.map(async ({ date }) => {
+      const logs = await fetchDayLogs(date);
+      const day = mapDayResponse(logs, date);
+
+      return mapDayPreview(date, day.logs);
+    }),
+  );
+
+  return {
+    monthKey,
+    previewByDate: Object.fromEntries(
+      previews.map((preview) => [preview.date, preview]),
+    ),
+  };
 }

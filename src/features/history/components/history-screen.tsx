@@ -45,9 +45,13 @@ export function HistoryScreen({
 
   return (
     <div className="relative min-h-dvh bg-background pb-28">
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 pt-safe">
-        <HistoryHeader viewMode={viewMode} onToggleView={handleToggleView} />
+      <div className="fixed inset-x-0 top-0 z-30 border-b border-foreground/8 bg-background/95 backdrop-blur-sm">
+        <div className="mx-auto w-full max-w-lg px-4 py-3">
+          <HistoryHeader viewMode={viewMode} onToggleView={handleToggleView} />
+        </div>
+      </div>
 
+      <main className="mx-auto flex w-full max-w-lg flex-col px-4 pt-[calc(env(safe-area-inset-top)+4.25rem)]">
         {viewMode === "calendar" ? (
           <HistoryCalendarView navigation={navigation} />
         ) : (

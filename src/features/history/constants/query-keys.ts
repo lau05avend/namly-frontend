@@ -5,6 +5,7 @@ export const historyQueryKeys = {
   day: (dateKey: string) => [...historyQueryKeys.all, "day", dateKey] as const,
   monthActivity: (monthKey: string) =>
     [...historyQueryKeys.all, "month-activity", monthKey] as const,
+  timeline: () => [...historyQueryKeys.all, "timeline"] as const,
 };
 
 export function toMonthKey(date: Date): string {

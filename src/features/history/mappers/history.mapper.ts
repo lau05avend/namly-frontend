@@ -5,9 +5,23 @@ import type {
 } from "@/features/history/types/history-api.types";
 import type {
   HistoryDay,
+  HistoryDayPreview,
   HistoryMealLog,
   HistoryMonthActivity,
 } from "@/features/history/types/history.types";
+
+export function mapDayPreview(
+  dateKey: string,
+  logs: HistoryMealLog[],
+): HistoryDayPreview {
+  const thumbnailUrl = logs.find((log) => log.mediaUrl)?.mediaUrl ?? null;
+
+  return {
+    date: dateKey,
+    mealCount: logs.length,
+    thumbnailUrl,
+  };
+}
 
 function mapMealLog(log: MealLogApiDto): HistoryMealLog {
   return {
