@@ -35,7 +35,8 @@ const iconToneClass: Record<PlannerDaySectionTone, string> = {
 const surfaceClass: Record<PlannerDaySectionTone, string> = {
   primary: "",
   default: "rounded-2xl border border-foreground/6 bg-card/40 px-3.5 py-4",
-  muted: "rounded-2xl border border-foreground/7 bg-foreground/[0.02] px-3.5 py-4",
+  muted:
+    "rounded-2xl border border-foreground/7 bg-foreground/[0.02] px-3.5 py-4",
 };
 
 export function PlannerDaySection({
@@ -63,9 +64,7 @@ export function PlannerDaySection({
   const HeaderTag = collapsible ? "button" : "div";
 
   return (
-    <section
-      className={cn("flex flex-col", surface && surfaceClass[tone])}
-    >
+    <section className={cn("flex flex-col", surface && surfaceClass[tone])}>
       <header className="flex flex-col gap-1">
         <HeaderTag
           type={collapsible ? "button" : undefined}

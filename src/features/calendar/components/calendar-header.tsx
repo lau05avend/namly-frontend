@@ -11,6 +11,7 @@ type CalendarHeaderProps = {
   isExpanded: boolean;
   onToggleExpand: () => void;
   onGoToToday: () => void;
+  hideExpandToggle?: boolean;
   className?: string;
 };
 
@@ -19,6 +20,7 @@ export function CalendarHeader({
   isExpanded,
   onToggleExpand,
   onGoToToday,
+  hideExpandToggle = false,
   className,
 }: CalendarHeaderProps) {
   const todayDayNumber = new Date().getDate();
@@ -45,25 +47,27 @@ export function CalendarHeader({
           {todayDayNumber}
         </motion.button>
 
-        <motion.button
-          type="button"
-          onClick={onToggleExpand}
-          aria-expanded={isExpanded}
-          aria-label={isExpanded ? "Ver semana" : "Ver mes"}
-          whileTap={{ scale: 0.94 }}
-          transition={CALENDAR_LAYOUT_SPRING}
-          className={cn(
-            "flex size-9 items-center justify-center rounded-full bg-card text-foreground/60 transition-colors hover:bg-mint/50",
-            isExpanded && "bg-mint text-primary",
-          )}
-        >
-          <motion.span
-            animate={{ rotate: isExpanded ? 180 : 0 }}
+        {hideExpandToggle ? null : (
+          <motion.button
+            type="button"
+            onClick={onToggleExpand}
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? "Ver semana" : "Ver mes"}
+            whileTap={{ scale: 0.94 }}
             transition={CALENDAR_LAYOUT_SPRING}
+            className={cn(
+              "flex size-9 items-center justify-center rounded-full bg-card text-foreground/60 transition-colors hover:bg-mint/50",
+              isExpanded && "bg-mint text-primary",
+            )}
           >
-            <ChevronsUpDown className="size-4" aria-hidden="true" />
-          </motion.span>
-        </motion.button>
+            <motion.span
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={CALENDAR_LAYOUT_SPRING}
+            >
+              <ChevronsUpDown className="size-4" aria-hidden="true" />
+            </motion.span>
+          </motion.button>
+        )}
       </div>
     </div>
   );
