@@ -18,6 +18,7 @@ export type ScheduledMealSuggestionApiDto = {
   mealType: ScheduledMealSuggestionMealTypeApiDto;
   recipes: ScheduledMealSuggestionRecipeApiDto[];
   isExpress: boolean;
+  expressNote: string | null;
 };
 
 export type CreateMealLogApiPayload = {

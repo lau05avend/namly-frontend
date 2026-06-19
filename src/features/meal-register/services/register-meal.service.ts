@@ -1,5 +1,6 @@
 import {
   mapFormToCreateMealLogPayload,
+  mapScheduledMealApiToSuggestion,
   mapSuggestionApiToDomain,
 } from "@/features/meal-register/mappers/register-meal.mapper";
 import { uploadMealPhoto } from "@/features/meal-register/services/meal-photo-storage.service";
@@ -13,6 +14,7 @@ import type {
   SaveRegisterMealResponse,
   ScheduledMealSuggestion,
 } from "@/features/meal-register/types/register-meal.types";
+import type { ScheduledMealApiDto } from "@/features/planner/types/planner-api.types";
 import { apiClient } from "@/lib/api/api-client";
 
 export async function fetchMealLogSuggestions(
@@ -23,6 +25,19 @@ export async function fetchMealLogSuggestions(
   );
 
   return raw.map(mapSuggestionApiToDomain);
+}
+
+export async function fetchRegisterPlanPickerMeals(
+  dateKey: string,
+): Promise<ScheduledMealSuggestion[]> {
+  const meals = await apiClient<ScheduledMealApiDto[]>(
+    `/api/v1/scheduled-meals?date=${dateKey}`,
+  );
+
+  return meals
+    .filter((meal) => meal.status !== "completed")
+    .sort((left, right) => left.plannedTime.localeCompare(right.plannedTime))
+    .map(mapScheduledMealApiToSuggestion);
 }
 
 export async function saveRegisterMeal(

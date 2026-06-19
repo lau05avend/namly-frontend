@@ -19,8 +19,9 @@ type RegisterMealContentProps = {
   photoPicker: ReturnType<typeof useMealPhotoPicker>;
   planSuggestion?: ScheduledMealSuggestion;
   planStatus: PlanLinkStatus;
+  defaultPickerDate: string;
   onLinkSuggestion: (suggestion: ScheduledMealSuggestion) => void;
-  onDismissSuggestion?: () => void;
+  onUnlink: () => void;
   onWhenChange?: (when: RegisterWhenChangePayload) => void;
 };
 
@@ -28,8 +29,9 @@ export function RegisterMealContent({
   photoPicker,
   planSuggestion,
   planStatus,
+  defaultPickerDate,
   onLinkSuggestion,
-  onDismissSuggestion,
+  onUnlink,
   onWhenChange,
 }: RegisterMealContentProps) {
   return (
@@ -41,8 +43,9 @@ export function RegisterMealContent({
       <RegisterPlanSection
         suggestion={planSuggestion}
         planStatus={planStatus}
+        defaultPickerDate={defaultPickerDate}
         onLinkSuggestion={onLinkSuggestion}
-        onDismissSuggestion={onDismissSuggestion}
+        onUnlink={onUnlink}
       />
       <RegisterTypeSection />
       <RegisterRecipesSection />

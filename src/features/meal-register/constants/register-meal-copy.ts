@@ -24,13 +24,30 @@ export const REGISTER_MEAL_COPY = {
     edit: "Editar",
   },
   plan: {
-    matchTitle: "Coincide con tu plan de hoy",
+    suggestedLabel: "Sugerencia",
     link: "Vincular",
-    seeOthers: "Ver otros planes",
-    linked: "Vinculado a tu plan",
+    seeOthers: "Buscar más",
+    linkedLabel: "Vinculado",
     noMatch: "Sin coincidencia automática",
     searchPlan: "Buscar en tu plan",
     expressDetail: "Nota rápida",
+    pickerTitle: "Elegir del plan",
+    pickerDescription: "Selecciona la comida planificada que quieres vincular.",
+    pickerConfirm: "Vincular comida",
+    pickerEmpty: "No hay comidas planificadas para este día.",
+    pickerDateLabel: "Fecha",
+    unlinkAria: "Desvincular del plan",
+    cancel: "Cancelar",
+    info: {
+      ariaLabel: "Información sobre vincular al plan",
+      title: "Vincular al plan",
+      linkBullet:
+        "Conecta este registro con una comida que ya planificaste.",
+      autofillBullet:
+        "Al vincular, el formulario se rellena con el tipo de comida y las recetas de tu plan.",
+      unlinkBullet:
+        "Puedes desvincular cuando quieras; se restaura lo que tenías antes.",
+    },
   },
   recipes: {
     add: "Añadir receta",

@@ -9,17 +9,54 @@ import type {
   ScheduledMealSuggestion,
 } from "@/features/meal-register/types/register-meal.types";
 import { buildLoggedAtParam } from "@/features/meal-register/utils/register-meal-defaults";
+import type { ScheduledMealApiDto } from "@/features/planner/types/planner-api.types";
+import { formatPlannedTimeLabel } from "@/features/history/utils/history-meal-log-plan.utils";
 
-function formatPlannedTimeLabel(plannedTime: string): string {
-  const [hours, minutes] = plannedTime.split(":").map(Number);
-  const date = new Date();
-  date.setHours(hours, minutes, 0, 0);
+export function resolveSuggestionDetail(
+  suggestion: ScheduledMealSuggestion,
+): string | null {
+  if (suggestion.isExpress) {
+    const note = suggestion.expressNote?.trim();
+    return note || REGISTER_MEAL_COPY.plan.expressDetail;
+  }
 
-  return date.toLocaleTimeString("es", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+  if (suggestion.recipes.length > 0) {
+    return suggestion.recipes.map((recipe) => recipe.title).join(", ");
+  }
+
+  return null;
+}
+
+export function resolveSuggestionSecondaryLine(
+  suggestion: ScheduledMealSuggestion,
+): string {
+  const time = formatPlannedTimeLabel(suggestion.plannedTime);
+  const detail = resolveSuggestionDetail(suggestion);
+
+  if (detail) {
+    return `${time} · ${detail}`;
+  }
+
+  return time;
+}
+
+export function mapScheduledMealApiToSuggestion(
+  meal: ScheduledMealApiDto,
+): ScheduledMealSuggestion {
+  return {
+    id: meal.id,
+    plannedTime: meal.plannedTime,
+    mealType: meal.mealType,
+    recipes: (meal.recipes ?? []).map((recipe) => ({
+      id: recipe.id,
+      recipeId: recipe.recipeId,
+      title: recipe.title,
+      coverUrl: recipe.coverUrl,
+      sortOrder: recipe.sortOrder,
+    })),
+    isExpress: meal.isExpress,
+    expressNote: meal.expressNote,
+  };
 }
 
 export function mapSuggestionApiToDomain(
@@ -31,25 +68,19 @@ export function mapSuggestionApiToDomain(
     mealType: suggestion.mealType,
     recipes: suggestion.recipes,
     isExpress: suggestion.isExpress,
+    expressNote: suggestion.expressNote,
   };
 }
 
 export function toPlanMatchSuggestion(
   suggestion: ScheduledMealSuggestion,
 ): PlanMatchSuggestion {
-  const recipeTitles = suggestion.recipes
-    .map((recipe) => recipe.title.trim())
-    .filter(Boolean);
-
-  const detail = suggestion.isExpress
-    ? REGISTER_MEAL_COPY.plan.expressDetail
-    : recipeTitles.length > 0
-      ? recipeTitles.join(", ")
-      : suggestion.mealType.name;
+  const detail =
+    resolveSuggestionDetail(suggestion) ?? suggestion.mealType.name;
 
   return {
     id: suggestion.id,
-    title: REGISTER_MEAL_COPY.plan.matchTitle,
+    title: REGISTER_MEAL_COPY.plan.suggestedLabel,
     meta: `${suggestion.mealType.name} · ${formatPlannedTimeLabel(suggestion.plannedTime)}`,
     detail,
   };

@@ -23,6 +23,7 @@ export type ScheduledMealSuggestion = {
     sortOrder: number;
   }>;
   isExpress: boolean;
+  expressNote?: string | null;
 };
 
 export type SaveRegisterMealInput = {

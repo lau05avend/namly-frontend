@@ -1,18 +1,37 @@
 import { cn } from "@/lib/utils";
-import { CircleCheck } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { CircleCheck, Salad } from "lucide-react";
 
 export type PlannedMealPreviewItem = {
   id: string;
   label: string;
 };
 
+export type PlannedMealCompactPreviewIcon = "check" | "salad";
+
 type PlannedMealCompactPreviewProps = {
   slotLabel?: string;
   timeLabel?: string;
   items?: PlannedMealPreviewItem[];
   expressNote?: string | null;
+  icon?: PlannedMealCompactPreviewIcon;
   className?: string;
 };
+
+const PREVIEW_ICONS: Record<PlannedMealCompactPreviewIcon, LucideIcon> = {
+  check: CircleCheck,
+  salad: Salad,
+};
+
+function PreviewIcon({ icon = "check" }: { icon?: PlannedMealCompactPreviewIcon }) {
+  const Icon = PREVIEW_ICONS[icon];
+
+  return (
+    <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary/80">
+      <Icon className="size-3.5" aria-hidden />
+    </span>
+  );
+}
 
 function PreviewMetaRow({
   slotLabel,
@@ -30,19 +49,12 @@ function PreviewMetaRow({
   );
 }
 
-function PreviewIcon() {
-  return (
-    <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary/80">
-      <CircleCheck className="size-3.5" aria-hidden />
-    </span>
-  );
-}
-
 export function PlannedMealCompactPreview({
   slotLabel,
   timeLabel,
   items = [],
   expressNote,
+  icon = "check",
   className,
 }: PlannedMealCompactPreviewProps) {
   const trimmedExpressNote = expressNote?.trim() ?? "";
@@ -53,7 +65,7 @@ export function PlannedMealCompactPreview({
   if (isExpress) {
     return (
       <div className={cn("flex items-start gap-2.5", className)}>
-        <PreviewIcon />
+        <PreviewIcon icon={icon} />
         <div className="min-w-0 flex-1">
           {showMeta ? (
             <PreviewMetaRow
@@ -72,7 +84,7 @@ export function PlannedMealCompactPreview({
   if (items.length > 0) {
     return (
       <div className={cn("flex items-start gap-2.5", className)}>
-        <PreviewIcon />
+        <PreviewIcon icon={icon} />
         <div className="min-w-0 flex-1">
           {showMeta ? (
             <PreviewMetaRow
@@ -99,7 +111,7 @@ export function PlannedMealCompactPreview({
 
   return (
     <div className={cn("flex items-start gap-2.5", className)}>
-      <PreviewIcon />
+      <PreviewIcon icon={icon} />
       <div className="min-w-0 flex-1">
         <PreviewMetaRow slotLabel={slotLabel!} timeLabel={timeLabel!} />
       </div>
