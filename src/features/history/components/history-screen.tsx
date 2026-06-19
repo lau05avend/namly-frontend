@@ -14,6 +14,7 @@ import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { historyQueryKeys } from "@/features/history/constants/query-keys";
 import { fetchHistoryDay } from "@/features/history/services/history.service";
 import type { HistoryViewMode } from "@/features/history/types/history.types";
+import { useRegisterMealLaunch } from "@/features/meal-register/hooks/use-register-meal-launch";
 
 type HistoryScreenProps = {
   initialView?: HistoryViewMode;
@@ -24,6 +25,7 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
   const queryClient = useQueryClient();
   const timelineRef = useRef<HistoryTimelineCalendarHandle>(null);
   const viewMode = initialView;
+  const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
 
   const handleToggleView = useCallback(() => {
     const nextView: HistoryViewMode =
@@ -53,11 +55,10 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
   );
 
   const handleFabClick = useCallback(() => {
-    const params = new URLSearchParams({
+    openRegisterWithCamera({
       date: toDateKey(new Date()),
     });
-    router.push(`/meals/register?${params.toString()}`);
-  }, [router]);
+  }, [openRegisterWithCamera]);
 
   return (
     <div className="relative min-h-dvh bg-background pb-28">
@@ -84,6 +85,7 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
         icon="camera"
         onClick={handleFabClick}
       />
+      {cameraInput}
       <BottomNav activeId="history" />
     </div>
   );

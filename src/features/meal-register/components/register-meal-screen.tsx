@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { RegisterMealContent } from "@/features/meal-register/components/register-meal-content";
 import { RegisterMealHeader } from "@/features/meal-register/components/register-meal-header";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
@@ -20,6 +21,7 @@ import {
   buildLoggedAtParam,
   buildRegisterMealDefaults,
 } from "@/features/meal-register/utils/register-meal-defaults";
+import { resolveInitialRegisterPhoto } from "@/features/meal-register/utils/register-meal-launch";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
 
@@ -41,7 +43,8 @@ function RegisterMealForm({ defaults }: RegisterMealFormProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [linkedSuggestion, setLinkedSuggestion] =
     useState<ScheduledMealSuggestion | null>(null);
-  const photoPicker = useMealPhotoPicker();
+  const [initialPhotoFile] = useState(() => resolveInitialRegisterPhoto());
+  const photoPicker = useMealPhotoPicker(initialPhotoFile);
   const form = useRegisterMealForm(defaults);
   const saveMutation = useSaveRegisterMeal();
   const { control, setValue, getValues } = form;
@@ -112,19 +115,26 @@ function RegisterMealForm({ defaults }: RegisterMealFormProps) {
 
   const handleSave = form.handleSubmit(async (values) => {
     setSaveError(null);
-    photoPicker.clearPickError();
+    photoPicker.actions.clearPickError();
 
-    const photoFile = photoPicker.getPendingFile();
+    const photoFile = photoPicker.actions.getPendingFile();
     if (!photoFile) {
-      setSaveError(REGISTER_MEAL_COPY.errors.photoRequired);
+      const message = REGISTER_MEAL_COPY.errors.photoRequired;
+      setSaveError(message);
+      toast.error(message);
       return;
     }
 
     try {
       await saveMutation.mutateAsync({ values, photoFile });
       router.push("/history");
-    } catch {
-      setSaveError(REGISTER_MEAL_COPY.errors.save);
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : REGISTER_MEAL_COPY.errors.save;
+      setSaveError(message);
+      toast.error(message, { duration: 6000 });
     }
   });
 

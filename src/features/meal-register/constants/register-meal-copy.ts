@@ -16,6 +16,21 @@ export const REGISTER_MEAL_COPY = {
     add: "Tomar foto",
     change: "Cambiar foto",
     emptyHint: "La foto es obligatoria para guardar el registro",
+    sourceSheetTitle: "Añadir foto",
+    sourceSheetDescription: "Elige cómo quieres añadir la foto de tu comida.",
+    takePhoto: "Tomar foto",
+    chooseFromGallery: "Elegir de galería",
+    cancel: "Cancelar",
+    preparing: "Preparando foto…",
+    errors: {
+      title: "No pudimos usar esa foto",
+      tooLarge:
+        "No pudimos dejarla por debajo de 5 MB. Prueba otra más cercana o elige una imagen más ligera.",
+      compressFailed:
+        "No pudimos comprimir la foto por debajo de 5 MB. Prueba otra más cercana.",
+      prepareFailed: "No pudimos preparar la foto. Intenta con otra imagen.",
+      invalidType: "Usa una imagen en JPG, PNG, WebP o GIF.",
+    },
   },
   note: {
     placeholder: "Descripción opcional…",

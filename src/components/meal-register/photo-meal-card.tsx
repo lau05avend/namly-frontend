@@ -9,6 +9,17 @@ type PhotoMealCardProps = {
   error?: string | null;
 };
 
+function PhotoMealCardError({ message }: { message: string }) {
+  return (
+    <p
+      role="alert"
+      className="rounded-xl border border-cta/25 bg-cta/8 px-3 py-2.5 text-xs leading-relaxed font-medium text-cta"
+    >
+      {message}
+    </p>
+  );
+}
+
 export function PhotoMealCard({
   photoUrl,
   onPickPhoto,
@@ -32,7 +43,7 @@ export function PhotoMealCard({
             {REGISTER_MEAL_COPY.photo.emptyHint}
           </span>
         </button>
-        {error ? <p className="text-xs text-cta">{error}</p> : null}
+        {error ? <PhotoMealCardError message={error} /> : null}
       </div>
     );
   }
@@ -54,7 +65,7 @@ export function PhotoMealCard({
           {REGISTER_MEAL_COPY.photo.change}
         </button>
       </div>
-      {error ? <p className="text-xs text-cta">{error}</p> : null}
+      {error ? <PhotoMealCardError message={error} /> : null}
     </div>
   );
 }

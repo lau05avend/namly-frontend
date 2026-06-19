@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { TabBar } from "@/components/navigation/tab-bar";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
@@ -11,6 +10,7 @@ import { HomeTodayView } from "@/features/home/components/home-today-view";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { useHomeSummary } from "@/features/home/queries/use-home-summary";
 import type { HomeTabId } from "@/features/home/types/home.types";
+import { useRegisterMealLaunch } from "@/features/meal-register/hooks/use-register-meal-launch";
 
 const HOME_TABS = [
   { id: "today" as const, label: HOME_COPY.tabs.today },
@@ -18,12 +18,12 @@ const HOME_TABS = [
 ];
 
 export function HomeScreen() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<HomeTabId>("today");
   const { data, isPending, isError } = useHomeSummary();
+  const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
 
   const handleFabClick = () => {
-    router.push("/meals/register");
+    openRegisterWithCamera();
   };
 
   return (
@@ -65,6 +65,7 @@ export function HomeScreen() {
         label={HOME_COPY.fabLabel}
         onClick={handleFabClick}
       />
+      {cameraInput}
       <BottomNav activeId="home" />
     </div>
   );

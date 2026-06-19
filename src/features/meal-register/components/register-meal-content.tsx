@@ -11,12 +11,12 @@ import {
   RegisterWhenSection,
   type RegisterWhenChangePayload,
 } from "@/features/meal-register/components/sections/register-when-section";
-import type { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
+import type { MealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
 import type { PlanLinkStatus } from "@/features/meal-register/schemas/register-meal.schema";
 import type { ScheduledMealSuggestion } from "@/features/meal-register/types/register-meal.types";
 
 type RegisterMealContentProps = {
-  photoPicker: ReturnType<typeof useMealPhotoPicker>;
+  photoPicker: MealPhotoPicker;
   planSuggestion?: ScheduledMealSuggestion;
   planStatus: PlanLinkStatus;
   defaultPickerDate: string;
@@ -36,7 +36,11 @@ export function RegisterMealContent({
 }: RegisterMealContentProps) {
   return (
     <div className="flex flex-col gap-6 px-4 pb-10">
-      <RegisterPhotoSection photoPicker={photoPicker} />
+      <RegisterPhotoSection
+        refs={photoPicker.refs}
+        state={photoPicker.state}
+        actions={photoPicker.actions}
+      />
       <RegisterNoteSection />
       <RegisterMoodSection />
       <RegisterWhenSection onWhenChange={onWhenChange} />
