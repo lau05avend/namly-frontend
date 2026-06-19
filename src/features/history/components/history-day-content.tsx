@@ -15,7 +15,7 @@ export function HistoryDayContent({ day }: HistoryDayContentProps) {
       <ul className="flex flex-col gap-2.5">
         {day.logs.map((log) => (
           <li key={log.id}>
-            <HistoryLogCard log={log} />
+            <HistoryLogCard log={log} dateKey={day.date} />
           </li>
         ))}
       </ul>

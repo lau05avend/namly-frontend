@@ -1,4 +1,4 @@
-import { HistoryDayScreen } from "@/features/history/components/history-day-screen";
+import { HistoryDayRedirect } from "@/features/history/components/history-day-redirect";
 import { parseDateKey } from "@/features/calendar/utils/date";
 import { redirect } from "next/navigation";
 
@@ -20,5 +20,5 @@ export default async function HistoryDayPage({ params }: HistoryDayPageProps) {
     redirect("/history");
   }
 
-  return <HistoryDayScreen dateKey={date} />;
+  return <HistoryDayRedirect dateKey={date} />;
 }

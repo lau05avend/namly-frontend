@@ -7,12 +7,15 @@ import {
   mapDayPreview,
   mapDayResponse,
 } from "@/features/history/mappers/history.mapper";
+import { mapMealLogDetail } from "@/features/history/mappers/history-meal-log.mapper";
 import type {
   MealLogApiDto,
+  MealLogDetailApiDto,
   MealLogsCalendarApiResponse,
 } from "@/features/history/types/history-api.types";
 import type {
   HistoryDay,
+  HistoryMealLogDetail,
   HistoryMonthActivity,
   HistoryMonthTimeline,
 } from "@/features/history/types/history.types";
@@ -26,6 +29,16 @@ export async function fetchHistoryDay(dateKey: string): Promise<HistoryDay> {
   const logs = await fetchDayLogs(dateKey);
 
   return mapDayResponse(logs, dateKey);
+}
+
+export async function fetchHistoryMealLog(
+  logId: string,
+): Promise<HistoryMealLogDetail> {
+  const raw = await apiClient<MealLogDetailApiDto>(
+    `/api/v1/meal-logs/${logId}`,
+  );
+
+  return mapMealLogDetail(raw);
 }
 
 export async function fetchHistoryMonthActivity(

@@ -3,6 +3,8 @@ import { format } from "date-fns";
 export const historyQueryKeys = {
   all: ["history"] as const,
   day: (dateKey: string) => [...historyQueryKeys.all, "day", dateKey] as const,
+  mealLog: (logId: string) =>
+    [...historyQueryKeys.all, "meal-log", logId] as const,
   monthActivity: (monthKey: string) =>
     [...historyQueryKeys.all, "month-activity", monthKey] as const,
   timeline: () => [...historyQueryKeys.all, "timeline"] as const,

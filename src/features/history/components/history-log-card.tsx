@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import { MealPhotoImage } from "@/features/meal-register/components/meal-photo-image";
 import type { HistoryMealLog } from "@/features/history/types/history.types";
@@ -8,17 +9,23 @@ import { ChevronRight, ImageIcon } from "lucide-react";
 
 type HistoryLogCardProps = {
   log: HistoryMealLog;
+  dateKey?: string;
   className?: string;
 };
 
-export function HistoryLogCard({ log, className }: HistoryLogCardProps) {
+export function HistoryLogCard({ log, dateKey, className }: HistoryLogCardProps) {
+  const href = dateKey
+    ? `/history/meals/${log.id}?date=${dateKey}`
+    : `/history/meals/${log.id}`;
+
   return (
-    <SurfaceCard
-      className={cn(
-        "flex items-center gap-3.5 border-foreground/8 bg-card px-3 py-3 shadow-none",
-        className,
-      )}
-    >
+    <Link href={href} className="block cursor-pointer">
+      <SurfaceCard
+        className={cn(
+          "flex items-center gap-3.5 border-foreground/8 bg-card px-3 py-3 shadow-none transition-colors hover:bg-card/80",
+          className,
+        )}
+      >
       <div className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.03]">
         {log.mediaUrl ? (
           <MealPhotoImage
@@ -48,6 +55,7 @@ export function HistoryLogCard({ log, className }: HistoryLogCardProps) {
         className="size-4 shrink-0 text-foreground/25"
         aria-hidden="true"
       />
-    </SurfaceCard>
+      </SurfaceCard>
+    </Link>
   );
 }
