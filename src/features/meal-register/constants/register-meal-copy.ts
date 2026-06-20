@@ -1,12 +1,14 @@
 export const REGISTER_MEAL_COPY = {
   title: "Registrar comida",
+  editTitle: "Editar comida",
   save: "Guardar registro",
+  saveEdit: "Guardar cambios",
   back: "Volver",
   sections: {
-    photo: "Foto",
-    note: "Nota",
+    photo: "",
+    note: "¿Algo que quieras contar?",
     mood: "¿Cómo te sentiste?",
-    when: "Cuándo",
+    when: "Fecha y hora",
     plan: "¿Parte de tu plan?",
     mealType: "Tipo de comida",
     recipes: "Recetas",
@@ -33,17 +35,18 @@ export const REGISTER_MEAL_COPY = {
     },
   },
   note: {
-    placeholder: "Descripción opcional…",
+    placeholder: "Cómo te sentiste, un detalle, lo que quieras recordar…",
   },
   when: {
-    edit: "Editar",
+    dateLabel: "Fecha",
+    timeLabel: "Hora",
   },
   plan: {
     suggestedLabel: "Sugerencia",
     link: "Vincular",
     seeOthers: "Buscar más",
     linkedLabel: "Vinculado",
-    noMatch: "Sin coincidencia automática",
+    noMatch: "Nada planificado cerca de esta hora",
     searchPlan: "Buscar en tu plan",
     expressDetail: "Nota rápida",
     pickerTitle: "Elegir del plan",
@@ -51,6 +54,7 @@ export const REGISTER_MEAL_COPY = {
     pickerConfirm: "Vincular comida",
     pickerEmpty: "No hay comidas planificadas para este día.",
     pickerDateLabel: "Fecha",
+    pickerCurrentLabel: "Vinculación actual",
     unlinkAria: "Desvincular del plan",
     cancel: "Cancelar",
     info: {
@@ -62,6 +66,13 @@ export const REGISTER_MEAL_COPY = {
         "Al vincular, el formulario se rellena con el tipo de comida y las recetas de tu plan.",
       unlinkBullet:
         "Puedes desvincular cuando quieras; se restaura lo que tenías antes.",
+    },
+    dateReset: {
+      title: "Otro día, otro contexto",
+      description:
+        "Si cambias la fecha, tu plan actual se desvinculará. No pasa nada: puedes volver a vincular cuando quieras.",
+      confirm: "Cambiar fecha",
+      cancel: "Mejor no",
     },
   },
   recipes: {

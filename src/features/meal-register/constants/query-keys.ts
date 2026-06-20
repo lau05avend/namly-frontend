@@ -1,7 +1,12 @@
 export const registerMealQueryKeys = {
   all: ["meal-register"] as const,
-  suggestions: (loggedAt: string) =>
-    [...registerMealQueryKeys.all, "suggestions", loggedAt] as const,
+  suggestions: (loggedAt: string, scheduledMealId?: string) =>
+    [
+      ...registerMealQueryKeys.all,
+      "suggestions",
+      loggedAt,
+      scheduledMealId ?? "",
+    ] as const,
   planPicker: (dateKey: string) =>
     [...registerMealQueryKeys.all, "plan-picker", dateKey] as const,
   mealPhotoDisplayUrl: (mediaRef: string) =>

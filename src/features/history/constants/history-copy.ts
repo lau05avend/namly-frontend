@@ -25,6 +25,15 @@ export const HISTORY_COPY = {
   openRecipeAria: (title: string) => `Ver receta ${title}`,
   loadError: "No pudimos cargar tus comidas. Intenta de nuevo.",
   mealLogLoadError: "No pudimos cargar este registro. Intenta de nuevo.",
+  editMeal: "Editar registro",
+  deleteMeal: "Eliminar registro",
+  deleteMealTitle: "Eliminar registro",
+  deleteMealDescription:
+    "Se borrará este registro de comida. Esta acción no se puede deshacer.",
+  deleteMealConfirm: "Eliminar",
+  deleteMealCancel: "Cancelar",
+  deleteMealSuccess: "Registro eliminado",
+  deleteMealError: "No pudimos eliminar el registro. Intenta de nuevo.",
   agendaPlaceholder: "La vista de agenda llegará pronto.",
   goToToday: "Ir a hoy",
 } as const;

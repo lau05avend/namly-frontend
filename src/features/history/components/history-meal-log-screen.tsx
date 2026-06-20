@@ -1,16 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { parseDateKey } from "@/features/calendar";
 import { HistoryMealLogCarousel } from "@/features/history/components/history-meal-log-carousel";
 import { HistoryMealLogContextBar } from "@/features/history/components/history-meal-log-pager";
+import { HistoryMealLogDeleteSheet } from "@/features/history/components/history-meal-log-delete-sheet";
 import { HistoryMealLogHeader } from "@/features/history/components/history-meal-log-header";
 import { HistoryLoading } from "@/features/history/components/history-loading";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { historyQueryKeys } from "@/features/history/constants/query-keys";
+import { useDeleteMealLog } from "@/features/history/queries/use-delete-meal-log";
 import { useHistoryDay } from "@/features/history/queries/use-history-day";
 import {
   fetchHistoryMealLog,
@@ -27,6 +30,8 @@ export function HistoryMealLogScreen({
 }: HistoryMealLogScreenProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const deleteMutation = useDeleteMealLog();
   const parsedDate = parseDateKey(dateKey);
   const { data: day, isPending, isError } = useHistoryDay(dateKey);
 
@@ -97,6 +102,28 @@ export function HistoryMealLogScreen({
     }
   }, [activeIndex, handleActiveLogChange, logIds]);
 
+  const handleEdit = useCallback(() => {
+    router.push(`/meals/register?edit=${logId}`);
+  }, [logId, router]);
+
+  const handleDelete = useCallback(async () => {
+    try {
+      await deleteMutation.mutateAsync({ logId, dateKey });
+      setIsDeleteOpen(false);
+      toast.success(HISTORY_COPY.deleteMealSuccess);
+
+      const remainingIds = logIds.filter((id) => id !== logId);
+      if (remainingIds.length > 0) {
+        router.replace(`/history/meals/${remainingIds[0]}?date=${dateKey}`);
+        return;
+      }
+
+      router.replace(`/history/${dateKey}`);
+    } catch {
+      toast.error(HISTORY_COPY.deleteMealError);
+    }
+  }, [dateKey, deleteMutation, logId, logIds, router]);
+
   if (!parsedDate) {
     return null;
   }
@@ -106,6 +133,15 @@ export function HistoryMealLogScreen({
       <HistoryMealLogHeader
         dateKey={dateKey}
         loggedAtTime={activeSummary?.loggedAtTime}
+        onEdit={handleEdit}
+        onDelete={() => setIsDeleteOpen(true)}
+      />
+
+      <HistoryMealLogDeleteSheet
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        onConfirm={handleDelete}
+        isDeleting={deleteMutation.isPending}
       />
 
       <main className="mx-auto w-full max-w-lg pt-[calc(env(safe-area-inset-top)+4.5rem)]">

@@ -41,6 +41,12 @@ export async function fetchHistoryMealLog(
   return mapMealLogDetail(raw);
 }
 
+export async function deleteHistoryMealLog(logId: string): Promise<void> {
+  await apiClient<void>(`/api/v1/meal-logs/${logId}`, {
+    method: "DELETE",
+  });
+}
+
 export async function fetchHistoryMonthActivity(
   month: Date,
 ): Promise<HistoryMonthActivity> {

@@ -1,12 +1,6 @@
 import { z } from "zod";
 
-export const MOOD_VALUES = [
-  "rough",
-  "low",
-  "okay",
-  "good",
-  "great",
-] as const;
+export const MOOD_VALUES = ["rough", "low", "okay", "good", "great"] as const;
 
 export const PLAN_LINK_STATUSES = [
   "none",

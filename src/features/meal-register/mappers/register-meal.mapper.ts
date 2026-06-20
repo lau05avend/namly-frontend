@@ -9,6 +9,7 @@ import type {
   ScheduledMealSuggestion,
 } from "@/features/meal-register/types/register-meal.types";
 import { buildLoggedAtParam } from "@/features/meal-register/utils/register-meal-defaults";
+import { mapMoodToScore } from "@/features/meal-register/utils/mood.utils";
 import type { ScheduledMealApiDto } from "@/features/planner/types/planner-api.types";
 import { formatPlannedTimeLabel } from "@/features/history/utils/history-meal-log-plan.utils";
 
@@ -100,6 +101,7 @@ export function mapFormToCreateMealLogPayload(
   values: RegisterMealFormValues,
   mediaUrl: string,
   tagIds: string[] = [],
+  options?: { isUpdate?: boolean },
 ): CreateMealLogApiPayload {
   const payload: CreateMealLogApiPayload = {
     mediaUrl,
@@ -108,7 +110,9 @@ export function mapFormToCreateMealLogPayload(
 
   if (values.planLinkStatus === "linked" && values.linkedPlanId) {
     payload.scheduledMealId = values.linkedPlanId;
-  } else if (values.mealTypeId) {
+  }
+
+  if (values.mealTypeId) {
     payload.mealTypeId = values.mealTypeId;
   }
 
@@ -117,11 +121,17 @@ export function mapFormToCreateMealLogPayload(
     payload.content = note;
   }
 
-  if (values.recipes.length > 0) {
-    payload.recipeIds = values.recipes.map((recipe) => recipe.id);
+  if (values.mood) {
+    payload.score = mapMoodToScore(values.mood);
   }
 
-  if (tagIds.length > 0) {
+  const recipeIds = values.recipes.map((recipe) => recipe.id);
+
+  if (options?.isUpdate || recipeIds.length > 0) {
+    payload.recipeIds = recipeIds;
+  }
+
+  if (options?.isUpdate || tagIds.length > 0) {
     payload.tagIds = tagIds;
   }
 

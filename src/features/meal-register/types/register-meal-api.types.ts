@@ -35,3 +35,5 @@ export type CreateMealLogApiPayload = {
 export type CreateMealLogApiResponse = {
   id: string;
 };
+
+export type UpdateMealLogApiPayload = CreateMealLogApiPayload;

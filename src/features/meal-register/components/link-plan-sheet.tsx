@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { format, getYear } from "date-fns";
 import { es } from "date-fns/locale";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
@@ -15,15 +15,39 @@ import {
 import { formatPlannedTimeLabel } from "@/features/history/utils/history-meal-log-plan.utils";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
+import { useMealLogSuggestions } from "@/features/meal-register/queries/use-meal-log-suggestions";
 import { useRegisterPlanPicker } from "@/features/meal-register/queries/use-register-plan-picker";
 import type { ScheduledMealSuggestion } from "@/features/meal-register/types/register-meal.types";
+import { buildLoggedAtParam } from "@/features/meal-register/utils/register-meal-defaults";
 import { cn } from "@/lib/utils";
+
+function normalizeDateKey(dateKey: string): string {
+  const parsed = parseDateKey(dateKey);
+  return parsed ? toDateKey(parsed) : dateKey.slice(0, 10);
+}
+
+type PinnedPlanMeal = {
+  suggestion: ScheduledMealSuggestion;
+  entryDate: string;
+};
 
 type LinkPlanSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultDate: string;
-  onConfirm: (suggestion: ScheduledMealSuggestion) => void;
+  onConfirm: (
+    suggestion: ScheduledMealSuggestion,
+    entryDate: string,
+  ) => void;
+  initialSelectedId?: string | null;
+  selectionEntryDate?: string | null;
+  pinnedMeals?: PinnedPlanMeal[];
+  badgeMealId?: string | null;
+  badgeMealLabel?: string | null;
+  bdScheduledMealId?: string | null;
+  bdScheduledMealEntryDate?: string | null;
+  suggestionTime?: string | null;
+  onDismiss?: (browseDate: string, selectedId: string | null) => void;
 };
 
 function capitalizeSentence(text: string): string {
@@ -66,23 +90,173 @@ function shiftBrowseDate(dateKey: string, deltaDays: number): string {
   return toDateKey(addDays(parsed, deltaDays));
 }
 
+function mergePinnedMeals(
+  meals: ScheduledMealSuggestion[],
+  pinnedMeals: PinnedPlanMeal[],
+  browseDate: string,
+): ScheduledMealSuggestion[] {
+  const normalizedBrowseDate = normalizeDateKey(browseDate);
+  const pinsForDay = pinnedMeals.filter(
+    (pin) => normalizeDateKey(pin.entryDate) === normalizedBrowseDate,
+  );
+
+  if (pinsForDay.length === 0) {
+    return meals;
+  }
+
+  let result = meals;
+
+  for (const pin of pinsForDay) {
+    if (result.some((meal) => meal.id === pin.suggestion.id)) {
+      continue;
+    }
+
+    result = [...result, pin.suggestion];
+  }
+
+  return result.sort((left, right) =>
+    left.plannedTime.localeCompare(right.plannedTime),
+  );
+}
+
+function mergeSuggestionMeals(
+  meals: ScheduledMealSuggestion[],
+  suggestions: ScheduledMealSuggestion[],
+): ScheduledMealSuggestion[] {
+  if (suggestions.length === 0) {
+    return meals;
+  }
+
+  let result = meals;
+
+  for (const suggestion of suggestions) {
+    if (result.some((meal) => meal.id === suggestion.id)) {
+      continue;
+    }
+
+    result = [...result, suggestion];
+  }
+
+  return result.sort((left, right) =>
+    left.plannedTime.localeCompare(right.plannedTime),
+  );
+}
+
 export function LinkPlanSheet({
   open,
   onOpenChange,
   defaultDate,
   onConfirm,
+  initialSelectedId = null,
+  selectionEntryDate = null,
+  pinnedMeals = [],
+  badgeMealId = null,
+  badgeMealLabel = null,
+  bdScheduledMealId = null,
+  bdScheduledMealEntryDate = null,
+  suggestionTime = null,
+  onDismiss,
 }: LinkPlanSheetProps) {
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const isConfirmingRef = useRef(false);
   const [browseDate, setBrowseDate] = useState(defaultDate);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [userSelectedId, setUserSelectedId] = useState<string | null>(null);
 
   const { data: meals = [], isPending, isError } = useRegisterPlanPicker(
     browseDate,
     open,
   );
 
-  const selectedMeal = meals.find((meal) => meal.id === selectedId);
+  const shouldFetchBdSuggestion = useMemo(() => {
+    if (!bdScheduledMealId || !bdScheduledMealEntryDate || !suggestionTime) {
+      return false;
+    }
+
+    return (
+      normalizeDateKey(browseDate) ===
+      normalizeDateKey(bdScheduledMealEntryDate)
+    );
+  }, [bdScheduledMealEntryDate, bdScheduledMealId, browseDate, suggestionTime]);
+
+  const suggestionLoggedAt = useMemo(() => {
+    if (!shouldFetchBdSuggestion || !suggestionTime) {
+      return undefined;
+    }
+
+    return buildLoggedAtParam(browseDate, suggestionTime);
+  }, [browseDate, shouldFetchBdSuggestion, suggestionTime]);
+
+  const { data: bdSuggestions = [], isPending: isBdSuggestionsPending } =
+    useMealLogSuggestions(suggestionLoggedAt, {
+      scheduledMealId: shouldFetchBdSuggestion ? bdScheduledMealId! : undefined,
+      enabled: open && shouldFetchBdSuggestion,
+    });
+
+  const isOnBdEntryDate = useMemo(() => {
+    if (!bdScheduledMealId || !bdScheduledMealEntryDate) {
+      return false;
+    }
+
+    return (
+      normalizeDateKey(browseDate) ===
+      normalizeDateKey(bdScheduledMealEntryDate)
+    );
+  }, [bdScheduledMealEntryDate, bdScheduledMealId, browseDate]);
+
+  const isListPending =
+    isPending || (shouldFetchBdSuggestion && isBdSuggestionsPending);
+
+  const displayMeals = useMemo(() => {
+    const withPins = mergePinnedMeals(meals, pinnedMeals, browseDate);
+    return mergeSuggestionMeals(withPins, bdSuggestions);
+  }, [bdSuggestions, browseDate, meals, pinnedMeals]);
+
+  const autoSelectedId = useMemo(() => {
+    if (!initialSelectedId) {
+      return null;
+    }
+
+    if (!displayMeals.some((meal) => meal.id === initialSelectedId)) {
+      return null;
+    }
+
+    if (selectionEntryDate && browseDate !== selectionEntryDate) {
+      return null;
+    }
+
+    return initialSelectedId;
+  }, [
+    browseDate,
+    displayMeals,
+    initialSelectedId,
+    selectionEntryDate,
+  ]);
+
+  const selectedId = useMemo(() => {
+    if (userSelectedId) {
+      return userSelectedId;
+    }
+
+    return autoSelectedId;
+  }, [autoSelectedId, userSelectedId]);
+  const selectedMeal = displayMeals.find((meal) => meal.id === selectedId);
   const browseDateLabel = formatPickerDateLabel(browseDate);
+
+  const resolveContextBadgeLabel = (mealId: string): string | null => {
+    if (
+      isOnBdEntryDate &&
+      bdScheduledMealId &&
+      mealId === bdScheduledMealId
+    ) {
+      return REGISTER_MEAL_COPY.plan.pickerCurrentLabel;
+    }
+
+    if (badgeMealId && mealId === badgeMealId && badgeMealLabel) {
+      return badgeMealLabel;
+    }
+
+    return null;
+  };
 
   const updateBrowseDate = (nextDate: string) => {
     if (!parseDateKey(nextDate)) {
@@ -90,7 +264,7 @@ export function LinkPlanSheet({
     }
 
     setBrowseDate(nextDate);
-    setSelectedId(null);
+    setUserSelectedId(null);
   };
 
   const openNativeDatePicker = () => {
@@ -110,7 +284,12 @@ export function LinkPlanSheet({
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
-      setSelectedId(null);
+      if (!isConfirmingRef.current) {
+        onDismiss?.(browseDate, userSelectedId ?? autoSelectedId);
+      }
+
+      isConfirmingRef.current = false;
+      setUserSelectedId(null);
     }
 
     onOpenChange(nextOpen);
@@ -121,7 +300,8 @@ export function LinkPlanSheet({
       return;
     }
 
-    onConfirm(selectedMeal);
+    isConfirmingRef.current = true;
+    onConfirm(selectedMeal, browseDate);
     handleOpenChange(false);
   };
 
@@ -202,20 +382,21 @@ export function LinkPlanSheet({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          {isPending ? (
+          {isListPending ? (
             <PlannerLoading variant="compact" />
           ) : isError ? (
             <p className="py-6 text-center text-sm text-foreground/50">
               {REGISTER_MEAL_COPY.errors.load}
             </p>
-          ) : meals.length === 0 ? (
+          ) : displayMeals.length === 0 ? (
             <p className="py-6 text-center text-sm text-foreground/50">
               {REGISTER_MEAL_COPY.plan.pickerEmpty}
             </p>
           ) : (
             <ul className="flex flex-col gap-2 pb-2">
-              {meals.map((meal) => {
+              {displayMeals.map((meal) => {
                 const isSelected = meal.id === selectedId;
+                const contextBadgeLabel = resolveContextBadgeLabel(meal.id);
                 const previewItems = meal.recipes.map((recipe) => ({
                   id: recipe.id,
                   label: recipe.title,
@@ -225,15 +406,20 @@ export function LinkPlanSheet({
                   <li key={meal.id}>
                     <button
                       type="button"
-                      onClick={() => setSelectedId(meal.id)}
+                      onClick={() => setUserSelectedId(meal.id)}
                       aria-pressed={isSelected}
                       className={cn(
-                        "w-full rounded-xl border px-3 py-2.5 text-left transition-colors",
+                        "relative w-full rounded-xl border px-3 py-2.5 text-left transition-colors",
                         isSelected
                           ? "border-primary/40 bg-mint/30"
                           : "border-foreground/8 bg-card/40 hover:bg-mint/10",
                       )}
                     >
+                      {contextBadgeLabel ? (
+                        <span className="absolute top-2 right-2 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                          {contextBadgeLabel}
+                        </span>
+                      ) : null}
                       <PlannedMealCompactPreview
                         icon="salad"
                         slotLabel={meal.mealType.name.toUpperCase()}

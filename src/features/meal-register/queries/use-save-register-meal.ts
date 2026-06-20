@@ -38,6 +38,12 @@ export function useSaveRegisterMeal() {
       queryClient.invalidateQueries({
         queryKey: tagQueryKeys.byCategory(MEAL_LOG_TAG_CATEGORY),
       });
+
+      if (variables.logId) {
+        queryClient.invalidateQueries({
+          queryKey: historyQueryKeys.mealLog(variables.logId),
+        });
+      }
     },
   });
 }

@@ -6,12 +6,17 @@ export const metadata = {
 };
 
 type RegisterMealPageProps = {
-  searchParams: Promise<{ date?: string }>;
+  searchParams: Promise<{ date?: string; edit?: string }>;
 };
 
 export default async function RegisterMealPage({
   searchParams,
 }: RegisterMealPageProps) {
   const params = await searchParams;
-  return <RegisterMealScreen initialDate={params.date} />;
+  return (
+    <RegisterMealScreen
+      initialDate={params.date}
+      editLogId={params.edit}
+    />
+  );
 }

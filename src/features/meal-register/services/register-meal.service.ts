@@ -9,6 +9,7 @@ import type {
   CreateMealLogApiResponse,
   ScheduledMealSuggestionApiDto,
 } from "@/features/meal-register/types/register-meal-api.types";
+import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import type {
   SaveRegisterMealInput,
   SaveRegisterMealResponse,
@@ -19,9 +20,15 @@ import { apiClient } from "@/lib/api/api-client";
 
 export async function fetchMealLogSuggestions(
   loggedAt: string,
+  scheduledMealId?: string,
 ): Promise<ScheduledMealSuggestion[]> {
+  const params = new URLSearchParams({ loggedAt });
+  if (scheduledMealId) {
+    params.set("scheduledMealId", scheduledMealId);
+  }
+
   const raw = await apiClient<ScheduledMealSuggestionApiDto[]>(
-    `/api/v1/scheduled-meals/suggestions?loggedAt=${encodeURIComponent(loggedAt)}`,
+    `/api/v1/scheduled-meals/suggestions?${params.toString()}`,
   );
 
   return raw.map(mapSuggestionApiToDomain);
@@ -44,13 +51,32 @@ export async function saveRegisterMeal(
   input: SaveRegisterMealInput,
   userId: string,
 ): Promise<SaveRegisterMealResponse> {
-  const mediaUrl = await uploadMealPhoto(input.photoFile, userId);
   const tagIds = await resolveMealLogTagIds(input.values.tags);
+  let mediaUrl = input.existingMediaUrl;
+
+  if (input.photoFile) {
+    mediaUrl = await uploadMealPhoto(input.photoFile, userId);
+  }
+
+  if (!mediaUrl) {
+    throw new Error(REGISTER_MEAL_COPY.errors.photoRequired);
+  }
+
   const payload = mapFormToCreateMealLogPayload(
     input.values,
     mediaUrl,
     tagIds,
+    { isUpdate: Boolean(input.logId) },
   );
+
+  if (input.logId) {
+    await apiClient<void>(`/api/v1/meal-logs/${input.logId}`, {
+      method: "PATCH",
+      body: payload,
+    });
+
+    return { id: input.logId };
+  }
 
   const response = await apiClient<CreateMealLogApiResponse>(
     "/api/v1/meal-logs",

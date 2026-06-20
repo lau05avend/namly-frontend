@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -5,6 +6,7 @@ type PlannerDashedAddButtonProps = {
   label: string;
   onClick: () => void;
   disabled?: boolean;
+  icon?: LucideIcon;
   className?: string;
 };
 
@@ -12,6 +14,7 @@ export function PlannerDashedAddButton({
   label,
   onClick,
   disabled = false,
+  icon: Icon = Plus,
   className,
 }: PlannerDashedAddButtonProps) {
   return (
@@ -24,7 +27,7 @@ export function PlannerDashedAddButton({
         className,
       )}
     >
-      <Plus className="size-4" aria-hidden />
+      <Icon className="size-4" aria-hidden />
       {label}
     </button>
   );

@@ -9,6 +9,7 @@ import {
   type RefObject,
 } from "react";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
+import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
 import { validateMealPhotoFile, normalizeMealPhotoFile } from "@/features/meal-register/services/meal-photo-storage.service";
 import {
   prepareMealPhotoFile,
@@ -37,8 +38,14 @@ export type MealPhotoPickerActions = {
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
   setFile: (file: File) => void;
   getPendingFile: () => File | null;
+  getExistingMediaUrl: () => string | null;
   clearPickError: () => void;
   reset: () => void;
+};
+
+export type MealPhotoPickerInitialState = {
+  initialFile?: File | null;
+  initialRemoteMediaUrl?: string | null;
 };
 
 export type MealPhotoPicker = {
@@ -85,19 +92,34 @@ function buildInitialPhotoState(initialFile?: File | null): InitialPhotoState {
   };
 }
 
-export function useMealPhotoPicker(initialFile?: File | null): MealPhotoPicker {
+export function useMealPhotoPicker(
+  initial?: MealPhotoPickerInitialState,
+): MealPhotoPicker {
+  const initialFile = initial?.initialFile;
+  const initialRemoteMediaUrl = initial?.initialRemoteMediaUrl?.trim()
+    ? initial.initialRemoteMediaUrl.trim()
+    : null;
+
   const [initialPhotoState] = useState(() =>
     buildInitialPhotoState(initialFile),
   );
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const pendingFileRef = useRef<File | null>(initialPhotoState.file);
+  const existingMediaUrlRef = useRef<string | null>(initialRemoteMediaUrl);
   const previewObjectUrlRef = useRef<string | null>(
     initialPhotoState.objectUrl,
   );
   const [previewUrl, setPreviewUrl] = useState(initialPhotoState.previewUrl);
+  const [hasLocalFile, setHasLocalFile] = useState(Boolean(initialPhotoState.file));
   const [pickError, setPickError] = useState(initialPhotoState.pickError);
   const [isPreparing, setIsPreparing] = useState(false);
+  const { displayUrl: resolvedRemoteUrl } = useResolvedMealPhotoUrl(
+    initialRemoteMediaUrl ?? undefined,
+  );
+  const displayPreviewUrl =
+    previewUrl ??
+    (initialRemoteMediaUrl && !hasLocalFile ? (resolvedRemoteUrl ?? null) : null);
 
   const revokePreview = useCallback(() => {
     if (previewObjectUrlRef.current) {
@@ -122,6 +144,7 @@ export function useMealPhotoPicker(initialFile?: File | null): MealPhotoPicker {
       const objectUrl = URL.createObjectURL(normalizedFile);
       previewObjectUrlRef.current = objectUrl;
       pendingFileRef.current = normalizedFile;
+      setHasLocalFile(true);
       setPreviewUrl(objectUrl);
     },
     [revokePreview],
@@ -193,8 +216,18 @@ export function useMealPhotoPicker(initialFile?: File | null): MealPhotoPicker {
 
   const getPendingFile = useCallback(() => pendingFileRef.current, []);
 
+  const getExistingMediaUrl = useCallback(() => {
+    if (hasLocalFile) {
+      return null;
+    }
+
+    return existingMediaUrlRef.current;
+  }, [hasLocalFile]);
+
   const reset = useCallback(() => {
     pendingFileRef.current = null;
+    existingMediaUrlRef.current = null;
+    setHasLocalFile(false);
     revokePreview();
     setPreviewUrl(null);
     setPickError(null);
@@ -211,7 +244,7 @@ export function useMealPhotoPicker(initialFile?: File | null): MealPhotoPicker {
       cameraInputRef,
     },
     state: {
-      previewUrl,
+      previewUrl: displayPreviewUrl,
       pickError,
       isPreparing,
     },
@@ -221,6 +254,7 @@ export function useMealPhotoPicker(initialFile?: File | null): MealPhotoPicker {
       handleFileChange,
       setFile,
       getPendingFile,
+      getExistingMediaUrl,
       clearPickError,
       reset,
     },

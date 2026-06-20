@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { CircleCheck, Sparkles } from "lucide-react";
+import { Circle, CircleCheck } from "lucide-react";
 
 export type PlanCompactRowVariant = "suggested" | "linked";
 
@@ -26,11 +26,11 @@ const VARIANT_CONFIG: Record<
   }
 > = {
   suggested: {
-    Icon: Sparkles,
-    iconWrap: "size-7 rounded-full bg-highlight/15",
-    iconClass: "size-3.5 text-highlight",
-    labelClass: "text-foreground/60",
-    rowClass: "border-primary/12 bg-mint/15",
+    Icon: CircleCheck,
+    iconWrap: "size-7 rounded-full bg-foreground/6",
+    iconClass: "size-3.5 text-foreground/30",
+    labelClass: "text-foreground/50",
+    rowClass: "border-foreground/8 bg-card",
   },
   linked: {
     Icon: CircleCheck,
@@ -41,19 +41,18 @@ const VARIANT_CONFIG: Record<
   },
 };
 
-export function PlanCompactRow({
+function PlanCompactRowContent({
   label,
   secondaryLine,
-  variant = "linked",
-  trailing,
-  onPress,
-  ariaLabel,
-  className,
-}: PlanCompactRowProps) {
-  const config = VARIANT_CONFIG[variant];
+  config,
+}: {
+  label: string;
+  secondaryLine?: string;
+  config: (typeof VARIANT_CONFIG)[PlanCompactRowVariant];
+}) {
   const Icon = config.Icon;
 
-  const content = (
+  return (
     <>
       <span className="flex shrink-0 items-center gap-1.5">
         <span
@@ -89,18 +88,50 @@ export function PlanCompactRow({
       ) : (
         <span className="min-w-0 flex-1" />
       )}
-
-      {trailing}
     </>
   );
+}
+
+export const PLAN_COMPACT_ROW_VARIANTS = VARIANT_CONFIG;
+
+export function PlanCompactRow({
+  label,
+  secondaryLine,
+  variant = "linked",
+  trailing,
+  onPress,
+  ariaLabel,
+  className,
+}: PlanCompactRowProps) {
+  const config = VARIANT_CONFIG[variant];
 
   const rowClassName = cn(
-    "flex w-full min-w-0 items-center gap-2 rounded-lg border px-2.5 py-2 text-left",
+    "flex w-full min-w-0 items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors duration-300",
     config.rowClass,
     className,
   );
 
   if (onPress) {
+    if (trailing) {
+      return (
+        <div className={cn(rowClassName, "gap-1")}>
+          <button
+            type="button"
+            onClick={onPress}
+            aria-label={ariaLabel}
+            className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-opacity hover:opacity-90 active:opacity-80"
+          >
+            <PlanCompactRowContent
+              label={label}
+              secondaryLine={secondaryLine}
+              config={config}
+            />
+          </button>
+          {trailing}
+        </div>
+      );
+    }
+
     return (
       <button
         type="button"
@@ -108,13 +139,27 @@ export function PlanCompactRow({
         aria-label={ariaLabel}
         className={cn(
           rowClassName,
-          "cursor-pointer transition-[border-color,opacity] hover:border-primary/20 hover:opacity-90 active:opacity-80",
+          "cursor-pointer transition-opacity hover:opacity-90 active:opacity-80",
         )}
       >
-        {content}
+        <PlanCompactRowContent
+          label={label}
+          secondaryLine={secondaryLine}
+          config={config}
+        />
+        {trailing}
       </button>
     );
   }
 
-  return <div className={rowClassName}>{content}</div>;
+  return (
+    <div className={rowClassName}>
+      <PlanCompactRowContent
+        label={label}
+        secondaryLine={secondaryLine}
+        config={config}
+      />
+      {trailing}
+    </div>
+  );
 }

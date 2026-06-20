@@ -28,7 +28,9 @@ export type ScheduledMealSuggestion = {
 
 export type SaveRegisterMealInput = {
   values: RegisterMealFormValues;
-  photoFile: File;
+  photoFile?: File;
+  existingMediaUrl?: string;
+  logId?: string;
 };
 
 export type SaveRegisterMealResponse = { id: string };

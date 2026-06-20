@@ -20,9 +20,20 @@ type RegisterMealContentProps = {
   planSuggestion?: ScheduledMealSuggestion;
   planStatus: PlanLinkStatus;
   defaultPickerDate: string;
-  onLinkSuggestion: (suggestion: ScheduledMealSuggestion) => void;
+  onLinkSuggestion: (
+    suggestion: ScheduledMealSuggestion,
+    planEntryDate: string,
+  ) => void;
   onUnlink: () => void;
   onWhenChange?: (when: RegisterWhenChangePayload) => void;
+  onDateChangeAttempt?: (nextDate: string) => boolean;
+  editScheduledMealId?: string | null;
+  activeLinkedPlanId?: string | null;
+  linkedPlanEntryDate?: string | null;
+  originalScheduledSuggestion?: ScheduledMealSuggestion | null;
+  originalScheduledEntryDate?: string | null;
+  pinnedSuggestion?: ScheduledMealSuggestion | null;
+  pinnedEntryDate?: string | null;
 };
 
 export function RegisterMealContent({
@@ -33,23 +44,41 @@ export function RegisterMealContent({
   onLinkSuggestion,
   onUnlink,
   onWhenChange,
+  onDateChangeAttempt,
+  editScheduledMealId = null,
+  activeLinkedPlanId = null,
+  linkedPlanEntryDate = null,
+  originalScheduledSuggestion = null,
+  originalScheduledEntryDate = null,
+  pinnedSuggestion = null,
+  pinnedEntryDate = null,
 }: RegisterMealContentProps) {
   return (
-    <div className="flex flex-col gap-6 px-4 pb-10">
+    <div className="flex flex-col gap-6 px-4 pt-3 pb-5">
       <RegisterPhotoSection
         refs={photoPicker.refs}
         state={photoPicker.state}
         actions={photoPicker.actions}
       />
-      <RegisterNoteSection />
+      <RegisterWhenSection
+        onWhenChange={onWhenChange}
+        onDateChangeAttempt={onDateChangeAttempt}
+      />
       <RegisterMoodSection />
-      <RegisterWhenSection onWhenChange={onWhenChange} />
+      <RegisterNoteSection />
       <RegisterPlanSection
         suggestion={planSuggestion}
         planStatus={planStatus}
         defaultPickerDate={defaultPickerDate}
         onLinkSuggestion={onLinkSuggestion}
         onUnlink={onUnlink}
+        editScheduledMealId={editScheduledMealId}
+        activeLinkedPlanId={activeLinkedPlanId}
+        linkedPlanEntryDate={linkedPlanEntryDate}
+        originalScheduledSuggestion={originalScheduledSuggestion}
+        originalScheduledEntryDate={originalScheduledEntryDate}
+        pinnedSuggestion={pinnedSuggestion}
+        pinnedEntryDate={pinnedEntryDate}
       />
       <RegisterTypeSection />
       <RegisterRecipesSection />
