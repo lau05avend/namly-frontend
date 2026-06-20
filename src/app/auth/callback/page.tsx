@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { AuthLoading } from "@/components/auth/auth-loading";
+import { BRAND_SPLASH_COPY } from "@/components/brand/brand-assets";
 import { clearOnboardingFlow } from "@/features/onboarding/constants/onboarding-flow-storage";
 import { resolvePostAuthDestination } from "@/features/onboarding/utils/post-auth-redirect";
 import { resolveGoogleDisplayName } from "@/features/profile/utils/resolve-google-display-name";
@@ -96,12 +97,14 @@ function AuthCallbackHandler() {
     );
   }
 
-  return <AuthLoading />;
+  return <AuthLoading message={BRAND_SPLASH_COPY.signingIn} />;
 }
 
 export default function AuthCallbackPage() {
   return (
-    <Suspense fallback={<AuthLoading />}>
+    <Suspense
+      fallback={<AuthLoading message={BRAND_SPLASH_COPY.signingIn} />}
+    >
       <AuthCallbackHandler />
     </Suspense>
   );

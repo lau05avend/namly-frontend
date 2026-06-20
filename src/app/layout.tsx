@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
+import {
+  BRAND_ASSETS,
+  BRAND_COLORS,
+} from "@/components/brand/brand-assets";
 import { AuthProvider } from "@/providers/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import "./globals.css";
@@ -13,14 +17,29 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Namly",
-  description: "Namly",
+  title: {
+    default: "Namly",
+    template: "%s · Namly",
+  },
+  description: "Continuidad y organización de tus comidas, con calma.",
+  applicationName: "Namly",
+  appleWebApp: {
+    capable: true,
+    title: "Namly",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: { url: BRAND_ASSETS.logo, type: "image/svg+xml" },
+    shortcut: BRAND_ASSETS.logo,
+    apple: BRAND_ASSETS.pwaIcon512,
+  },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: BRAND_COLORS.background,
 };
 
 export default function RootLayout({
