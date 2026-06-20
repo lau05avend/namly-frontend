@@ -4,3 +4,13 @@ export type Tag = {
   name: string;
   iconName: string | null;
 };
+
+export type CreateTagInput = {
+  name: string;
+  iconName: string | null;
+};
+
+export type CreateTagsPayload = {
+  category: string;
+  tags: CreateTagInput[];
+};

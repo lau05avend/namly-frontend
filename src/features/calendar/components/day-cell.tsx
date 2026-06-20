@@ -24,7 +24,7 @@ export function DayCell({
   onSelect,
 }: DayCellProps) {
   const today = isToday(date);
-  const hasPlanned = activity?.hasPlanned;
+  const hasActivity = activity?.hasPlanned || activity?.hasCompleted;
 
   return (
     <motion.button
@@ -53,7 +53,7 @@ export function DayCell({
         {format(date, "d")}
       </motion.span>
 
-      {hasPlanned ? (
+      {hasActivity ? (
         <motion.span
           layout
           className={cn(

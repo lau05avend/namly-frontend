@@ -7,13 +7,30 @@ export type PlanMatchSuggestion = {
   detail: string;
 };
 
-export type RegisterMealDefaults = RegisterMealFormValues & {
-  planSuggestion?: PlanMatchSuggestion;
+export type ScheduledMealSuggestion = {
+  id: string;
+  plannedTime: string;
+  mealType: {
+    id: string;
+    name: string;
+    sortOrder: number;
+  };
+  recipes: Array<{
+    id: string;
+    recipeId: string | null;
+    title: string;
+    coverUrl: string | null;
+    sortOrder: number;
+  }>;
+  isExpress: boolean;
+  expressNote?: string | null;
 };
 
-export type RegisterMealDefaultsParams = {
-  date?: string;
+export type SaveRegisterMealInput = {
+  values: RegisterMealFormValues;
+  photoFile?: File;
+  existingMediaUrl?: string;
+  logId?: string;
 };
 
-export type SaveRegisterMealPayload = RegisterMealFormValues;
-export type SaveRegisterMealResponse = { id: string; date: string };
+export type SaveRegisterMealResponse = { id: string };

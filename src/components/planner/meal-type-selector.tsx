@@ -35,7 +35,7 @@ export function MealTypeSelector({
             aria-checked={selected}
             onClick={() => onChange(option.id)}
             className={cn(
-              "rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
+              "cursor-pointer rounded-full px-4 py-2.5 text-sm font-medium transition-colors",
               selected
                 ? "bg-primary text-white shadow-sm"
                 : "bg-mint/50 text-foreground/70 hover:bg-mint",

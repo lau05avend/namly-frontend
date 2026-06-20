@@ -5,7 +5,7 @@ import { PlannerSection } from "@/components/planner/planner-section";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
-import { Pencil } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 export function RegisterNoteSection() {
   const {
@@ -16,7 +16,7 @@ export function RegisterNoteSection() {
   return (
     <PlannerSection label={REGISTER_MEAL_COPY.sections.note}>
       <SurfaceCard className="flex items-center gap-3 p-4">
-        <Pencil className="size-4 shrink-0 text-foreground/40" aria-hidden />
+        <MessageCircle className="size-4 shrink-0 text-foreground/40" aria-hidden />
         <Controller
           name="note"
           control={control}

@@ -15,7 +15,7 @@ export function PlanMealContent() {
   const entryMode = useWatch({ control, name: "entryMode" });
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-10">
+    <div className="flex flex-col gap-6 px-4 pt-2 pb-5">
       <PlanMealDateSection />
       <PlanMealTypeSection />
       <PlanMealModeSection />

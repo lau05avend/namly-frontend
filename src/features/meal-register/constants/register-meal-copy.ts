@@ -1,12 +1,14 @@
 export const REGISTER_MEAL_COPY = {
   title: "Registrar comida",
+  editTitle: "Editar comida",
   save: "Guardar registro",
+  saveEdit: "Guardar cambios",
   back: "Volver",
   sections: {
-    photo: "Foto",
-    note: "Nota",
+    photo: "",
+    note: "¿Algo que quieras contar?",
     mood: "¿Cómo te sentiste?",
-    when: "Cuándo",
+    when: "Fecha y hora",
     plan: "¿Parte de tu plan?",
     mealType: "Tipo de comida",
     recipes: "Recetas",
@@ -15,21 +17,63 @@ export const REGISTER_MEAL_COPY = {
   photo: {
     add: "Tomar foto",
     change: "Cambiar foto",
-    emptyHint: "Opcional — ayuda a recordar el momento",
+    emptyHint: "La foto es obligatoria para guardar el registro",
+    sourceSheetTitle: "Añadir foto",
+    sourceSheetDescription: "Elige cómo quieres añadir la foto de tu comida.",
+    takePhoto: "Tomar foto",
+    chooseFromGallery: "Elegir de galería",
+    cancel: "Cancelar",
+    preparing: "Preparando foto…",
+    errors: {
+      title: "No pudimos usar esa foto",
+      tooLarge:
+        "No pudimos dejarla por debajo de 5 MB. Prueba otra más cercana o elige una imagen más ligera.",
+      compressFailed:
+        "No pudimos comprimir la foto por debajo de 5 MB. Prueba otra más cercana.",
+      prepareFailed: "No pudimos preparar la foto. Intenta con otra imagen.",
+      invalidType: "Usa una imagen en JPG, PNG, WebP o GIF.",
+    },
   },
   note: {
-    placeholder: "Descripción opcional…",
+    placeholder: "Cómo te sentiste, un detalle, lo que quieras recordar…",
   },
   when: {
-    edit: "Editar",
+    dateLabel: "Fecha",
+    timeLabel: "Hora",
   },
   plan: {
-    matchTitle: "Coincide con tu plan de hoy",
+    suggestedLabel: "Sugerencia",
     link: "Vincular",
-    seeOthers: "Ver otros planes",
-    linked: "Vinculado a tu plan",
-    noMatch: "Sin coincidencia automática",
+    seeOthers: "Buscar más",
+    linkedLabel: "Vinculado",
+    noMatch: "Nada planificado cerca de esta hora",
     searchPlan: "Buscar en tu plan",
+    expressDetail: "Nota rápida",
+    pickerTitle: "Elegir del plan",
+    pickerDescription: "Selecciona la comida planificada que quieres vincular.",
+    pickerConfirm: "Vincular comida",
+    pickerEmpty: "No hay comidas planificadas para este día.",
+    pickerDateLabel: "Fecha",
+    pickerCurrentLabel: "Vinculación actual",
+    unlinkAria: "Desvincular del plan",
+    cancel: "Cancelar",
+    info: {
+      ariaLabel: "Información sobre vincular al plan",
+      title: "Vincular al plan",
+      linkBullet:
+        "Conecta este registro con una comida que ya planificaste.",
+      autofillBullet:
+        "Al vincular, el formulario se rellena con el tipo de comida y las recetas de tu plan.",
+      unlinkBullet:
+        "Puedes desvincular cuando quieras; se restaura lo que tenías antes.",
+    },
+    dateReset: {
+      title: "Otro día, otro contexto",
+      description:
+        "Si cambias la fecha, tu plan actual se desvinculará. No pasa nada: puedes volver a vincular cuando quieras.",
+      confirm: "Cambiar fecha",
+      cancel: "Mejor no",
+    },
   },
   recipes: {
     add: "Añadir receta",
@@ -37,6 +81,22 @@ export const REGISTER_MEAL_COPY = {
     remove: "Quitar",
   },
   tags: {
-    add: "Añadir etiqueta",
+    browse: "Etiquetas",
+    sheetTitle: "Etiquetas",
+    sheetDescription: "Busca una etiqueta o crea una nueva para este registro.",
+    searchPlaceholder: "Buscar etiqueta…",
+    create: "Crear etiqueta",
+    createNamed: (name: string) => `Crear "${name}"`,
+    done: "Listo",
+    clear: "Quitar todas",
+    remove: (name: string) => `Quitar ${name}`,
+    emptySearch: "No encontramos esa etiqueta",
+    loading: "Cargando etiquetas…",
+    loadError: "No pudimos cargar las etiquetas.",
+  },
+  errors: {
+    load: "No pudimos abrir el registro. Intenta de nuevo.",
+    save: "No pudimos guardar tu comida. Intenta de nuevo.",
+    photoRequired: "Añade una foto antes de guardar.",
   },
 } as const;

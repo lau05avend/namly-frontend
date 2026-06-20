@@ -6,3 +6,6 @@ export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
 
 export const SUPABASE_AVATAR_BUCKET =
   process.env.NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET ?? "avatars";
+
+export const SUPABASE_MEAL_PHOTO_BUCKET =
+  process.env.NEXT_PUBLIC_SUPABASE_MEAL_PHOTO_BUCKET ?? "meal-logs-photos";

@@ -34,6 +34,7 @@ type ExpandableCalendarProps = {
   onPreviousPeriod: () => void;
   onNextPeriod: () => void;
   onSelectDate: (date: Date) => void;
+  hideExpandToggle?: boolean;
   className?: string;
 };
 
@@ -48,6 +49,7 @@ export function ExpandableCalendar({
   onPreviousPeriod,
   onNextPeriod,
   onSelectDate,
+  hideExpandToggle = false,
   className,
 }: ExpandableCalendarProps) {
   const dragX = useMotionValue(0);
@@ -86,6 +88,7 @@ export function ExpandableCalendar({
         isExpanded={isExpanded}
         onToggleExpand={onToggleExpand}
         onGoToToday={onGoToToday}
+        hideExpandToggle={hideExpandToggle}
       />
 
       <WeekdayHeader />

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProfileAvatar } from "@/features/profile/components/profile-avatar";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
-import { isRemoteImageUrl } from "@/features/profile/utils/avatar-storage.utils";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -31,7 +30,6 @@ export function EditProfileAvatarSection({
 }: EditProfileAvatarSectionProps) {
   const hasLocalPreview = Boolean(previewUrl);
   const persistedUrl = avatarUrl.trim() || undefined;
-  const displayUrl = previewUrl ?? persistedUrl;
 
   return (
     <section className="flex flex-col gap-4">
@@ -39,11 +37,10 @@ export function EditProfileAvatarSection({
 
       <div className="flex items-center gap-4">
         <div className="relative size-24 shrink-0">
-          {displayUrl &&
-          (hasLocalPreview || isRemoteImageUrl(displayUrl)) ? (
-            // eslint-disable-next-line @next/next/no-img-element -- local preview or immediate remote URL
+          {hasLocalPreview && previewUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- local preview only
             <img
-              src={displayUrl}
+              src={previewUrl}
               alt={PROFILE_COPY.avatarAlt}
               className="size-full rounded-full border border-foreground/8 object-cover"
             />

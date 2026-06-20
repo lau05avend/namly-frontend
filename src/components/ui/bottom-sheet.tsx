@@ -9,10 +9,11 @@ type BottomSheetProps = {
   onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
-  children: ReactNode;
+  children?: ReactNode;
   footer?: ReactNode;
   className?: string;
   scrollableContent?: boolean;
+  compact?: boolean;
 };
 
 export function BottomSheet({
@@ -24,6 +25,7 @@ export function BottomSheet({
   footer,
   className,
   scrollableContent = true,
+  compact = false,
 }: BottomSheetProps) {
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
@@ -35,34 +37,56 @@ export function BottomSheet({
             className,
           )}
         >
-          <div className="flex shrink-0 flex-col items-center px-4 pt-3 pb-2">
+          <div
+            className={cn(
+              "flex shrink-0 flex-col items-center px-5 pt-3",
+              compact ? "pb-4" : "pb-2",
+            )}
+          >
             <div
               className="mb-3 h-1 w-10 rounded-full bg-foreground/15"
               aria-hidden
             />
-            <Drawer.Title className="text-base font-bold text-foreground">
+            <Drawer.Title
+              className={cn(
+                "text-center font-bold text-foreground",
+                compact ? "text-lg" : "text-base",
+              )}
+            >
               {title}
             </Drawer.Title>
             {description ? (
-              <Drawer.Description className="mt-1 text-center text-sm text-foreground/55">
+              <Drawer.Description
+                className={cn(
+                  "text-center text-sm leading-relaxed text-foreground/55",
+                  compact ? "mt-2.5 max-w-[19rem]" : "mt-1",
+                )}
+              >
                 {description}
               </Drawer.Description>
             ) : null}
           </div>
 
-          <div
-            className={cn(
-              "min-h-0 flex-1 px-4",
-              scrollableContent
-                ? "overflow-y-auto"
-                : "flex flex-col overflow-hidden",
-            )}
-          >
-            {children}
-          </div>
+          {children ? (
+            <div
+              className={cn(
+                "min-h-0 flex-1 px-4",
+                scrollableContent
+                  ? "overflow-y-auto"
+                  : "flex flex-col overflow-hidden",
+              )}
+            >
+              {children}
+            </div>
+          ) : null}
 
           {footer ? (
-            <div className="shrink-0 border-t border-foreground/8 px-4 pt-3 pb-safe">
+            <div
+              className={cn(
+                "shrink-0 border-t border-foreground/8 px-4 pb-safe",
+                compact ? "pt-4" : "pt-3",
+              )}
+            >
               {footer}
             </div>
           ) : null}

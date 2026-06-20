@@ -87,7 +87,7 @@ export function PlanMealScreen({
   if (isLoading) {
     return (
       <div className="mx-auto max-w-lg px-4 pt-safe">
-        <PlannerLoading />
+        <PlannerLoading variant="form" />
       </div>
     );
   }

@@ -1,5 +1,7 @@
 import {
   AVATAR_SIGNED_URL_TTL_SECONDS,
+  buildAvatarObjectUrl,
+  extractAvatarStoragePath,
   isRemoteImageUrl,
 } from "@/features/profile/utils/avatar-storage.utils";
 import { SUPABASE_AVATAR_BUCKET } from "@/lib/env";
@@ -65,14 +67,23 @@ export async function resolveAvatarDisplayUrl(
     return undefined;
   }
 
+  if (trimmed.startsWith("blob:")) {
+    return trimmed;
+  }
+
+  const storagePath = extractAvatarStoragePath(trimmed);
+  if (storagePath) {
+    return createAvatarSignedUrl(storagePath);
+  }
+
   if (isRemoteImageUrl(trimmed)) {
     return trimmed;
   }
 
-  return createAvatarSignedUrl(trimmed);
+  return undefined;
 }
 
-/** Uploads to the private bucket and returns the full signed URL to persist. */
+/** Uploads to the private bucket and returns the object URL to persist (no token). */
 export async function uploadAvatar(
   file: File,
   userId: string,
@@ -101,5 +112,5 @@ export async function uploadAvatar(
     );
   }
 
-  return createAvatarSignedUrl(path);
+  return buildAvatarObjectUrl(path);
 }

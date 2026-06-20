@@ -28,7 +28,7 @@ export function MoodSelector({ value, onChange }: MoodSelectorProps) {
             aria-label={option.label}
             onClick={() => onChange(option.value)}
             className={cn(
-              "flex size-12 items-center justify-center rounded-full text-2xl transition-all",
+              "flex size-12 cursor-pointer items-center justify-center rounded-full text-2xl transition-all",
               selected
                 ? "bg-mint ring-2 ring-primary ring-offset-2 ring-offset-background"
                 : "bg-card hover:bg-mint/40",

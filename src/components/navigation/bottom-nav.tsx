@@ -19,7 +19,7 @@ export type BottomNavItem = {
 };
 
 const DEFAULT_ITEMS: BottomNavItem[] = [
-  { id: "history", href: "/home", label: "Historial", icon: Clock },
+  { id: "history", href: "/history", label: "Mis comidas", icon: Clock },
   { id: "planner", href: "/planner", label: "Plan", icon: BookOpen },
   { id: "home", href: "/home", label: "Inicio", icon: Home },
   { id: "calendar", href: "/planner", label: "Calendario", icon: CalendarDays },
