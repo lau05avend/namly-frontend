@@ -118,7 +118,7 @@ export function HistoryMealLogScreen({
         return;
       }
 
-      router.replace(`/history/${dateKey}`);
+      router.replace("/history");
     } catch {
       toast.error(HISTORY_COPY.deleteMealError);
     }
