@@ -9,6 +9,7 @@ type UseRecipePickerListOptions = {
   filter?: RecipeListFilter;
   tags?: string[];
   title?: string;
+  folderId?: string;
 };
 
 export function useRecipePickerList({
@@ -16,6 +17,7 @@ export function useRecipePickerList({
   filter = "all",
   tags = [],
   title = "",
+  folderId,
 }: UseRecipePickerListOptions = {}) {
   const trimmedTitle = title.trim();
   const normalizedTitle = trimmedTitle.toLowerCase();
@@ -47,6 +49,7 @@ export function useRecipePickerList({
     filter,
     tags,
     title: trimmedTitle,
+    folderId,
   });
 
   const recipes = useMemo(() => {

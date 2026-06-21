@@ -1,7 +1,7 @@
 import { WelcomeScreen } from "@/features/onboarding/components/welcome-screen";
 
 export const metadata = {
-  title: "Bienvenida · Namly",
+  title: "Bienvenida",
   description: "Te damos la bienvenida a Namly y te contamos cómo personalizaremos tu experiencia.",
 };
 

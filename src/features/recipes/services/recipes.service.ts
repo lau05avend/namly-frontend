@@ -40,6 +40,10 @@ function buildRecipesQueryString(params: RecipeListParams): string {
     searchParams.set("title", title);
   }
 
+  if (params.folderId) {
+    searchParams.set("folderId", params.folderId);
+  }
+
   return searchParams.toString();
 }
 

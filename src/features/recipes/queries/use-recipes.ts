@@ -14,6 +14,7 @@ type UseRecipesOptions = {
   filter?: RecipeListFilter;
   tags?: string[];
   title?: string;
+  folderId?: string;
 };
 
 export function useRecipes({
@@ -21,6 +22,7 @@ export function useRecipes({
   filter = "all",
   tags = [],
   title = "",
+  folderId,
 }: UseRecipesOptions = {}) {
   const { isAuthenticated } = useAuth();
   const sortedTags = [...tags].sort().join(",");
@@ -29,6 +31,7 @@ export function useRecipes({
     filter,
     tags,
     title,
+    folderId,
   };
 
   return useQuery({
@@ -36,6 +39,7 @@ export function useRecipes({
       filter,
       tags: sortedTags,
       title,
+      folderId: folderId ?? "",
     }),
     queryFn: () => fetchRecipes(params),
     enabled: isAuthenticated && enabled,

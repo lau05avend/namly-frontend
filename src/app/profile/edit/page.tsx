@@ -1,7 +1,7 @@
 import { EditProfileScreen } from "@/features/profile/components/edit-profile-screen";
 
 export const metadata = {
-  title: "Editar perfil · Namly",
+  title: "Editar perfil",
   description: "Actualiza tu nombre y foto de perfil.",
 };
 

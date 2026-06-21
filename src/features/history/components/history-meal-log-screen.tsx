@@ -10,6 +10,7 @@ import { HistoryMealLogCarousel } from "@/features/history/components/history-me
 import { HistoryMealLogContextBar } from "@/features/history/components/history-meal-log-pager";
 import { HistoryMealLogDeleteSheet } from "@/features/history/components/history-meal-log-delete-sheet";
 import { HistoryMealLogHeader } from "@/features/history/components/history-meal-log-header";
+import { HistoryDayEmpty } from "@/features/history/components/history-day-empty";
 import { HistoryLoading } from "@/features/history/components/history-loading";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { historyQueryKeys } from "@/features/history/constants/query-keys";
@@ -175,11 +176,7 @@ export function HistoryMealLogScreen({
           </>
         ) : null}
 
-        {day && day.logs.length === 0 ? (
-          <p className="px-4 py-10 text-center text-sm text-foreground/60">
-            {HISTORY_COPY.dayEmpty}
-          </p>
-        ) : null}
+        {day && day.logs.length === 0 ? <HistoryDayEmpty /> : null}
       </main>
 
       <BottomNav activeId="history" />

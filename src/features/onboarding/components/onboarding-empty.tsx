@@ -1,9 +1,13 @@
+import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { ONBOARDING_COPY } from "@/features/onboarding/constants/onboarding-copy";
+import { Sparkles } from "lucide-react";
 
 export function OnboardingEmpty() {
   return (
-    <p className="py-12 text-center text-sm text-foreground/60">
-      {ONBOARDING_COPY.wizard.empty}
-    </p>
+    <ModuleEmptyState
+      module="home"
+      icon={Sparkles}
+      title={ONBOARDING_COPY.wizard.empty}
+    />
   );
 }

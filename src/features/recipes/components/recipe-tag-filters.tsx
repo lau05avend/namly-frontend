@@ -16,6 +16,7 @@ type RecipeTagFiltersProps = {
   tagsSheetOpen: boolean;
   onTagsSheetOpenChange: (open: boolean) => void;
   parentOpen?: boolean;
+  layout?: "sheet" | "page";
 };
 
 function TagChip({
@@ -91,6 +92,7 @@ export function RecipeTagFilters({
   tagsSheetOpen,
   onTagsSheetOpenChange,
   parentOpen = true,
+  layout = "sheet",
 }: RecipeTagFiltersProps) {
   if (tags.length === 0) {
     return null;
@@ -100,7 +102,12 @@ export function RecipeTagFilters({
 
   return (
     <>
-      <div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        className={cn(
+          "flex min-w-0 gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          layout === "sheet" && "-mx-4 px-4",
+        )}
+      >
         <button
           type="button"
           onClick={() => onTagsSheetOpenChange(true)}

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { HistoryDayEmpty } from "@/features/history/components/history-day-empty";
 import { HistoryLoading } from "@/features/history/components/history-loading";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { useHistoryDay } from "@/features/history/queries/use-history-day";
@@ -30,11 +31,7 @@ export function HistoryDayRedirect({ dateKey }: HistoryDayRedirectProps) {
   }
 
   if (data && data.logs.length === 0) {
-    return (
-      <p className="px-4 py-10 text-center text-sm text-foreground/60">
-        {HISTORY_COPY.dayEmpty}
-      </p>
-    );
+    return <HistoryDayEmpty />;
   }
 
   if (isPending || data) {

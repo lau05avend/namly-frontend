@@ -22,6 +22,7 @@ import {
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
 import { PlannerSection } from "@/components/planner/planner-section";
+import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { RecipePlanCard } from "@/components/planner/recipe-plan-card";
 import { AddRecipesSheet } from "@/features/planner/components/plan-meal/add-recipes-sheet";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
@@ -95,9 +96,11 @@ export function RegisterRecipesSection() {
               </SortableContext>
             </DndContext>
           ) : (
-            <p className="text-sm text-foreground/50">
-              {PLAN_MEAL_COPY.recipes.empty}
-            </p>
+            <ModuleEmptyState
+              module="recipes"
+              variant="inline"
+              title={PLAN_MEAL_COPY.recipes.empty}
+            />
           )}
 
           <PlannerDashedAddButton

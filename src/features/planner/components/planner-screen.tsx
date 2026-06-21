@@ -84,7 +84,7 @@ export function PlannerScreen({ initialDate }: { initialDate?: string } = {}) {
         icon="plus"
         onClick={handleFabClick}
       />
-      <BottomNav activeId="calendar" />
+      <BottomNav activeId="planner" />
     </div>
   );
 }

@@ -27,6 +27,34 @@ body {
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
 }
 
+/*
+ * Hide scrollbars app-wide while preserving scroll behavior.
+ * Use .scrollbar-visible on a container to opt out when needed.
+ */
+@layer base {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+.scrollbar-visible {
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  display: block;
+  width: initial;
+  height: initial;
+}
+
 @utility pt-safe {
   padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
 }

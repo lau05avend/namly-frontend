@@ -7,6 +7,7 @@ import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { PlannedMealCompactPreview } from "@/components/meal/planned-meal-compact-preview";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import {
   addDays,
   parseDateKey,
@@ -389,9 +390,11 @@ export function LinkPlanSheet({
               {REGISTER_MEAL_COPY.errors.load}
             </p>
           ) : displayMeals.length === 0 ? (
-            <p className="py-6 text-center text-sm text-foreground/50">
-              {REGISTER_MEAL_COPY.plan.pickerEmpty}
-            </p>
+            <ModuleEmptyState
+              module="planner"
+              title={REGISTER_MEAL_COPY.plan.pickerEmpty}
+              className="py-6"
+            />
           ) : (
             <ul className="flex flex-col gap-2 pb-2">
               {displayMeals.map((meal) => {

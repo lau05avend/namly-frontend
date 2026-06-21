@@ -1,7 +1,7 @@
 import { OnboardingWizardScreen } from "@/features/onboarding/components/onboarding-wizard-screen";
 
 export const metadata = {
-  title: "Conócenos · Namly",
+  title: "Conócenos",
   description: "Cuéntanos un poco sobre ti para personalizar tu experiencia.",
 };
 

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { formatMonthYear } from "@/features/calendar/utils/date";
 import { CALENDAR_LAYOUT_SPRING } from "@/features/calendar/constants/motion";
+import { SCREEN_LAYOUT } from "@/constants/screen-layout";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
 
@@ -26,23 +27,23 @@ export function CalendarHeader({
   const todayDayNumber = new Date().getDate();
 
   return (
-    <div className={cn("flex items-center justify-between gap-3", className)}>
-      <motion.h2
+    <header className={cn(SCREEN_LAYOUT.headerRow, className)}>
+      <motion.h1
         layout
-        className="text-xl font-bold text-foreground"
+        className={SCREEN_LAYOUT.headerTitle}
         transition={CALENDAR_LAYOUT_SPRING}
       >
         {formatMonthYear(visibleMonth)}
-      </motion.h2>
+      </motion.h1>
 
-      <div className="flex items-center gap-2">
+      <div className={SCREEN_LAYOUT.headerActions}>
         <motion.button
           type="button"
           onClick={onGoToToday}
           aria-label="Ir a hoy"
           whileTap={{ scale: 0.94 }}
           transition={CALENDAR_LAYOUT_SPRING}
-          className="flex size-9 items-center justify-center rounded-full bg-mint text-sm font-semibold text-primary transition-colors hover:bg-mint/80"
+          className={SCREEN_LAYOUT.todayButton}
         >
           {todayDayNumber}
         </motion.button>
@@ -56,8 +57,8 @@ export function CalendarHeader({
             whileTap={{ scale: 0.94 }}
             transition={CALENDAR_LAYOUT_SPRING}
             className={cn(
-              "flex size-9 items-center justify-center rounded-full bg-card text-foreground/60 transition-colors hover:bg-mint/50",
-              isExpanded && "bg-mint text-primary",
+              SCREEN_LAYOUT.iconButton,
+              isExpanded && "bg-mint text-primary hover:text-primary",
             )}
           >
             <motion.span
@@ -69,6 +70,6 @@ export function CalendarHeader({
           </motion.button>
         )}
       </div>
-    </div>
+    </header>
   );
 }

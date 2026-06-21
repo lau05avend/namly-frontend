@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { RecipePickerCard } from "@/features/recipes/components/recipe-picker-card";
 import { RecipePrimaryFilters } from "@/features/recipes/components/recipe-primary-filters";
 import { RecipeTagFilters } from "@/features/recipes/components/recipe-tag-filters";
@@ -176,14 +177,14 @@ export function AddRecipesSheet({
         <div className="flex shrink-0 flex-col gap-3 border-b border-foreground/6 pb-3">
           <div className="relative">
             <Search
-              className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-foreground/35"
+              className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-foreground/35"
               aria-hidden
             />
             <Input
               value={titleSearch}
               onChange={(event) => setTitleSearch(event.target.value)}
               placeholder={PLAN_MEAL_COPY.recipes.searchPlaceholder}
-              className="h-10 pl-10"
+              className="h-9 px-3.5 pl-9 text-sm"
             />
           </div>
 
@@ -227,9 +228,12 @@ export function AddRecipesSheet({
           ) : null}
 
           {!isPending && !isError && recipes.length === 0 ? (
-            <p className="py-8 text-center text-sm text-foreground/50">
-              {PLAN_MEAL_COPY.recipes.noResults}
-            </p>
+            <ModuleEmptyState
+              module="recipes"
+              title={PLAN_MEAL_COPY.recipes.noResults}
+              description={PLAN_MEAL_COPY.recipes.noResultsHint}
+              className="py-8"
+            />
           ) : null}
 
           {!isPending && !isError && recipes.length > 0 ? (
