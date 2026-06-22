@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
-import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { MeasurementUnitPickerSheet } from "@/features/recipes/components/measurement-unit-picker-sheet";
 import { RecipeIngredientRow } from "@/features/recipes/components/recipe-ingredient-row";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
@@ -64,20 +63,15 @@ export function CreateRecipeIngredientsSection() {
   return (
     <>
       {fields.length === 0 ? (
-        <ModuleEmptyState
-          module="recipes"
-          variant="inline"
-          title={copy.empty}
-        />
+        <p className="py-1 text-sm text-foreground/45">{copy.empty}</p>
       ) : (
-        <ul className="overflow-hidden rounded-2xl border border-foreground/8 bg-card">
+        <ul>
           {fields.map((field, index) => (
             <RecipeIngredientRow
               key={field.fieldKey}
               index={index}
               unitId={field.unitId}
               units={units}
-              isFirst={index === 0}
               isLast={index === fields.length - 1}
               onOpenUnitPicker={() => setUnitPickerIndex(index)}
               onRemove={() => remove(index)}

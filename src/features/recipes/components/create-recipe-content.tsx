@@ -1,10 +1,9 @@
 "use client";
 
-import { PlannerSection } from "@/components/planner/planner-section";
 import { CreateRecipeBasicSection } from "@/features/recipes/components/sections/create-recipe-basic-section";
+import { CreateRecipeBodyTabsSection } from "@/features/recipes/components/sections/create-recipe-body-tabs-section";
 import { CreateRecipeCoverSection } from "@/features/recipes/components/sections/create-recipe-cover-section";
-import { CreateRecipeIngredientsSection } from "@/features/recipes/components/sections/create-recipe-ingredients-section";
-import { CreateRecipeStepsSection } from "@/features/recipes/components/sections/create-recipe-steps-section";
+import { CreateRecipePublicSection } from "@/features/recipes/components/sections/create-recipe-public-section";
 import { CreateRecipeTagsSection } from "@/features/recipes/components/sections/create-recipe-tags-section";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { MealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
@@ -17,28 +16,24 @@ export function CreateRecipeContent({ photoPicker }: CreateRecipeContentProps) {
   const copy = RECIPES_COPY.create;
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-28 pt-4">
+    <div className="flex flex-col gap-8 px-4 pb-28 pt-3">
+      <CreateRecipeBasicSection />
+
       <CreateRecipeCoverSection
         refs={photoPicker.refs}
         state={photoPicker.state}
         actions={photoPicker.actions}
       />
 
-      <PlannerSection label={copy.sections.basic}>
-        <CreateRecipeBasicSection />
-      </PlannerSection>
+      <CreateRecipeBodyTabsSection />
 
-      <PlannerSection label={copy.sections.ingredients}>
-        <CreateRecipeIngredientsSection />
-      </PlannerSection>
+      <div className="flex flex-col gap-5 border-t border-foreground/6 pt-6">
+        <CreateRecipePublicSection />
 
-      <PlannerSection label={copy.sections.steps}>
-        <CreateRecipeStepsSection />
-      </PlannerSection>
-
-      <PlannerSection label={copy.sections.tags}>
-        <CreateRecipeTagsSection />
-      </PlannerSection>
+        <div className="flex flex-col gap-2">
+          <CreateRecipeTagsSection />
+        </div>
+      </div>
     </div>
   );
 }

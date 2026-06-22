@@ -36,16 +36,15 @@ export const RECIPES_COPY = {
     save: "Guardar receta",
     back: "Volver",
     sections: {
-      cover: "Foto",
-      basic: "Información",
+      tagsOptional: "Etiquetas (opcional)",
+    },
+    tabs: {
       ingredients: "Ingredientes",
-      steps: "Pasos",
-      tags: "Etiquetas",
+      preparation: "Preparación",
     },
     cover: {
       add: "Añadir foto",
       change: "Cambiar",
-      hint: "Opcional — puedes agregarla ahora o después",
     },
     fields: {
       titlePlaceholder: "Título de la receta",
@@ -55,9 +54,10 @@ export const RECIPES_COPY = {
     },
     ingredients: {
       add: "Añadir ingrediente",
-      empty: "Agrega los ingredientes de esta receta.",
-      namePlaceholder: "Nombre del ingrediente",
-      quantityPlaceholder: "Cant.",
+      empty: "Empieza con el primer ingrediente.",
+      namePlaceholder: "Ingrediente",
+      quantityPlaceholder: "0",
+      unitFallback: "unidad",
       unitSearchPlaceholder: "Buscar unidad…",
       unitPickerTitle: "Unidad de medida",
       remove: "Quitar ingrediente",
@@ -65,7 +65,7 @@ export const RECIPES_COPY = {
     },
     steps: {
       add: "Añadir paso",
-      empty: "Describe cómo se prepara esta receta.",
+      empty: "Describe cómo se prepara.",
       descriptionPlaceholder: "Describe este paso…",
       durationPlaceholder: "Min",
       durationLabel: "Duración",

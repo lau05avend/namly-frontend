@@ -12,7 +12,6 @@ type RecipeIngredientRowProps = {
   index: number;
   unitId: string;
   units: MeasurementUnit[];
-  isFirst?: boolean;
   isLast?: boolean;
   onOpenUnitPicker: () => void;
   onRemove: () => void;
@@ -22,7 +21,6 @@ export function RecipeIngredientRow({
   index,
   unitId,
   units,
-  isFirst = false,
   isLast = false,
   onOpenUnitPicker,
   onRemove,
@@ -40,17 +38,15 @@ export function RecipeIngredientRow({
   return (
     <li
       className={cn(
-        "border-b border-foreground/6 px-3 py-2.5 last:border-b-0",
-        isFirst && isLast && "rounded-2xl border-b-0",
-        isFirst && !isLast && "rounded-t-2xl",
-        isLast && !isFirst && "rounded-b-2xl border-b-0",
+        "py-2.5",
+        !isLast && "border-b border-foreground/6",
       )}
     >
       <div className="flex items-center gap-2">
         <input
           {...register(`ingredients.${index}.name`)}
           placeholder={copy.namePlaceholder}
-          className="min-w-0 flex-1 bg-transparent text-sm font-medium text-foreground placeholder:text-foreground/40 focus-visible:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-base font-medium text-foreground placeholder:text-foreground/35 focus-visible:outline-none"
         />
 
         <input
@@ -60,31 +56,33 @@ export function RecipeIngredientRow({
           step="any"
           inputMode="decimal"
           placeholder={copy.quantityPlaceholder}
-          className="w-14 shrink-0 bg-transparent text-right text-sm text-foreground/70 placeholder:text-foreground/35 focus-visible:outline-none"
+          className="w-9 shrink-0 bg-transparent text-right text-xs text-foreground/50 placeholder:text-foreground/30 focus-visible:outline-none"
         />
+
+        <span className="shrink-0 text-xs text-foreground/25" aria-hidden>
+          ·
+        </span>
 
         <button
           type="button"
           onClick={onOpenUnitPicker}
-          className="shrink-0 cursor-pointer rounded-full border border-foreground/10 bg-background px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/60 transition-colors hover:border-primary/25 hover:bg-mint/30 hover:text-primary"
+          className="shrink-0 cursor-pointer text-xs font-medium text-foreground/45 transition-colors hover:text-primary"
         >
-          {unit?.abbreviation ?? "—"}
+          {unit?.abbreviation ?? copy.unitFallback}
         </button>
 
         <button
           type="button"
           onClick={onRemove}
           aria-label={copy.remove}
-          className="shrink-0 cursor-pointer rounded-md p-1 text-foreground/35 transition-colors hover:text-cta"
+          className="shrink-0 cursor-pointer rounded-md p-1 text-foreground/25 transition-colors hover:text-cta"
         >
-          <X className="size-4" aria-hidden />
+          <X className="size-3.5" aria-hidden />
         </button>
       </div>
 
       {nameError || quantityError ? (
-        <p className="mt-1 text-xs text-cta">
-          {nameError ?? quantityError}
-        </p>
+        <p className="mt-1 text-xs text-cta">{nameError ?? quantityError}</p>
       ) : null}
     </li>
   );

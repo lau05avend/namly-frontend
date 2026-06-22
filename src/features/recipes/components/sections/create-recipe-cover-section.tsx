@@ -2,7 +2,6 @@
 
 import { useLayoutEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { PhotoMealCard } from "@/components/meal-register/photo-meal-card";
 import { PhotoSourceSheet } from "@/features/meal-register/components/photo-source-sheet";
 import {
   MEAL_PHOTO_ACCEPT,
@@ -19,6 +18,17 @@ type CreateRecipeCoverSectionProps = {
   state: MealPhotoPickerState;
   actions: MealPhotoPickerActions;
 };
+
+function CoverError({ message }: { message: string }) {
+  return (
+    <p
+      role="alert"
+      className="rounded-xl border border-cta/25 bg-cta/8 px-3 py-2.5 text-xs leading-relaxed font-medium text-cta"
+    >
+      {message}
+    </p>
+  );
+}
 
 function RecipeCoverCard({
   photoUrl,
@@ -37,34 +47,35 @@ function RecipeCoverCard({
         <button
           type="button"
           onClick={onPickPhoto}
-          className="flex aspect-[16/10] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-foreground/15 bg-card/60 p-6"
+          className="flex h-24 w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl border border-dashed border-foreground/15 bg-card/60 transition-colors hover:border-primary/20 hover:bg-mint/15"
         >
-          <span className="flex size-12 items-center justify-center rounded-full bg-mint text-primary">
-            <ImagePlus className="size-6" aria-hidden />
+          <span className="flex size-10 items-center justify-center rounded-full bg-mint text-primary">
+            <ImagePlus className="size-5" aria-hidden />
           </span>
-          <span className="text-sm font-semibold text-foreground">
+          <span className="text-sm font-medium text-foreground/75">
             {copy.add}
           </span>
-          <span className="text-xs text-foreground/45">{copy.hint}</span>
         </button>
-        {error ? (
-          <p
-            role="alert"
-            className="rounded-xl border border-cta/25 bg-cta/8 px-3 py-2.5 text-xs leading-relaxed font-medium text-cta"
-          >
-            {error}
-          </p>
-        ) : null}
+        {error ? <CoverError message={error} /> : null}
       </div>
     );
   }
 
   return (
-    <PhotoMealCard
-      photoUrl={photoUrl}
-      onPickPhoto={onPickPhoto}
-      error={error}
-    />
+    <div className="flex flex-col gap-2">
+      <div className="relative h-28 overflow-hidden rounded-2xl bg-foreground/5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={photoUrl} alt="" className="size-full object-cover" />
+        <button
+          type="button"
+          onClick={onPickPhoto}
+          className="absolute right-2.5 bottom-2.5 cursor-pointer rounded-full bg-card/95 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm"
+        >
+          {copy.change}
+        </button>
+      </div>
+      {error ? <CoverError message={error} /> : null}
+    </div>
   );
 }
 
@@ -91,15 +102,6 @@ export function CreateRecipeCoverSection({
     });
   }, [coverUrl, previewUrl, setValue]);
 
-  const openPicker = () => {
-    if (displayPhotoUrl) {
-      setIsSourceOpen(true);
-      return;
-    }
-
-    setIsSourceOpen(true);
-  };
-
   return (
     <>
       <input
@@ -120,7 +122,7 @@ export function CreateRecipeCoverSection({
 
       <RecipeCoverCard
         photoUrl={displayPhotoUrl}
-        onPickPhoto={openPicker}
+        onPickPhoto={() => setIsSourceOpen(true)}
         error={pickError}
       />
 

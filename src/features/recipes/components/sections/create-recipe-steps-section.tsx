@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -21,7 +20,6 @@ import {
 } from "@dnd-kit/sortable";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
-import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { RecipeStepCard } from "@/features/recipes/components/recipe-step-card";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
@@ -68,7 +66,7 @@ export function CreateRecipeStepsSection() {
   return (
     <>
       {fields.length === 0 ? (
-        <ModuleEmptyState module="recipes" variant="inline" title={copy.empty} />
+        <p className="py-1 text-sm text-foreground/45">{copy.empty}</p>
       ) : (
         <DndContext
           sensors={sensors}
@@ -80,15 +78,13 @@ export function CreateRecipeStepsSection() {
             items={fields.map((field) => field.fieldKey)}
             strategy={verticalListSortingStrategy}
           >
-            <ul>
+            <ul className="flex flex-col gap-2.5">
               {fields.map((field, index) => (
                 <RecipeStepCard
                   key={field.fieldKey}
                   sortableId={field.fieldKey}
                   stepNumber={index + 1}
                   step={field}
-                  isFirst={index === 0}
-                  isLast={index === fields.length - 1}
                   onDescriptionChange={(description) =>
                     update(index, { ...field, description })
                   }
