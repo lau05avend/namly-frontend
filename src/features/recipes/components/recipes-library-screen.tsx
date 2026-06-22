@@ -130,14 +130,14 @@ export function RecipesLibraryScreen({
   };
 
   const handleFabClick = () => {
-    toast.info(
-      view === "collections"
-        ? RECIPES_COPY.fab.addCollection
-        : RECIPES_COPY.fab.addRecipe,
-      {
+    if (view === "collections") {
+      toast.info(RECIPES_COPY.fab.addCollection, {
         description: "Muy pronto podrás hacerlo desde aquí.",
-      },
-    );
+      });
+      return;
+    }
+
+    router.push("/recipes/new");
   };
 
   const panelVariants = viewPanelVariants(slideDirection);

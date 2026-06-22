@@ -14,3 +14,9 @@ export type CreateTagsPayload = {
   category: string;
   tags: CreateTagInput[];
 };
+
+export type UpdateTagInput = {
+  category: string;
+  name: string;
+  iconName: string | null;
+};

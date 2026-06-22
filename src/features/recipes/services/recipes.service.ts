@@ -1,3 +1,4 @@
+import type { CreateRecipePayload, CreateRecipeResponse } from "@/features/recipes/types/create-recipe-api.types";
 import type { RecipeListItemApiDto } from "@/features/recipes/types/recipe-api.types";
 import type {
   RecipeListFilter,
@@ -66,4 +67,13 @@ export async function fetchRecipes(
         : true,
     )
     .map((recipe) => mapRecipeListItem(recipe, listFilter));
+}
+
+export async function createRecipe(
+  payload: CreateRecipePayload,
+): Promise<CreateRecipeResponse> {
+  return apiClient<CreateRecipeResponse>("/api/v1/recipes", {
+    method: "POST",
+    body: payload,
+  });
 }
