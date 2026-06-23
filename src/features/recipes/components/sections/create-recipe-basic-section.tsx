@@ -1,30 +1,9 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
-
-function useAutoGrowTextarea(value: string) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const resize = useCallback(() => {
-    const element = textareaRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    element.style.height = "auto";
-    element.style.height = `${element.scrollHeight}px`;
-  }, []);
-
-  useLayoutEffect(() => {
-    resize();
-  }, [resize, value]);
-
-  return { textareaRef, resize };
-}
+import { useAutoGrowTextarea } from "@/hooks/use-auto-grow-textarea";
 
 export function CreateRecipeBasicSection() {
   const {
@@ -52,14 +31,6 @@ export function CreateRecipeBasicSection() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        {/* <label
-          htmlFor="recipe-description"
-          className="text-xs text-foreground/40"
-        >
-          {copy.descriptionLabel}{" "}
-          <span className="text-foreground/30">({copy.descriptionOptional})</span>
-        </label> */}
-
         <div className="border-l-2 border-primary/12 pl-3 transition-colors focus-within:border-primary/25">
           <textarea
             {...descriptionField}

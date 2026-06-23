@@ -1,14 +1,19 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
 import type { MeasurementUnit } from "@/features/recipes/types/measurement-unit.types";
 import { resolveMeasurementUnitById } from "@/features/recipes/utils/resolve-default-measurement-unit";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { GripVertical, X } from "lucide-react";
+
+const SORTABLE_TRANSITION = "transform 520ms cubic-bezier(0.22, 0.03, 0.26, 1)";
 
 type RecipeIngredientRowProps = {
+  sortableId: string;
   index: number;
   units: MeasurementUnit[];
   isLast?: boolean;
@@ -17,6 +22,7 @@ type RecipeIngredientRowProps = {
 };
 
 export function RecipeIngredientRow({
+  sortableId,
   index,
   units,
   isLast = false,
@@ -29,6 +35,20 @@ export function RecipeIngredientRow({
     watch,
     formState: { errors },
   } = useFormContext<CreateRecipeFormValues>();
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: sortableId,
+    transition: {
+      duration: 480,
+      easing: "cubic-bezier(0.22, 0.03, 0.26, 1)",
+    },
+  });
 
   const unitId = watch(`ingredients.${index}.unitId`);
   const unit = resolveMeasurementUnitById(units, unitId);
@@ -37,10 +57,17 @@ export function RecipeIngredientRow({
 
   return (
     <li
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition: isDragging ? undefined : (transition ?? SORTABLE_TRANSITION),
+      }}
       className={cn(
         "py-2.5",
         !isLast && "border-b border-foreground/6",
+        isDragging && "bg-mint/10",
       )}
+      {...attributes}
     >
       <div className="flex items-center gap-2">
         <input
@@ -74,14 +101,24 @@ export function RecipeIngredientRow({
           {unit?.abbreviation ?? copy.unitFallback}
         </button>
 
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label={copy.remove}
-          className="shrink-0 cursor-pointer rounded-md p-1 text-foreground/25 transition-colors hover:text-cta"
-        >
-          <X className="size-3.5" aria-hidden />
-        </button>
+        <div className="flex shrink-0 items-center gap-0.5">
+          <button
+            type="button"
+            className="cursor-grab touch-none rounded-md p-1 text-foreground/20 active:cursor-grabbing"
+            aria-label={copy.reorder}
+            {...listeners}
+          >
+            <GripVertical className="size-3.5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={copy.remove}
+            className="cursor-pointer rounded-md p-1 text-foreground/25 transition-colors hover:text-cta"
+          >
+            <X className="size-3.5" aria-hidden />
+          </button>
+        </div>
       </div>
 
       {nameError || quantityError ? (

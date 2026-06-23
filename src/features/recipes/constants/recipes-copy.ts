@@ -63,6 +63,7 @@ export const RECIPES_COPY = {
       unitSearchPlaceholder: "Buscar unidad…",
       unitPickerTitle: "Unidad de medida",
       remove: "Quitar ingrediente",
+      reorder: "Reordenar ingredientes",
       loadUnitsError: "No pudimos cargar las unidades.",
     },
     steps: {

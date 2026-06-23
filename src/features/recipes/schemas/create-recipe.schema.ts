@@ -7,46 +7,50 @@ export const createRecipeTagSchema = z.object({
   isPending: z.boolean().optional(),
 });
 
-export const createRecipeIngredientSchema = z.object({
-  fieldKey: z.string(),
-  name: z.string().min(1, "Escribe el nombre del ingrediente"),
-  quantity: z.number().positive("La cantidad debe ser mayor a 0"),
-  unitId: z.string().min(1, "Selecciona una unidad"),
-});
-
-export const createRecipeStepSchema = z.object({
-  fieldKey: z.string(),
-  description: z.string().min(1, "Describe el paso"),
-  durationMinutes: z.number().int().min(0).nullable().optional(),
-});
-
-export const createRecipeFormSchema = z
+export const createRecipeIngredientSchema = z
   .object({
-    title: z.string().trim().min(1, "Escribe un título"),
-    description: z.string(),
-    coverUrl: z.string().nullable().optional(),
-    isPublic: z.boolean(),
-    ingredients: z.array(createRecipeIngredientSchema),
-    steps: z.array(createRecipeStepSchema),
-    tags: z.array(createRecipeTagSchema),
+    fieldKey: z.string(),
+    name: z.string(),
+    quantity: z.number(),
+    unitId: z.string(),
   })
-  .superRefine((values, ctx) => {
-    if (values.ingredients.length === 0) {
+  .superRefine((ingredient, ctx) => {
+    if (!ingredient.name.trim()) {
+      return;
+    }
+
+    if (!ingredient.unitId.trim()) {
       ctx.addIssue({
         code: "custom",
-        message: "Agrega al menos un ingrediente",
-        path: ["ingredients"],
+        message: "Selecciona una unidad",
+        path: ["unitId"],
       });
     }
 
-    if (values.steps.length === 0) {
+    if (!(ingredient.quantity > 0)) {
       ctx.addIssue({
         code: "custom",
-        message: "Agrega al menos un paso",
-        path: ["steps"],
+        message: "La cantidad debe ser mayor a 0",
+        path: ["quantity"],
       });
     }
   });
+
+export const createRecipeStepSchema = z.object({
+  fieldKey: z.string(),
+  description: z.string(),
+  durationMinutes: z.number().int().min(0).nullable().optional(),
+});
+
+export const createRecipeFormSchema = z.object({
+  title: z.string().trim().min(1, "Escribe un título"),
+  description: z.string(),
+  coverUrl: z.string().nullable().optional(),
+  isPublic: z.boolean(),
+  ingredients: z.array(createRecipeIngredientSchema),
+  steps: z.array(createRecipeStepSchema),
+  tags: z.array(createRecipeTagSchema),
+});
 
 export type CreateRecipeFormValues = z.infer<typeof createRecipeFormSchema>;
 export type CreateRecipeTagFormValue = z.infer<typeof createRecipeTagSchema>;

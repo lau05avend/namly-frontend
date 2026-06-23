@@ -1,5 +1,23 @@
 "use client";
 
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  type DragEndEvent,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  restrictToParentElement,
+  restrictToVerticalAxis,
+} from "@dnd-kit/modifiers";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
@@ -18,7 +36,7 @@ export function CreateRecipeIngredientsSection() {
     getValues,
     formState: { errors },
   } = useFormContext<CreateRecipeFormValues>();
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove, update, move } = useFieldArray({
     control,
     name: "ingredients",
     keyName: "fieldKey",
@@ -26,8 +44,29 @@ export function CreateRecipeIngredientsSection() {
   const { data: units = [], isPending, isError } = useMeasurementUnits();
   const [unitPickerIndex, setUnitPickerIndex] = useState<number | null>(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
   const defaultUnitId = resolveDefaultMeasurementUnitId(units);
   const canAddIngredient = !isPending && defaultUnitId.length > 0;
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = fields.findIndex((field) => field.fieldKey === active.id);
+    const newIndex = fields.findIndex((field) => field.fieldKey === over.id);
+
+    if (oldIndex >= 0 && newIndex >= 0) {
+      move(oldIndex, newIndex);
+    }
+  };
 
   const addIngredient = () => {
     if (!canAddIngredient) {
@@ -67,18 +106,31 @@ export function CreateRecipeIngredientsSection() {
       {fields.length === 0 ? (
         <p className="py-1 text-sm text-foreground/45">{copy.empty}</p>
       ) : (
-        <ul>
-          {fields.map((field, index) => (
-            <RecipeIngredientRow
-              key={field.fieldKey}
-              index={index}
-              units={units}
-              isLast={index === fields.length - 1}
-              onOpenUnitPicker={() => setUnitPickerIndex(index)}
-              onRemove={() => remove(index)}
-            />
-          ))}
-        </ul>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={fields.map((field) => field.fieldKey)}
+            strategy={verticalListSortingStrategy}
+          >
+            <ul>
+              {fields.map((field, index) => (
+                <RecipeIngredientRow
+                  key={field.fieldKey}
+                  sortableId={field.fieldKey}
+                  index={index}
+                  units={units}
+                  isLast={index === fields.length - 1}
+                  onOpenUnitPicker={() => setUnitPickerIndex(index)}
+                  onRemove={() => remove(index)}
+                />
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
       )}
 
       <PlannerDashedAddButton

@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
+import { useAutoGrowTextarea } from "@/hooks/use-auto-grow-textarea";
 import { cn } from "@/lib/utils";
 import { GripVertical, X } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -28,8 +29,14 @@ export function RecipeStepCard({
   const copy = RECIPES_COPY.create.steps;
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext<CreateRecipeFormValues>();
+  const description = watch(`steps.${index}.description`) ?? "";
+  const { textareaRef, resize } = useAutoGrowTextarea(description);
+  const { ref: descriptionRef, ...descriptionField } = register(
+    `steps.${index}.description`,
+  );
   const durationField = register(`steps.${index}.durationMinutes`, {
     setValueAs: (value) => {
       if (value === "" || value == null) {
@@ -79,10 +86,15 @@ export function RecipeStepCard({
         </span>
 
         <textarea
-          {...register(`steps.${index}.description`)}
+          {...descriptionField}
+          ref={(element) => {
+            descriptionRef(element);
+            textareaRef.current = element;
+          }}
           placeholder={copy.descriptionPlaceholder}
           rows={2}
-          className="min-w-0 flex-1 resize-none bg-transparent text-[14px] font-medium leading-relaxed text-foreground placeholder:text-foreground/35 focus-visible:outline-none"
+          onInput={resize}
+          className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent text-[14px] font-medium leading-relaxed text-foreground placeholder:text-foreground/35 focus-visible:outline-none"
         />
 
         <div className="flex shrink-0 items-baseline gap-px pt-0.5">

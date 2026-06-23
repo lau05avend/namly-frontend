@@ -13,19 +13,23 @@ export function toCreateRecipePayload(
     description: description.length > 0 ? description : null,
     coverUrl,
     isPublic: values.isPublic,
-    ingredients: values.ingredients.map((ingredient) => ({
-      name: ingredient.name.trim(),
-      quantity: ingredient.quantity,
-      unitId: ingredient.unitId,
-    })),
-    steps: values.steps.map((step, index) => ({
-      stepOrder: index + 1,
-      description: step.description.trim(),
-      durationMinutes:
-        step.durationMinutes != null && step.durationMinutes > 0
-          ? step.durationMinutes
-          : null,
-    })),
+    ingredients: values.ingredients
+      .filter((ingredient) => ingredient.name.trim().length > 0)
+      .map((ingredient) => ({
+        name: ingredient.name.trim(),
+        quantity: ingredient.quantity,
+        unitId: ingredient.unitId,
+      })),
+    steps: values.steps
+      .filter((step) => step.description.trim().length > 0)
+      .map((step, index) => ({
+        stepOrder: index + 1,
+        description: step.description.trim(),
+        durationMinutes:
+          step.durationMinutes != null && step.durationMinutes > 0
+            ? step.durationMinutes
+            : null,
+      })),
     tagIds,
   };
 }
