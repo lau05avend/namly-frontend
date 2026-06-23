@@ -16,6 +16,7 @@ import { useProfile } from "@/features/profile/queries/use-profile";
 import { useUpdateProfile } from "@/features/profile/queries/use-update-profile";
 import { uploadAvatar } from "@/features/profile/services/avatar-storage.service";
 import { useAuth } from "@/hooks/use-auth";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 
 export function EditProfileScreen() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export function EditProfileScreen() {
       router.push("/profile");
     } catch (error) {
       setSaveError(
-        error instanceof Error ? error.message : PROFILE_COPY.saveError,
+        getUserFacingErrorMessage(error, PROFILE_COPY.saveError),
       );
     } finally {
       setIsSubmitting(false);

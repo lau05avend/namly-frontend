@@ -11,6 +11,7 @@ import { useCreateRecipeForm } from "@/features/recipes/hooks/use-create-recipe-
 import { useCreateRecipe } from "@/features/recipes/queries/use-create-recipe";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
 import { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import { getFirstFieldErrorMessage } from "@/lib/form/get-first-field-error-message";
 
 export function CreateRecipeScreen() {
@@ -32,17 +33,17 @@ export function CreateRecipeScreen() {
     photoPicker.actions.clearPickError();
 
     try {
-      const response = await createMutation.mutateAsync({
+      await createMutation.mutateAsync({
         values,
         coverFile: photoPicker.actions.getPendingFile() ?? undefined,
       });
 
-      router.replace(`/recipes/${response.id}`);
+      router.replace("/recipes");
     } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : RECIPES_COPY.create.errors.save;
+      const message = getUserFacingErrorMessage(
+        error,
+        RECIPES_COPY.create.errors.save,
+      );
       setSaveError(message);
       toast.error(message, { duration: 6000 });
     }

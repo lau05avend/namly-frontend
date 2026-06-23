@@ -16,6 +16,7 @@ import {
   recipeTagNameExistsExcluding,
 } from "@/features/recipes/utils/recipe-tag.utils";
 import { tagQueryKeys } from "@/features/tags/constants/query-keys";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import {
   createRecipeTags,
   RECIPE_TAG_CATEGORY,
@@ -247,10 +248,7 @@ export function RecipeTagPicker({
 
       await invalidateRecipeTags();
     } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : copy.renameError;
+      const message = getUserFacingErrorMessage(error, copy.renameError);
       toast.error(message);
     }
   };
@@ -300,10 +298,7 @@ export function RecipeTagPicker({
       setCreatingTagName(null);
       await invalidateRecipeTags();
     } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : copy.createError;
+      const message = getUserFacingErrorMessage(error, copy.createError);
       toast.error(message);
     } finally {
       setIsCreatingTag(false);
