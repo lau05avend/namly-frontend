@@ -1,4 +1,4 @@
-import type { CreateRecipePayload, CreateRecipeResponse } from "@/features/recipes/types/create-recipe-api.types";
+import type { CreateRecipePayload, CreateRecipeResponse, UpdateRecipePayload } from "@/features/recipes/types/create-recipe-api.types";
 import type {
   RecipeDetailApiDto,
   RecipeDetailPage,
@@ -169,5 +169,21 @@ export async function createRecipe(
   return apiClient<CreateRecipeResponse>("/api/v1/recipes", {
     method: "POST",
     body: payload,
+  });
+}
+
+export async function updateRecipe(
+  recipeId: string,
+  payload: UpdateRecipePayload,
+): Promise<void> {
+  await apiClient<void>(`/api/v1/recipes/${recipeId}`, {
+    method: "PATCH",
+    body: payload,
+  });
+}
+
+export async function deleteRecipe(recipeId: string): Promise<void> {
+  await apiClient<void>(`/api/v1/recipes/${recipeId}`, {
+    method: "DELETE",
   });
 }

@@ -23,3 +23,5 @@ export type CreateRecipePayload = {
 export type CreateRecipeResponse = {
   id: string;
 };
+
+export type UpdateRecipePayload = CreateRecipePayload;

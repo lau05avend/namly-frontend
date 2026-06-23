@@ -21,16 +21,19 @@ export function RecipeDetailHero({
   recipeId,
   isFavorite,
 }: RecipeDetailHeroProps) {
+  const hasCover = Boolean(recipe.coverUrl?.trim());
   const hasMeta =
     recipe.tags.length > 0 ||
     recipe.hasCompatibilityWarning ||
     Boolean(recipe.sourceLabel || recipe.authorName);
 
   return (
-    <header className="flex flex-col gap-4">
+    <header className="flex flex-col gap-6">
       <RecipeCover
         coverUrl={recipe.coverUrl}
-        aspectClassName="aspect-[4/3] rounded-2xl"
+        aspectClassName={
+          hasCover ? "aspect-[4/3] rounded-2xl" : "aspect-[2/1] rounded-2xl"
+        }
       >
         <RecipeOriginBadge recipe={recipe} />
         <RecipeDetailFavoriteButton

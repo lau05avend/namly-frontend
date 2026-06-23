@@ -19,4 +19,6 @@ export const recipeQueryKeys = {
     title: string;
     folderId: string;
   }) => [...recipeQueryKeys.all, "list", params] as const,
+  editForm: (recipeId: string) =>
+    [...recipeQueryKeys.all, "edit-form", recipeId] as const,
 };

@@ -27,6 +27,8 @@ export type RecipeDetail = {
   authorAvatarUrl: string | null;
   sourceLabel: string | null;
   hasCompatibilityWarning: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   tags: RecipeDetailTag[];
   ingredients: RecipeDetailIngredient[];
   steps: RecipeDetailStep[];

@@ -44,6 +44,8 @@ export function mapRecipeDetailApiToPage(dto: RecipeDetailApiDto): RecipeDetailP
     authorAvatarUrl: null,
     sourceLabel: resolveSourceLabel(summary),
     hasCompatibilityWarning: false,
+    canEdit: summary.canEdit ?? dto.canEdit ?? false,
+    canDelete: summary.canDelete ?? dto.canDelete ?? false,
     tags: (dto.tags ?? []).map((tag) => ({
       id: tag.id,
       name: tag.name.trim(),

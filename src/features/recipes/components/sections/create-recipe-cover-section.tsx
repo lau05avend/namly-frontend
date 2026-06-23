@@ -90,10 +90,10 @@ export function CreateRecipeCoverSection({
   const { galleryInputRef, cameraInputRef } = refs;
   const { previewUrl, pickError } = state;
   const { openGallery, openCamera, handleFileChange } = actions;
-  const displayPhotoUrl = previewUrl ?? coverUrl ?? undefined;
+  const displayPhotoUrl = previewUrl ?? undefined;
 
   useLayoutEffect(() => {
-    if (!previewUrl || coverUrl === previewUrl) {
+    if (!previewUrl?.startsWith("blob:") || coverUrl === previewUrl) {
       return;
     }
 

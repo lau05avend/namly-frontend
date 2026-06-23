@@ -1,10 +1,11 @@
 export function RecipeDetailSkeleton() {
   return (
-    <div className="flex flex-col" aria-hidden>
+    <div className="flex flex-col gap-6" aria-hidden>
       <div className="aspect-[4/3] animate-pulse rounded-2xl bg-foreground/[0.06]" />
-      <div className="mt-4 flex flex-col gap-4">
+
+      <div className="flex flex-col gap-4">
         <div className="h-8 w-3/4 animate-pulse rounded-lg bg-foreground/[0.06]" />
-        <div className="flex flex-col gap-1.5 border-l-2 border-foreground/8 pl-3">
+        <div className="flex flex-col gap-1.5 pl-1">
           <div className="h-4 w-full animate-pulse rounded bg-foreground/[0.05]" />
           <div className="h-4 w-4/5 animate-pulse rounded bg-foreground/[0.05]" />
         </div>
@@ -13,7 +14,8 @@ export function RecipeDetailSkeleton() {
           <div className="h-6 w-20 animate-pulse rounded-full bg-foreground/[0.06]" />
         </div>
       </div>
-      <div className="mt-7 flex flex-col gap-4 border-t border-foreground/6 pt-7">
+
+      <div className="flex flex-col gap-4 pt-7">
         <div className="flex w-full gap-0 border-b border-foreground/8 pb-3">
           <div className="flex flex-1 justify-center">
             <div className="h-4 w-20 animate-pulse rounded bg-foreground/[0.06]" />

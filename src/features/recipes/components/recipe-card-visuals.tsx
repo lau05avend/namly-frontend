@@ -61,11 +61,13 @@ type RecipeOriginBadgeProps = {
     isPublic?: boolean;
   };
   reserveSelectionSpace?: boolean;
+  className?: string;
 };
 
 export function RecipeOriginBadge({
   recipe,
   reserveSelectionSpace = false,
+  className,
 }: RecipeOriginBadgeProps) {
   const badge = getOriginBadge(recipe);
 
@@ -83,6 +85,7 @@ export function RecipeOriginBadge({
           ? "max-w-[calc(100%-3.5rem)]"
           : "max-w-[calc(100%-1.25rem)]",
         badge.chipClassName,
+        className,
       )}
     >
       <Icon

@@ -56,6 +56,20 @@ export const RECIPES_COPY = {
     favoriteAdd: "Añadir a favoritas",
     favoriteRemove: "Quitar de favoritas",
     feedbackError: "No pudimos guardar tu valoración. Intenta de nuevo.",
+    editRecipe: "Editar receta",
+    deleteRecipe: "Eliminar receta",
+    deleteRecipeTitle: "Eliminar receta",
+    deleteRecipeDescription:
+      "Esta acción no se puede deshacer. La receta dejará de estar en tu biblioteca.",
+    deleteRecipeConfirm: "Eliminar",
+    deleteRecipeCancel: "Cancelar",
+    deleteRecipeSuccess: "Receta eliminada",
+    deleteRecipeError: "No pudimos eliminar la receta. Intenta de nuevo.",
+  },
+  edit: {
+    title: "Editar receta",
+    save: "Guardar cambios",
+    loadError: "No pudimos cargar esta receta.",
   },
   create: {
     title: "Nueva receta",

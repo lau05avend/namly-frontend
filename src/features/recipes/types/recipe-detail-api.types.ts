@@ -35,6 +35,8 @@ export type RecipeSummaryApiDto = {
   coverUrl: string | null;
   isPublic: boolean;
   isSuggested?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -45,6 +47,8 @@ export type RecipeDetailApiDto = {
   steps: RecipeDetailStepApiDto[];
   tags: RecipeDetailTagApiDto[];
   interaction: RecipeInteractionsApiDto;
+  canEdit?: boolean;
+  canDelete?: boolean;
 };
 
 export type RecipeDetailPage = {
