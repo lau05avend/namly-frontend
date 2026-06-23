@@ -28,8 +28,34 @@ export const RECIPES_COPY = {
   recipeDetail: {
     back: "Volver a biblioteca",
     loading: "Cargando receta…",
+    loadError: "No pudimos cargar esta receta.",
     notFound: "No encontramos esta receta.",
-    comingSoon: "El detalle completo estará disponible pronto.",
+    sourceSuggested: "Sugerida por Namly",
+    originSuggested: "Sugerida",
+    originPublic: "Pública",
+    originOwn: "Propia",
+    tabs: {
+      cook: "Cocinar",
+      experience: "Tu experiencia",
+    },
+    sections: {
+      ingredients: "Ingredientes",
+      preparation: "Preparación",
+      rating: "Tu valoración",
+      opinion: "Tu opinión",
+    },
+    compatibilityWarning:
+      "Esta receta contiene ingredientes que pueden no ser compatibles con tus preferencias.",
+    ingredientsEmpty: "Esta receta aún no tiene ingredientes.",
+    preparationEmpty: "Esta receta aún no tiene pasos de preparación.",
+    ratingOf: (rating: number) => `${rating} de 5`,
+    ratingClear: "Quitar valoración",
+    opinionPlaceholder: "",
+    opinionExamples:
+      "¿Qué tal te fue con esta receta?",
+    favoriteAdd: "Añadir a favoritas",
+    favoriteRemove: "Quitar de favoritas",
+    feedbackError: "No pudimos guardar tu valoración. Intenta de nuevo.",
   },
   create: {
     title: "Nueva receta",

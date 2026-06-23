@@ -22,7 +22,8 @@ export async function parseApiError(response: Response): Promise<ApiError> {
           message = body.message;
         } else if (Array.isArray(body.message)) {
           const parts = body.message.filter(
-            (item): item is string => typeof item === "string" && item.trim(),
+            (item): item is string =>
+              typeof item === "string" && item.trim().length > 0,
           );
           if (parts.length > 0) {
             message = parts.join(" ");

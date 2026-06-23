@@ -87,8 +87,8 @@ export function getRecipeOriginBadgeStyles(id: RecipeOriginBadgeId) {
 
   const cardChipClassName =
     id === "suggested"
-      ? "border-highlight/50 bg-card/95 text-foreground"
-      : "border-sky-300/50 bg-card/95 text-sky-800";
+      ? "border-highlight/55 bg-highlight/35 text-foreground"
+      : "border-sky-300/55 bg-sky-50/95 text-sky-900";
 
   return {
     icon: config.icon,

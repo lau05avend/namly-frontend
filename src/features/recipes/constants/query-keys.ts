@@ -9,6 +9,10 @@ export const recipeCollectionQueryKeys = {
 
 export const recipeQueryKeys = {
   all: ["recipes"] as const,
+  detail: (recipeId: string) =>
+    [...recipeQueryKeys.all, "detail", recipeId] as const,
+  interactions: (recipeId: string) =>
+    [...recipeQueryKeys.all, "interactions", recipeId] as const,
   list: (params: {
     filter: string;
     tags: string;

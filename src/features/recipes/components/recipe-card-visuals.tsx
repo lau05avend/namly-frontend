@@ -5,7 +5,6 @@ import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-reso
 import { getRecipeOriginBadgeStyles } from "@/features/recipes/constants/recipe-filters";
 import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { resolveRecipeOriginBadgeId } from "@/features/recipes/utils/resolve-recipe-origin";
-import type { RecipeListItem } from "@/features/recipes/types/recipe.types";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import { cn } from "@/lib/utils";
 import { Heart, Star } from "lucide-react";
@@ -37,7 +36,10 @@ export function RecipeRatingStars({ rating }: { rating: number }) {
   );
 }
 
-function getOriginBadge(recipe: RecipeListItem) {
+function getOriginBadge(recipe: {
+  isSuggested?: boolean;
+  isPublic?: boolean;
+}) {
   const origin = resolveRecipeOriginBadgeId(recipe);
 
   if (!origin) {
@@ -54,7 +56,10 @@ function getOriginBadge(recipe: RecipeListItem) {
 }
 
 type RecipeOriginBadgeProps = {
-  recipe: RecipeListItem;
+  recipe: {
+    isSuggested?: boolean;
+    isPublic?: boolean;
+  };
   reserveSelectionSpace?: boolean;
 };
 
@@ -73,15 +78,15 @@ export function RecipeOriginBadge({
   return (
     <span
       className={cn(
-        "absolute top-2 left-2 z-10 inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-semibold",
+        "absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-semibold shadow-sm backdrop-blur-md",
         reserveSelectionSpace
-          ? "max-w-[calc(100%-3rem)]"
-          : "max-w-[calc(100%-1rem)]",
+          ? "max-w-[calc(100%-3.5rem)]"
+          : "max-w-[calc(100%-1.25rem)]",
         badge.chipClassName,
       )}
     >
       <Icon
-        className={cn("size-2.5 shrink-0", badge.iconClassName)}
+        className={cn("size-3 shrink-0", badge.iconClassName)}
         aria-hidden
       />
       <span className="truncate">{badge.label}</span>
@@ -96,11 +101,11 @@ export function RecipeFavoriteBadge({ isFavorite }: { isFavorite: boolean }) {
 
   return (
     <span
-      className="absolute right-2 bottom-2 z-10 flex size-6 items-center justify-center rounded-full border-cta/25 bg-background/75 backdrop-blur-sm"
+      className="absolute right-2.5 bottom-2.5 z-10 flex size-7 items-center justify-center rounded-full border border-cta/35 bg-background/90 shadow-sm backdrop-blur-md"
       aria-label="Favorita"
     >
       <Heart
-        className="size-4 fill-cta text-cta"
+        className="size-[18px] fill-cta text-cta"
         strokeWidth={2}
         aria-hidden
       />
