@@ -31,6 +31,7 @@ import { resolveInitialRegisterPhoto } from "@/features/meal-register/utils/regi
 import { useHistoryMealLog } from "@/features/history/queries/use-history-meal-log";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 
 type RegisterMealScreenProps = {
   initialDate?: string;
@@ -332,10 +333,10 @@ function RegisterMealForm({
 
       router.push("/history");
     } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : REGISTER_MEAL_COPY.errors.save;
+      const message = getUserFacingErrorMessage(
+        error,
+        REGISTER_MEAL_COPY.errors.save,
+      );
       setSaveError(message);
       toast.error(message, { duration: 6000 });
     }

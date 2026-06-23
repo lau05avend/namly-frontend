@@ -4,7 +4,9 @@ import { useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { BottomNav } from "@/components/navigation/bottom-nav";
+import { ScreenTopBar } from "@/components/layout/screen-top-bar";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
+import { SCREEN_LAYOUT } from "@/constants/screen-layout";
 import { toDateKey } from "@/features/calendar";
 import { HistoryAgendaView } from "@/features/history/components/history-agenda-view";
 import { HistoryCalendarView } from "@/features/history/components/history-calendar-view";
@@ -62,17 +64,17 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
 
   return (
     <div className="relative min-h-dvh bg-background pb-28">
-      <div className="fixed inset-x-0 top-0 z-30 border-b border-foreground/8 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto w-full max-w-lg px-4 py-3">
-          <HistoryHeader
-            viewMode={viewMode}
-            onToggleView={handleToggleView}
-            onGoToToday={handleGoToToday}
-          />
-        </div>
-      </div>
+      <ScreenTopBar>
+        <HistoryHeader
+          viewMode={viewMode}
+          onToggleView={handleToggleView}
+          onGoToToday={handleGoToToday}
+        />
+      </ScreenTopBar>
 
-      <main className="mx-auto flex w-full max-w-lg flex-col px-4 pt-[calc(env(safe-area-inset-top)+4.25rem)]">
+      <main
+        className={`${SCREEN_LAYOUT.content} flex flex-col ${SCREEN_LAYOUT.mainOffset}`}
+      >
         {viewMode === "calendar" ? (
           <HistoryCalendarView ref={timelineRef} onDayPress={handleDayPress} />
         ) : (

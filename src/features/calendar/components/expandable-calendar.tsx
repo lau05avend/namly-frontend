@@ -35,6 +35,7 @@ type ExpandableCalendarProps = {
   onNextPeriod: () => void;
   onSelectDate: (date: Date) => void;
   hideExpandToggle?: boolean;
+  hideHeader?: boolean;
   className?: string;
 };
 
@@ -50,6 +51,7 @@ export function ExpandableCalendar({
   onNextPeriod,
   onSelectDate,
   hideExpandToggle = false,
+  hideHeader = false,
   className,
 }: ExpandableCalendarProps) {
   const dragX = useMotionValue(0);
@@ -83,13 +85,15 @@ export function ExpandableCalendar({
 
   return (
     <section className={cn("flex flex-col gap-3", className)} aria-label="Calendario">
-      <CalendarHeader
-        visibleMonth={visibleMonth}
-        isExpanded={isExpanded}
-        onToggleExpand={onToggleExpand}
-        onGoToToday={onGoToToday}
-        hideExpandToggle={hideExpandToggle}
-      />
+      {hideHeader ? null : (
+        <CalendarHeader
+          visibleMonth={visibleMonth}
+          isExpanded={isExpanded}
+          onToggleExpand={onToggleExpand}
+          onGoToToday={onGoToToday}
+          hideExpandToggle={hideExpandToggle}
+        />
+      )}
 
       <WeekdayHeader />
 

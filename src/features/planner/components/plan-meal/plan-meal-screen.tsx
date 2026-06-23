@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { PlanMealContent } from "@/features/planner/components/plan-meal/plan-meal-content";
 import { PlanMealHeader } from "@/features/planner/components/plan-meal/plan-meal-header";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import { usePlanMealForm } from "@/features/planner/hooks/use-plan-meal-form";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
@@ -47,8 +48,10 @@ function PlanMealForm({ defaults }: PlanMealFormProps) {
       await saveMutation.mutateAsync(values);
       const params = new URLSearchParams({ date: values.date });
       router.push(`/planner?${params.toString()}`);
-    } catch {
-      setSaveError(PLAN_MEAL_COPY.errors.save);
+    } catch (error) {
+      setSaveError(
+        getUserFacingErrorMessage(error, PLAN_MEAL_COPY.errors.save),
+      );
     }
   });
 

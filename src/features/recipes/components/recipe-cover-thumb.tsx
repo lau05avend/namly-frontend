@@ -1,3 +1,6 @@
+"use client";
+
+import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
 import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +13,12 @@ export function RecipeCoverThumb({
   coverUrl,
   className,
 }: RecipeCoverThumbProps) {
+  const hasCover = Boolean(coverUrl?.trim());
+  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+    coverUrl ?? undefined,
+  );
+  const showImage = Boolean(displayUrl) && !isResolving;
+
   return (
     <div
       className={cn(
@@ -17,9 +26,11 @@ export function RecipeCoverThumb({
         className,
       )}
     >
-      {coverUrl ? (
+      {showImage ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={coverUrl} alt="" className="size-full object-cover" />
+        <img src={displayUrl} alt="" className="size-full object-cover" />
+      ) : hasCover && isResolving ? (
+        <span className="block size-full bg-foreground/5" aria-hidden />
       ) : (
         <span
           className="flex size-full items-center justify-center bg-card"

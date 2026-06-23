@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
-  BookOpen,
   CalendarDays,
   Clock,
   Home,
+  Library,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
@@ -20,9 +20,9 @@ export type BottomNavItem = {
 
 const DEFAULT_ITEMS: BottomNavItem[] = [
   { id: "history", href: "/history", label: "Mis comidas", icon: Clock },
-  { id: "planner", href: "/planner", label: "Plan", icon: BookOpen },
+  { id: "recipes", href: "/recipes", label: "Recetas", icon: Library },
   { id: "home", href: "/home", label: "Inicio", icon: Home },
-  { id: "calendar", href: "/planner", label: "Calendario", icon: CalendarDays },
+  { id: "planner", href: "/planner", label: "Plan", icon: CalendarDays },
   { id: "profile", href: "/profile", label: "Perfil", icon: UserRound },
 ];
 

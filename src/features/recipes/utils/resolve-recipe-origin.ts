@@ -27,9 +27,10 @@ export function resolveRecipeListItemOriginFlags(
   };
 }
 
-export function resolveRecipeOriginBadgeId(
-  recipe: RecipeListItem,
-): RecipeOriginBadgeId | null {
+export function resolveRecipeOriginBadgeId(recipe: {
+  isSuggested?: boolean;
+  isPublic?: boolean;
+}): RecipeOriginBadgeId | null {
   if (recipe.isSuggested) {
     return "suggested";
   }

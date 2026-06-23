@@ -17,8 +17,18 @@ export async function parseApiError(response: Response): Promise<ApiError> {
   try {
     const body: unknown = await response.json();
     if (body && typeof body === "object") {
-      if ("message" in body && typeof body.message === "string") {
-        message = body.message;
+      if ("message" in body) {
+        if (typeof body.message === "string") {
+          message = body.message;
+        } else if (Array.isArray(body.message)) {
+          const parts = body.message.filter(
+            (item): item is string =>
+              typeof item === "string" && item.trim().length > 0,
+          );
+          if (parts.length > 0) {
+            message = parts.join(" ");
+          }
+        }
       }
       if ("code" in body && typeof body.code === "string") {
         code = body.code;

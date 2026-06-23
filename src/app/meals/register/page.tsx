@@ -1,7 +1,7 @@
 import { RegisterMealScreen } from "@/features/meal-register/components/register-meal-screen";
 
 export const metadata = {
-  title: "Registrar comida · Namly",
+  title: "Registrar comida",
   description: "Registra lo que comiste con calma y claridad.",
 };
 

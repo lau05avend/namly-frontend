@@ -1,7 +1,7 @@
 import { PlanMealScreen } from "@/features/planner/components/plan-meal/plan-meal-screen";
 
 export const metadata = {
-  title: "Planear comida · Namly",
+  title: "Planear comida",
   description: "Planifica una comida con calma y flexibilidad.",
 };
 

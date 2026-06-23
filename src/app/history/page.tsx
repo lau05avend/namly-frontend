@@ -2,7 +2,7 @@ import { HistoryScreen } from "@/features/history/components/history-screen";
 import type { HistoryViewMode } from "@/features/history/types/history.types";
 
 export const metadata = {
-  title: "Mis comidas · Namly",
+  title: "Mis comidas",
   description: "Revisa tus comidas registradas con calma y claridad.",
 };
 

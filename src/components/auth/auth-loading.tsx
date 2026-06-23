@@ -1,7 +1,12 @@
-export function AuthLoading() {
-  return (
-    <div className="flex min-h-dvh items-center justify-center bg-background">
-      <p className="text-sm text-foreground/50">Cargando sesión…</p>
-    </div>
-  );
+import { NamlySplashScreen } from "@/components/brand/namly-splash-screen";
+import { BRAND_SPLASH_COPY } from "@/components/brand/brand-assets";
+
+type AuthLoadingProps = {
+  message?: string;
+};
+
+export function AuthLoading({
+  message = BRAND_SPLASH_COPY.sessionLoading,
+}: AuthLoadingProps) {
+  return <NamlySplashScreen message={message} />;
 }

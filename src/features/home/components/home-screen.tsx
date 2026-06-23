@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { TabBar } from "@/components/navigation/tab-bar";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
+import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { HomeHeader } from "@/features/home/components/home-header";
 import { HomeLoading } from "@/features/home/components/home-loading";
 import { HomeTodayView } from "@/features/home/components/home-today-view";
@@ -53,9 +54,11 @@ export function HomeScreen() {
             {activeTab === "today" ? (
               <HomeTodayView summary={data} />
             ) : (
-              <p className="py-12 text-center text-sm text-foreground/50">
-                {HOME_COPY.rhythmPlaceholder}
-              </p>
+              <ModuleEmptyState
+                module="home"
+                title={HOME_COPY.rhythmPlaceholder}
+                className="py-12"
+              />
             )}
           </>
         ) : null}

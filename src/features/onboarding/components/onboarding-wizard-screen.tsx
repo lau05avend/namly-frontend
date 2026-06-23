@@ -17,6 +17,7 @@ import { ONBOARDING_COPY } from "@/features/onboarding/constants/onboarding-copy
 import { useOnboardingWizard } from "@/features/onboarding/hooks/use-onboarding-wizard";
 import { useOnboardingQuestions } from "@/features/onboarding/queries/use-onboarding-questions";
 import { useSubmitOnboarding } from "@/features/onboarding/queries/use-submit-onboarding";
+import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 
 export function OnboardingWizardScreen() {
   const router = useRouter();
@@ -45,8 +46,10 @@ export function OnboardingWizardScreen() {
       await submitMutation.mutateAsync(wizard.responses);
       clearOnboardingFlow();
       router.push("/home");
-    } catch {
-      setSubmitError(ONBOARDING_COPY.wizard.submitError);
+    } catch (error) {
+      setSubmitError(
+        getUserFacingErrorMessage(error, ONBOARDING_COPY.wizard.submitError),
+      );
     }
   };
 

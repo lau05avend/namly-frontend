@@ -2,6 +2,7 @@ import type {
   CreateTagInput,
   CreateTagsPayload,
   Tag,
+  UpdateTagInput,
 } from "@/features/tags/types/tag.types";
 import { apiClient } from "@/lib/api/api-client";
 
@@ -36,6 +37,40 @@ export async function createMealLogTags(
 
   return apiClient<Tag[]>("/api/v1/tags", {
     method: "POST",
+    body: payload,
+  });
+}
+
+export async function createRecipeTags(
+  tags: CreateTagInput[],
+): Promise<Tag[]> {
+  if (tags.length === 0) {
+    return [];
+  }
+
+  const payload: CreateTagsPayload = {
+    category: RECIPE_TAG_CATEGORY,
+    tags,
+  };
+
+  return apiClient<Tag[]>("/api/v1/tags", {
+    method: "POST",
+    body: payload,
+  });
+}
+
+export async function updateRecipeTag(
+  tagId: string,
+  input: Pick<UpdateTagInput, "name" | "iconName">,
+): Promise<Tag> {
+  const payload: UpdateTagInput = {
+    category: RECIPE_TAG_CATEGORY,
+    name: input.name.trim(),
+    iconName: input.iconName ?? null,
+  };
+
+  return apiClient<Tag>(`/api/v1/tags/${tagId}`, {
+    method: "PATCH",
     body: payload,
   });
 }

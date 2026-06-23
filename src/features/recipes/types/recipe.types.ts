@@ -22,4 +22,5 @@ export type RecipeListParams = {
   filter?: RecipeListFilter;
   tags?: string[];
   title?: string;
+  folderId?: string;
 };

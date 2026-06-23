@@ -20,11 +20,11 @@ export const PLANNER_COPY = {
     },
     future: {
       title: "Este día aún está en blanco.",
-      subtitle: "Comienza planeando una comida para este día.",
+      subtitle: "Cuando quieras, puedes empezar con la comida que más te apetezca.",
     },
     past: {
-      title: "Sin comidas planeadas",
-      subtitle: "Todavía tienes muchos días por planear.",
+      title: "Este día está en blanco.",
+      subtitle: "No pasa nada — cuando quieras, puedes empezar a planear los días por venir.",
     },
   },
   fabLabel: "Agregar al plan",

@@ -1,7 +1,7 @@
 import { HomeScreen } from "@/features/home/components/home-screen";
 
 export const metadata = {
-  title: "Hoy · Namly",
+  title: "Hoy",
   description: "Tu continuidad alimentaria de hoy.",
 };
 

@@ -3,7 +3,7 @@ import { parseDateKey } from "@/features/calendar/utils/date";
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Día · Namly",
+  title: "Día",
   description: "Revisa tus comidas registradas en este día.",
 };
 
