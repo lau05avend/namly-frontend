@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
 import { getRecipeOriginBadgeStyles } from "@/features/recipes/constants/recipe-filters";
 import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { resolveRecipeOriginBadgeId } from "@/features/recipes/utils/resolve-recipe-origin";
@@ -95,7 +96,7 @@ export function RecipeFavoriteBadge({ isFavorite }: { isFavorite: boolean }) {
 
   return (
     <span
-      className="absolute right-2 bottom-2 z-10 flex size-6 items-center justify-center rounded-full border-cta/30 bg-card"
+      className="absolute right-2 bottom-2 z-10 flex size-6 items-center justify-center rounded-full border-cta/25 bg-background/75 backdrop-blur-sm"
       aria-label="Favorita"
     >
       <Heart
@@ -120,24 +121,33 @@ export function RecipeCover({
   aspectClassName = "aspect-[2/1]",
   children,
 }: RecipeCoverProps) {
+  const hasCover = Boolean(coverUrl?.trim());
+  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+    coverUrl ?? undefined,
+  );
+  const showImage = Boolean(displayUrl) && !isResolving;
+
   return (
     <div
       className={cn(
-        "relative w-full shrink-0 overflow-hidden bg-foreground/[0.04]",
+        "relative w-full shrink-0 overflow-hidden",
+        hasCover ? "bg-foreground/[0.02]" : "bg-transparent",
         aspectClassName,
         className,
       )}
     >
-      {coverUrl ? (
+      {showImage ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={coverUrl} alt="" className="size-full object-cover" />
+        <img src={displayUrl} alt="" className="size-full object-cover" />
+      ) : hasCover && isResolving ? (
+        <span className="block size-full bg-foreground/5" aria-hidden />
       ) : (
         <span
-          className="relative flex size-full items-center justify-center bg-card"
+          className="relative flex size-full items-center justify-center"
           aria-hidden
         >
           <RecipePlaceholderIcon
-            className="size-11 text-foreground/[0.05]"
+            className="size-11 text-foreground/[0.07]"
             strokeWidth={1}
           />
         </span>
@@ -154,7 +164,7 @@ type RecipeCardMetadataProps = {
 
 export function RecipeCardMetadata({ title, rating }: RecipeCardMetadataProps) {
   return (
-    <div className="flex flex-col gap-0.5 border-t border-foreground/6 bg-card px-2.5 py-2">
+    <div className="flex flex-col gap-0.5 border-t border-foreground/5 px-2.5 py-2">
       <p className="line-clamp-2 text-[13px] leading-tight font-semibold text-foreground">
         {title}
       </p>

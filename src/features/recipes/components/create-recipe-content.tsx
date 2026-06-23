@@ -5,7 +5,6 @@ import { CreateRecipeBodyTabsSection } from "@/features/recipes/components/secti
 import { CreateRecipeCoverSection } from "@/features/recipes/components/sections/create-recipe-cover-section";
 import { CreateRecipePublicSection } from "@/features/recipes/components/sections/create-recipe-public-section";
 import { CreateRecipeTagsSection } from "@/features/recipes/components/sections/create-recipe-tags-section";
-import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { MealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
 
 type CreateRecipeContentProps = {
@@ -13,10 +12,8 @@ type CreateRecipeContentProps = {
 };
 
 export function CreateRecipeContent({ photoPicker }: CreateRecipeContentProps) {
-  const copy = RECIPES_COPY.create;
-
   return (
-    <div className="flex flex-col gap-8 px-4 pb-28 pt-3">
+    <div className="flex flex-col gap-7 px-4 pb-28 pt-4">
       <CreateRecipeBasicSection />
 
       <CreateRecipeCoverSection
@@ -27,12 +24,9 @@ export function CreateRecipeContent({ photoPicker }: CreateRecipeContentProps) {
 
       <CreateRecipeBodyTabsSection />
 
-      <div className="flex flex-col gap-5 border-t border-foreground/6 pt-6">
+      <div className="flex flex-col gap-6 border-t border-foreground/6 pt-6">
+        <CreateRecipeTagsSection />
         <CreateRecipePublicSection />
-
-        <div className="flex flex-col gap-2">
-          <CreateRecipeTagsSection />
-        </div>
       </div>
     </div>
   );

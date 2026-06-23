@@ -36,7 +36,7 @@ export const RECIPES_COPY = {
     save: "Guardar receta",
     back: "Volver",
     sections: {
-      tagsOptional: "Etiquetas (opcional)",
+      classification: "Clasifica tu receta",
     },
     tabs: {
       ingredients: "Ingredientes",
@@ -48,9 +48,11 @@ export const RECIPES_COPY = {
     },
     fields: {
       titlePlaceholder: "Título de la receta",
-      descriptionPlaceholder: "Descripción breve, opcional…",
-      publicLabel: "Receta pública",
-      publicHint: "Visible para otros usuarios",
+      descriptionLabel: "Descripción",
+      descriptionOptional: "opcional",
+      descriptionPlaceholder: "Una nota breve sobre la receta…",
+      publicLabel: "Compartir con la comunidad",
+      publicHint: "Otros usuarios podrán encontrar esta receta.",
     },
     ingredients: {
       add: "Añadir ingrediente",
@@ -67,8 +69,8 @@ export const RECIPES_COPY = {
       add: "Añadir paso",
       empty: "Describe cómo se prepara.",
       descriptionPlaceholder: "Describe este paso…",
-      durationPlaceholder: "Min",
-      durationLabel: "Duración",
+      durationPlaceholder: "5",
+      durationLabel: "min",
       remove: "Quitar paso",
       reorder: "Reordenar pasos",
     },
@@ -77,7 +79,9 @@ export const RECIPES_COPY = {
       loadError: "No pudimos cargar las etiquetas.",
       add: "Agregar etiquetas",
       sheetTitle: "Clasifica tu receta",
-      sheetDescription: "Elige una o varias etiquetas para tu receta.",
+      sheetDescription: "Elige una o varias etiquetas para describirla.",
+      classificationHint: "Elige una o varias etiquetas para describirla.",
+      clear: "Limpiar",
       searchPlaceholder: "Buscar etiqueta…",
       done: "Listo",
       createNew: "Nueva",
@@ -95,6 +99,7 @@ export const RECIPES_COPY = {
     },
     errors: {
       save: "No pudimos guardar la receta. Revisa los datos e intenta de nuevo.",
+      validation: "Revisa los campos marcados antes de guardar.",
     },
   },
 } as const;

@@ -9,8 +9,9 @@ type FormScreenHeaderProps = {
   backLabel: string;
   saveLabel: string;
   onBack: () => void;
-  onSave: () => void;
+  onSave?: () => void;
   isSaving?: boolean;
+  saveType?: "button" | "submit";
   className?: string;
 };
 
@@ -24,6 +25,7 @@ export function FormScreenHeader({
   onBack,
   onSave,
   isSaving = false,
+  saveType = "button",
   className,
 }: FormScreenHeaderProps) {
   return (
@@ -56,8 +58,8 @@ export function FormScreenHeader({
         </div>
 
         <button
-          type="button"
-          onClick={onSave}
+          type={saveType}
+          onClick={saveType === "button" ? onSave : undefined}
           disabled={isSaving}
           aria-label={saveLabel}
           className={cn(

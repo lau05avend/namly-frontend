@@ -68,6 +68,16 @@ export const RECIPE_LIST_FILTERS: RecipeFilterConfig[] = [
 
 export type RecipeOriginBadgeId = "suggested" | "public";
 
+export const RECIPE_PUBLIC_THEME = {
+  surface: "border-sky-200/25 bg-sky-50/18",
+  surfaceActive: "border-sky-300/35 bg-sky-50/32",
+  label: "text-sky-900/65",
+  hint: "text-sky-800/55",
+  icon: "text-sky-600/75",
+  iconBg: "bg-sky-100/45",
+  switchOn: "bg-sky-500/85",
+} as const;
+
 export function getRecipeOriginBadgeStyles(id: RecipeOriginBadgeId) {
   const config = RECIPE_LIST_FILTERS.find((item) => item.id === id);
 

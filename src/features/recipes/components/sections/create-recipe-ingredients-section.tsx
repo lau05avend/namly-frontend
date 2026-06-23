@@ -15,10 +15,10 @@ export function CreateRecipeIngredientsSection() {
   const copy = RECIPES_COPY.create.ingredients;
   const {
     control,
-    setValue,
+    getValues,
     formState: { errors },
   } = useFormContext<CreateRecipeFormValues>();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: "ingredients",
     keyName: "fieldKey",
@@ -42,14 +42,16 @@ export function CreateRecipeIngredientsSection() {
     });
   };
 
-  const handleUnitSelect = (unitId: string) => {
-    if (unitPickerIndex == null) {
+  const handleUnitSelect = (unitId: string, index: number) => {
+    const ingredient = getValues(`ingredients.${index}`);
+
+    if (!ingredient) {
       return;
     }
 
-    setValue(`ingredients.${unitPickerIndex}.unitId`, unitId, {
-      shouldDirty: true,
-      shouldValidate: true,
+    update(index, {
+      ...ingredient,
+      unitId,
     });
     setUnitPickerIndex(null);
   };
@@ -70,7 +72,6 @@ export function CreateRecipeIngredientsSection() {
             <RecipeIngredientRow
               key={field.fieldKey}
               index={index}
-              unitId={field.unitId}
               units={units}
               isLast={index === fields.length - 1}
               onOpenUnitPicker={() => setUnitPickerIndex(index)}
@@ -84,6 +85,7 @@ export function CreateRecipeIngredientsSection() {
         label={copy.add}
         onClick={addIngredient}
         disabled={!canAddIngredient}
+        variant="compact"
       />
 
       {errors.ingredients?.message ? (
@@ -92,6 +94,7 @@ export function CreateRecipeIngredientsSection() {
 
       <MeasurementUnitPickerSheet
         open={unitPickerIndex != null}
+        ingredientIndex={unitPickerIndex}
         onOpenChange={(open) => {
           if (!open) {
             setUnitPickerIndex(null);
@@ -100,7 +103,7 @@ export function CreateRecipeIngredientsSection() {
         units={units}
         selectedUnitId={
           unitPickerIndex != null
-            ? fields[unitPickerIndex]?.unitId
+            ? getValues(`ingredients.${unitPickerIndex}.unitId`)
             : undefined
         }
         onSelect={handleUnitSelect}

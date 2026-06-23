@@ -45,10 +45,10 @@ export function RecipePickerCard({
       onClick={onToggle}
       aria-pressed={selected}
       className={cn(
-        "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-card text-left transition-colors",
+        "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-card/20 text-left transition-colors",
         selected
-          ? "border-primary/60"
-          : "border-foreground/8 hover:border-foreground/14",
+          ? "border-primary/60 bg-card/35"
+          : "border-foreground/6 hover:border-foreground/10 hover:bg-card/35",
       )}
     >
       <RecipeCover coverUrl={recipe.coverUrl}>

@@ -11,7 +11,7 @@ export const createRecipeIngredientSchema = z.object({
   fieldKey: z.string(),
   name: z.string().min(1, "Escribe el nombre del ingrediente"),
   quantity: z.number().positive("La cantidad debe ser mayor a 0"),
-  unitId: z.string().uuid("Selecciona una unidad"),
+  unitId: z.string().min(1, "Selecciona una unidad"),
 });
 
 export const createRecipeStepSchema = z.object({

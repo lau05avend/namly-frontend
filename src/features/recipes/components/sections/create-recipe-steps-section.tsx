@@ -28,7 +28,7 @@ import { createRecipeItemId } from "@/features/recipes/utils/create-recipe-item-
 export function CreateRecipeStepsSection() {
   const copy = RECIPES_COPY.create.steps;
   const { control, formState: { errors } } = useFormContext<CreateRecipeFormValues>();
-  const { fields, append, remove, update, move } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: "steps",
     keyName: "fieldKey",
@@ -78,19 +78,14 @@ export function CreateRecipeStepsSection() {
             items={fields.map((field) => field.fieldKey)}
             strategy={verticalListSortingStrategy}
           >
-            <ul className="flex flex-col gap-2.5">
+            <ul>
               {fields.map((field, index) => (
                 <RecipeStepCard
                   key={field.fieldKey}
                   sortableId={field.fieldKey}
+                  index={index}
                   stepNumber={index + 1}
-                  step={field}
-                  onDescriptionChange={(description) =>
-                    update(index, { ...field, description })
-                  }
-                  onDurationChange={(durationMinutes) =>
-                    update(index, { ...field, durationMinutes })
-                  }
+                  isLast={index === fields.length - 1}
                   onRemove={() => remove(index)}
                 />
               ))}
@@ -99,7 +94,7 @@ export function CreateRecipeStepsSection() {
         </DndContext>
       )}
 
-      <PlannerDashedAddButton label={copy.add} onClick={addStep} />
+      <PlannerDashedAddButton label={copy.add} onClick={addStep} variant="compact" />
 
       {errors.steps?.message ? (
         <p className="text-xs text-cta">{String(errors.steps.message)}</p>

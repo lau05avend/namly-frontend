@@ -10,7 +10,6 @@ import { X } from "lucide-react";
 
 type RecipeIngredientRowProps = {
   index: number;
-  unitId: string;
   units: MeasurementUnit[];
   isLast?: boolean;
   onOpenUnitPicker: () => void;
@@ -19,7 +18,6 @@ type RecipeIngredientRowProps = {
 
 export function RecipeIngredientRow({
   index,
-  unitId,
   units,
   isLast = false,
   onOpenUnitPicker,
@@ -28,9 +26,11 @@ export function RecipeIngredientRow({
   const copy = RECIPES_COPY.create.ingredients;
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext<CreateRecipeFormValues>();
 
+  const unitId = watch(`ingredients.${index}.unitId`);
   const unit = resolveMeasurementUnitById(units, unitId);
   const nameError = errors.ingredients?.[index]?.name?.message;
   const quantityError = errors.ingredients?.[index]?.quantity?.message;
@@ -46,7 +46,7 @@ export function RecipeIngredientRow({
         <input
           {...register(`ingredients.${index}.name`)}
           placeholder={copy.namePlaceholder}
-          className="min-w-0 flex-1 bg-transparent text-base font-medium text-foreground placeholder:text-foreground/35 focus-visible:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-[14px] font-medium text-foreground placeholder:text-foreground/35 focus-visible:outline-none"
         />
 
         <input
@@ -56,12 +56,15 @@ export function RecipeIngredientRow({
           step="any"
           inputMode="decimal"
           placeholder={copy.quantityPlaceholder}
-          className="w-9 shrink-0 bg-transparent text-right text-xs text-foreground/50 placeholder:text-foreground/30 focus-visible:outline-none"
+          className="w-11 shrink-0 bg-transparent text-right text-xs text-foreground/50 placeholder:text-foreground/30 focus-visible:outline-none"
         />
 
         <span className="shrink-0 text-xs text-foreground/25" aria-hidden>
           ·
         </span>
+
+        <input type="hidden" {...register(`ingredients.${index}.fieldKey`)} />
+        <input type="hidden" {...register(`ingredients.${index}.unitId`)} />
 
         <button
           type="button"

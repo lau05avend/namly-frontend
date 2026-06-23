@@ -25,7 +25,7 @@ export function RecipeLibraryCard({
     <Link
       href={href}
       className={cn(
-        "relative flex w-full flex-col overflow-hidden rounded-2xl border border-foreground/8 bg-card text-left transition-colors hover:border-foreground/14",
+        "relative flex w-full flex-col overflow-hidden rounded-2xl border border-foreground/8 bg-transparent text-left transition-colors hover:border-foreground/12 hover:bg-card/25",
         className,
       )}
     >

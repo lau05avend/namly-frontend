@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
@@ -11,9 +11,10 @@ import { Search } from "lucide-react";
 type MeasurementUnitPickerSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  ingredientIndex: number | null;
   units: MeasurementUnit[];
   selectedUnitId?: string;
-  onSelect: (unitId: string) => void;
+  onSelect: (unitId: string, ingredientIndex: number) => void;
 };
 
 function normalizeSearch(value: string): string {
@@ -23,6 +24,7 @@ function normalizeSearch(value: string): string {
 export function MeasurementUnitPickerSheet({
   open,
   onOpenChange,
+  ingredientIndex,
   units,
   selectedUnitId,
   onSelect,
@@ -30,11 +32,13 @@ export function MeasurementUnitPickerSheet({
   const copy = RECIPES_COPY.create.ingredients;
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    if (!open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    onOpenChange(nextOpen);
+
+    if (!nextOpen) {
       setSearch("");
     }
-  }, [open]);
+  };
 
   const normalizedSearch = normalizeSearch(search);
 
@@ -51,14 +55,18 @@ export function MeasurementUnitPickerSheet({
   }, [normalizedSearch, units]);
 
   const handleSelect = (unitId: string) => {
-    onSelect(unitId);
-    onOpenChange(false);
+    if (ingredientIndex == null) {
+      return;
+    }
+
+    onSelect(unitId, ingredientIndex);
+    handleOpenChange(false);
   };
 
   return (
     <BottomSheet
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       title={copy.unitPickerTitle}
       compact
     >

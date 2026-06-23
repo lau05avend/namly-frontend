@@ -323,6 +323,11 @@ export function RecipeTagPicker({
     startCreatingTag("");
   };
 
+  const clearSelectedTags = () => {
+    onChange([]);
+    setEditingTagId(null);
+  };
+
   const removeSelectedTag = (tagId: string) => {
     onChange(selectedTags.filter((tag) => tag.id !== tagId));
   };
@@ -348,30 +353,42 @@ export function RecipeTagPicker({
 
   return (
     <>
-      <div className="-mx-4 flex flex-wrap items-center gap-1.5 px-4">
+      <div className="flex flex-col gap-3">
+        {selectedTags.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {selectedTags.map((tag) => (
+              <RecipeTagChip
+                key={tag.id}
+                tag={tag}
+                selected
+                editable
+                isEditing={editingTagId === tag.id}
+                onEditStart={() => handleEditStart(tag.id)}
+                onEditEnd={handleEditEnd}
+                onToggle={() => removeSelectedTag(tag.id)}
+                onRemove={() => removeSelectedTag(tag.id)}
+                onRename={(name) => handleRenameTag(tag, name, "form")}
+              />
+            ))}
+
+            <ClearSelectionButton
+              onClick={clearSelectedTags}
+              size="xs"
+              className="shrink-0 text-foreground/35 hover:text-foreground/55"
+            >
+              {copy.clear}
+            </ClearSelectionButton>
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={openSheet}
-          className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-foreground/15 bg-card/50 px-3 py-1.5 text-sm font-medium text-foreground/60 transition-colors hover:border-primary/25 hover:bg-mint/30 hover:text-primary"
+          className="inline-flex w-fit cursor-pointer items-center gap-1 text-[13px] font-medium text-primary/60 transition-colors hover:text-primary"
         >
-          <Plus className="size-3.5" aria-hidden />
+          <Plus className="size-3.5" strokeWidth={2.25} aria-hidden />
           {copy.add}
         </button>
-
-        {selectedTags.map((tag) => (
-          <RecipeTagChip
-            key={tag.id}
-            tag={tag}
-            selected
-            editable
-            isEditing={editingTagId === tag.id}
-            onEditStart={() => handleEditStart(tag.id)}
-            onEditEnd={handleEditEnd}
-            onToggle={() => removeSelectedTag(tag.id)}
-            onRemove={() => removeSelectedTag(tag.id)}
-            onRename={(name) => handleRenameTag(tag, name, "form")}
-          />
-        ))}
       </div>
 
       <BottomSheet
