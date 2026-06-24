@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { getCurrentMealTime } from "@/components/meal/meal-datetime";
 import { toDateKey } from "@/features/calendar/utils/date";
 import type { MealType } from "@/features/planner/types/meal-type.types";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
@@ -14,7 +14,7 @@ export function buildRegisterMealDefaults(
     note: "",
     mood: undefined,
     date: params?.date ?? today,
-    time: format(new Date(), "HH:mm"),
+    time: getCurrentMealTime(),
     mealTypeId: mealTypes[0]?.id ?? "",
     planLinkStatus: "none",
     linkedPlanId: undefined,

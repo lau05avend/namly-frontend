@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncMealTimeOnOpen } from "@/components/meal/hooks/use-sync-meal-time-on-open";
 import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -39,6 +40,7 @@ function PlanMealForm({ defaults }: PlanMealFormProps) {
   const router = useRouter();
   const [saveError, setSaveError] = useState<string | null>(null);
   const form = usePlanMealForm(defaults);
+  useSyncMealTimeOnOpen(form.setValue);
   const saveMutation = useSavePlanMeal();
 
   const handleSave = form.handleSubmit(async (values) => {

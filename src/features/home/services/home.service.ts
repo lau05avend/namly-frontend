@@ -1,17 +1,24 @@
-import { simulateLatency } from "@/lib/api/simulate-latency";
-import { getMockHomeSummary } from "@/features/home/services/mock-home-data";
+import { mapHomeApiResponse } from "@/features/home/mappers/home.mapper";
+import type { HomeSummaryApiDto } from "@/features/home/types/home-api.types";
 import type { HomeSummary } from "@/features/home/types/home.types";
+import { apiClient } from "@/lib/api/api-client";
+
+function resolveReferenceDate(referenceDate?: string): string {
+  const debugDate = process.env.NEXT_PUBLIC_HOME_DEBUG_DATE?.trim();
+  if (debugDate) {
+    return debugDate;
+  }
+
+  return referenceDate ?? new Date().toISOString().slice(0, 10);
+}
 
 export async function fetchHomeSummary(
   referenceDate?: string,
 ): Promise<HomeSummary> {
-  await simulateLatency();
+  const date = resolveReferenceDate(referenceDate);
+  const raw = await apiClient<HomeSummaryApiDto>(
+    `/api/v1/home?date=${encodeURIComponent(date)}`,
+  );
 
-  // TODO: Replace mocked response with real API integration
-  // Example:
-  // return apiClient.get<HomeSummar56py>("/home/summary", {
-  //   params: { date: referenceDate },
-  // });
-
-  return getMockHomeSummary(referenceDate);
+  return mapHomeApiResponse(raw);
 }

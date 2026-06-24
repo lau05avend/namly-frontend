@@ -7,6 +7,7 @@ import {
 } from "@/components/brand/brand-assets";
 import { AuthProvider } from "@/providers/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { ProfileCacheSync } from "@/features/profile/components/profile-cache-sync";
 import "./globals.css";
 
 // Configure the font
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col font-sans">
         <QueryProvider>
           <AuthProvider>
+            <ProfileCacheSync />
             {children}
             <Toaster position="top-center" richColors closeButton />
           </AuthProvider>

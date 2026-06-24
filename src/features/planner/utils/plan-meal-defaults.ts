@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { getCurrentMealTime } from "@/components/meal/meal-datetime";
 import { toDateKey } from "@/features/calendar/utils/date";
 import type { MealSlot } from "@/constants/meal-slots";
 import type { MealType } from "@/features/planner/types/meal-type.types";
@@ -44,7 +44,7 @@ export function buildPlanMealDefaults(
 
   return {
     date: params?.date ?? today,
-    time: format(new Date(), "HH:mm"),
+    time: getCurrentMealTime(),
     mealTypeId: resolveMealTypeId(mealTypes, params),
     entryMode: "recipe",
     expressNote: "",

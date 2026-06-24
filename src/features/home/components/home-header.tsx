@@ -27,7 +27,7 @@ export function HomeHeader({
           <Bell className="size-5" aria-hidden="true" />
         </button>
       </div>
-      <h1 className="text-2xl font-bold leading-snug text-foreground">
+      <h1 className="text-xl font-bold leading-snug text-foreground">
         {greeting}
       </h1>
     </header>

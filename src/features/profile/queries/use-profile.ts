@@ -12,5 +12,6 @@ export function useProfile() {
     queryKey: profileQueryKeys.detail(),
     queryFn: fetchProfile,
     enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
   });
 }
