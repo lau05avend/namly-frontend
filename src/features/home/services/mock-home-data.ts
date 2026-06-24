@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { HOME_COPY } from "@/features/home/constants/home-copy";
 import type { HomeSummary } from "@/features/home/types/home.types";
 
 function capitalize(value: string): string {
@@ -15,9 +14,9 @@ function buildSummary(referenceDate: Date): HomeSummary {
     displayDate: capitalize(
       format(referenceDate, "EEEE d", { locale: es }),
     ),
-    greeting: HOME_COPY.greeting(),
     nextMeal: {
       id: "meal-next",
+      kind: "meal",
       slot: "lunch",
       slotLabel: "Almuerzo",
       timeLabel: "12:30 p. m.",
@@ -40,10 +39,9 @@ function buildSummary(referenceDate: Date): HomeSummary {
     },
     streak: {
       currentDays: 12,
-      contextLabel: "días seguidos",
-      personalBest: 18,
       mealsLoggedToday: 2,
       mealsGoalToday: 3,
+      growthStageId: 4,
     },
     upcomingMeals: [
       {
@@ -68,7 +66,6 @@ function buildSummary(referenceDate: Date): HomeSummary {
     ],
     registeredToday: {
       count: 3,
-      label: HOME_COPY.sections.dayRecapSubtitle(3),
       meals: [
         {
           id: "registered-breakfast",

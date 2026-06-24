@@ -63,9 +63,6 @@ export const STREAK_GROWTH_STAGES: readonly StreakGrowthStage[] = [
   },
 ] as const;
 
-/** Prototype: hardcoded stage until streak API exposes growth stage. */
-export const STREAK_GROWTH_STAGE_PROTOTYPE: StreakGrowthStageId = 5;
-
 export function getStreakGrowthStage(
   stageId: StreakGrowthStageId,
 ): StreakGrowthStage {

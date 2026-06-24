@@ -63,9 +63,9 @@ export function HomeNextMealCard({ meal, className }: HomeNextMealCardProps) {
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-top gap-1 pt-3">
+      <div className="flex min-h-0 flex-1 flex-col justify-start gap-1 pt-3">
         {isNote ? (
-          <p className="truncate text-base font-semibold leading-tight text-foreground">
+          <p className="line-clamp-3 min-w-0 text-base font-medium leading-snug text-foreground">
             {meal.title}
           </p>
         ) : visibleRecipes.length > 0 ? (
@@ -90,8 +90,8 @@ export function HomeNextMealCard({ meal, className }: HomeNextMealCardProps) {
             ) : null}
           </ul>
         ) : (
-          <p className="truncate text-base font-semibold leading-tight text-foreground">
-            {meal.title}
+          <p className="text-sm leading-snug text-foreground/55">
+            {HOME_COPY.nextMeal.emptyRecipes}
           </p>
         )}
       </div>

@@ -1,4 +1,5 @@
 import type { MealSlot } from "@/constants/meal-slots";
+import type { StreakGrowthStageId } from "@/features/home/constants/streak-growth-stages";
 
 export type HomeTabId = "today" | "rhythm";
 
@@ -23,29 +24,30 @@ export type NextMealDetail = {
 
 export type HomeStreak = {
   currentDays: number;
-  contextLabel: string;
-  personalBest: number;
   mealsLoggedToday: number;
   mealsGoalToday: number;
+  growthStageId: StreakGrowthStageId;
 };
 
 export type UpcomingMealItem = {
   id: string;
+  kind?: NextMealKind;
   slot: MealSlot;
   slotLabel: string;
   timeLabel: string;
   title: string;
   items?: NextMealItem[];
+  moreCount?: number;
 };
 
 export type RegisteredTodaySummary = {
   count: number;
-  label: string;
   meals?: {
     id: string;
     mealTypeName: string;
     timeLabel: string;
     detail: string;
+    mediaUrl?: string | null;
   }[];
 };
 
@@ -59,10 +61,9 @@ export type HomeRecommendation = {
 export type HomeSummary = {
   date: string;
   displayDate: string;
-  greeting: string;
-  nextMeal: NextMealDetail;
+  nextMeal: NextMealDetail | null;
   streak: HomeStreak;
   upcomingMeals: UpcomingMealItem[];
   registeredToday: RegisteredTodaySummary;
-  recommendation: HomeRecommendation;
+  recommendation: HomeRecommendation | null;
 };

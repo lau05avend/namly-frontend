@@ -7,10 +7,10 @@ import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { HomeHeader } from "@/features/home/components/home-header";
 import { HomeLoading } from "@/features/home/components/home-loading";
 import { HomeTodayView } from "@/features/home/components/home-today-view";
+import { useHomeGreeting } from "@/features/home/hooks/use-home-greeting";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { useHomeSummary } from "@/features/home/queries/use-home-summary";
 import type { HomeTabId } from "@/features/home/types/home.types";
-import { useUserDisplayName } from "@/features/profile/hooks/use-user-display-name";
 import { useRegisterMealLaunch } from "@/features/meal-register/hooks/use-register-meal-launch";
 import { RhythmView } from "@/features/rhythm/components/rhythm-view";
 // import { Activity, Sun } from "lucide-react";
@@ -23,8 +23,7 @@ const HOME_TABS = [
 export function HomeScreen() {
   const [activeTab, setActiveTab] = useState<HomeTabId>("today");
   const { data, isPending, isError } = useHomeSummary();
-  const displayName = useUserDisplayName();
-  const greeting = HOME_COPY.greeting(displayName);
+  const greeting = useHomeGreeting();
   const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
 
   const handleFabClick = () => {

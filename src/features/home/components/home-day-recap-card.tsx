@@ -2,6 +2,7 @@
 
 import { CompletedMealItem } from "@/components/meal/completed-meal-item";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
+import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import type { RegisteredTodaySummary } from "@/features/home/types/home.types";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
@@ -27,7 +28,7 @@ export function HomeDayRecapCard({
       aria-label={HOME_COPY.sections.dayRecap}
       className={className}
     >
-      <div className="overflow-hidden rounded-2xl border border-foreground/6 bg-card/45 shadow-none">
+      <div className={cn("overflow-hidden", HOME_SECTION_SURFACES.recap)}>
         <button
           type="button"
           onClick={() => setExpanded((value) => !value)}

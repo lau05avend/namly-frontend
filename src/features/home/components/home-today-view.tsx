@@ -1,5 +1,7 @@
 import { HomeNextMealCard } from "@/features/home/components/home-next-meal-card";
+import { HomeNextMealEmptyCard } from "@/features/home/components/home-next-meal-empty-card";
 import { HomeDayRecapCard } from "@/features/home/components/home-day-recap-card";
+import { HomeUpcomingEmptyCard } from "@/features/home/components/home-upcoming-empty-card";
 import { HomeSection } from "@/features/home/components/home-section";
 import { HomeSectionTitle } from "@/features/home/components/home-section-title";
 import { HomeStreakCard } from "@/features/home/components/home-streak-card";
@@ -36,15 +38,20 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
           </div>
 
           <div className="col-span-3">
-            <HomeNextMealCard
-              meal={summary.nextMeal}
-              className={HOME_HERO_CARD_HEIGHT}
-            />
+            {summary.nextMeal ? (
+              <HomeNextMealCard
+                meal={summary.nextMeal}
+                className={HOME_HERO_CARD_HEIGHT}
+              />
+            ) : (
+              <HomeNextMealEmptyCard className={HOME_HERO_CARD_HEIGHT} />
+            )}
           </div>
 
           <div className="col-span-2">
             <HomeStreakCard
               days={summary.streak.currentDays}
+              growthStageId={summary.streak.growthStageId}
               progressLabel={HOME_COPY.streak.mealsProgressShort(
                 summary.streak.mealsLoggedToday,
                 summary.streak.mealsGoalToday,
@@ -57,20 +64,26 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
       </section>
 
       <HomeSection title={HOME_COPY.sections.upcoming}>
-        <ul className="flex flex-col gap-2">
-          {summary.upcomingMeals.map((meal) => (
-            <li key={meal.id}>
-              <PlannedEntryCard entry={mapUpcomingMealToPlannerEntry(meal)} />
-            </li>
-          ))}
-        </ul>
+        {summary.upcomingMeals.length > 0 ? (
+          <ul className="flex flex-col gap-2">
+            {summary.upcomingMeals.map((meal) => (
+              <li key={meal.id}>
+                <PlannedEntryCard entry={mapUpcomingMealToPlannerEntry(meal)} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <HomeUpcomingEmptyCard />
+        )}
       </HomeSection>
 
       <HomeDayRecapCard registeredToday={summary.registeredToday} />
 
-      <HomeSection title={HOME_COPY.sections.recommendation}>
-        <RecommendationCard recommendation={summary.recommendation} />
-      </HomeSection>
+      {summary.recommendation ? (
+        <HomeSection title={HOME_COPY.sections.recommendation}>
+          <RecommendationCard recommendation={summary.recommendation} />
+        </HomeSection>
+      ) : null}
     </div>
   );
 }

@@ -1,10 +1,15 @@
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { HOME_HERO_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import { StreakGrowthBadge } from "@/features/home/components/streak-growth-badge";
+import {
+  getStreakGrowthStage,
+  type StreakGrowthStageId,
+} from "@/features/home/constants/streak-growth-stages";
 import { cn } from "@/lib/utils";
 
 type HomeStreakCardProps = {
   days: number;
+  growthStageId: StreakGrowthStageId;
   progressLabel: string;
   progressPercent: number;
   className?: string;
@@ -12,11 +17,13 @@ type HomeStreakCardProps = {
 
 export function HomeStreakCard({
   days,
+  growthStageId,
   progressLabel,
   progressPercent,
   className,
 }: HomeStreakCardProps) {
   const clampedProgress = Math.min(100, Math.max(0, progressPercent));
+  const growthStage = getStreakGrowthStage(growthStageId);
 
   return (
     <div
@@ -27,7 +34,7 @@ export function HomeStreakCard({
       )}
     >
       <div className="flex flex-col items-center gap-2.5 text-center">
-        <StreakGrowthBadge className="items-center" />
+        <StreakGrowthBadge stage={growthStage} className="items-center" />
         <p className="text-lg font-bold leading-tight text-foreground">
           {HOME_COPY.streak.days(days)}
         </p>

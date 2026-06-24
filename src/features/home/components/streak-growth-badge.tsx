@@ -1,6 +1,5 @@
 import {
   getStreakGrowthStage,
-  STREAK_GROWTH_STAGE_PROTOTYPE,
   type StreakGrowthStage,
 } from "@/features/home/constants/streak-growth-stages";
 import { cn } from "@/lib/utils";
@@ -11,9 +10,10 @@ type StreakGrowthBadgeProps = {
 };
 
 export function StreakGrowthBadge({
-  stage = getStreakGrowthStage(STREAK_GROWTH_STAGE_PROTOTYPE),
+  stage,
   className,
 }: StreakGrowthBadgeProps) {
+  const resolvedStage = stage ?? getStreakGrowthStage(1);
   const {
     Icon,
     accentIcon: AccentIcon,
@@ -21,7 +21,7 @@ export function StreakGrowthBadge({
     iconContainerClass,
     iconClass,
     labelClass,
-  } = stage;
+  } = resolvedStage;
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>

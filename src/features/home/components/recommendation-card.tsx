@@ -1,24 +1,40 @@
+"use client";
+
 import { SurfaceCard } from "@/components/ui/surface-card";
+import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import type { HomeRecommendation } from "@/features/home/types/home.types";
 import { Sparkles } from "lucide-react";
-import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type RecommendationCardProps = {
   recommendation: HomeRecommendation;
 };
 
 export function RecommendationCard({ recommendation }: RecommendationCardProps) {
+  const hasImage = Boolean(recommendation.imageUrl?.trim());
+  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+    recommendation.imageUrl ?? undefined,
+  );
+  const showImage = Boolean(displayUrl) && !isResolving;
+
   return (
-    <SurfaceCard className="flex items-center gap-3 border-foreground/6 bg-card/40 p-3 shadow-none">
-      <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-linear-to-br from-highlight/35 via-mint/40 to-card">
-        {recommendation.imageUrl ? (
-          <Image
-            src={recommendation.imageUrl}
+    <SurfaceCard
+      className={cn(
+        "flex items-center gap-3 rounded-2xl p-3 shadow-none",
+        HOME_SECTION_SURFACES.recommendation,
+      )}
+    >
+      <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-mint">
+        {showImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={displayUrl}
             alt=""
-            fill
-            className="object-cover"
-            sizes="56px"
+            className="size-full object-cover"
           />
+        ) : hasImage && isResolving ? (
+          <span className="block size-full bg-foreground/5" aria-hidden />
         ) : (
           <span className="flex size-full items-center justify-center">
             <Sparkles
