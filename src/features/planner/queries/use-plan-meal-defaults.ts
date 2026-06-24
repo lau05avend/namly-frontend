@@ -16,7 +16,5 @@ export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
     ),
     queryFn: () => buildPlanMealDefaults(mealTypesQuery.data!, params),
     enabled: Boolean(mealTypesQuery.data?.length),
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
   });
 }

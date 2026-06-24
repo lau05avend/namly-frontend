@@ -4,14 +4,16 @@ import { useState } from "react";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { TabBar } from "@/components/navigation/tab-bar";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
-import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { HomeHeader } from "@/features/home/components/home-header";
 import { HomeLoading } from "@/features/home/components/home-loading";
 import { HomeTodayView } from "@/features/home/components/home-today-view";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { useHomeSummary } from "@/features/home/queries/use-home-summary";
 import type { HomeTabId } from "@/features/home/types/home.types";
+import { useUserDisplayName } from "@/features/profile/hooks/use-user-display-name";
 import { useRegisterMealLaunch } from "@/features/meal-register/hooks/use-register-meal-launch";
+import { RhythmView } from "@/features/rhythm/components/rhythm-view";
+// import { Activity, Sun } from "lucide-react";
 
 const HOME_TABS = [
   { id: "today" as const, label: HOME_COPY.tabs.today },
@@ -21,6 +23,8 @@ const HOME_TABS = [
 export function HomeScreen() {
   const [activeTab, setActiveTab] = useState<HomeTabId>("today");
   const { data, isPending, isError } = useHomeSummary();
+  const displayName = useUserDisplayName();
+  const greeting = HOME_COPY.greeting(displayName);
   const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
 
   const handleFabClick = () => {
@@ -40,25 +44,20 @@ export function HomeScreen() {
 
         {data ? (
           <>
-            <HomeHeader
-              displayDate={data.displayDate}
-              greeting={data.greeting}
-            />
+            <HomeHeader displayDate={data.displayDate} greeting={greeting} />
 
             <TabBar
               items={HOME_TABS}
               activeId={activeTab}
               onChange={setActiveTab}
+              align="stretch"
+              className="-mx-4"
             />
 
             {activeTab === "today" ? (
               <HomeTodayView summary={data} />
             ) : (
-              <ModuleEmptyState
-                module="home"
-                title={HOME_COPY.rhythmPlaceholder}
-                className="py-12"
-              />
+              <RhythmView />
             )}
           </>
         ) : null}

@@ -7,8 +7,11 @@ export type NextMealItem = {
   label: string;
 };
 
+export type NextMealKind = "meal" | "note";
+
 export type NextMealDetail = {
   id: string;
+  kind?: NextMealKind;
   slot: MealSlot;
   slotLabel: string;
   timeLabel: string;
@@ -28,19 +31,29 @@ export type HomeStreak = {
 
 export type UpcomingMealItem = {
   id: string;
+  slot: MealSlot;
+  slotLabel: string;
+  timeLabel: string;
   title: string;
-  meta: string;
+  items?: NextMealItem[];
 };
 
 export type RegisteredTodaySummary = {
   count: number;
   label: string;
+  meals?: {
+    id: string;
+    mealTypeName: string;
+    timeLabel: string;
+    detail: string;
+  }[];
 };
 
 export type HomeRecommendation = {
   id: string;
   title: string;
   meta: string;
+  imageUrl?: string | null;
 };
 
 export type HomeSummary = {

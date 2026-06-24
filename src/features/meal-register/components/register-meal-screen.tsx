@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncMealTimeOnOpen } from "@/components/meal/hooks/use-sync-meal-time-on-open";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -94,6 +95,7 @@ function RegisterMealForm({
   const form = useRegisterMealForm(defaults);
   const saveMutation = useSaveRegisterMeal();
   const { control, setValue, getValues } = form;
+  useSyncMealTimeOnOpen(setValue, !isEditing);
   const preLinkSnapshotRef = useRef<PreLinkSnapshot | null>(null);
   const isConfirmingDateResetRef = useRef(false);
   const lastConfirmedDateRef = useRef(defaults.date);

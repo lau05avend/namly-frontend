@@ -47,7 +47,7 @@ export function RecipePickerCard({
       className={cn(
         "relative flex w-full flex-col overflow-hidden rounded-2xl border bg-card/20 text-left transition-colors",
         selected
-          ? "border-primary/60 bg-card/35"
+          ? "border-primary/60 bg-card/5"
           : "border-foreground/6 hover:border-foreground/10 hover:bg-card/35",
       )}
     >

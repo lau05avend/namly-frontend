@@ -1,11 +1,9 @@
 import { PlannedEntryCard } from "@/components/meal/planned-entry-card";
+import { CompletedMealItem } from "@/components/meal/completed-meal-item";
 import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { PlannerDayEmpty } from "@/features/planner/components/planner-day-empty";
 import { PlannerDaySection } from "@/features/planner/components/planner-day-section";
-import type {
-  PlannerDayPlan,
-  PlannerRegisteredMeal,
-} from "@/features/planner/types/planner.types";
+import type { PlannerDayPlan } from "@/features/planner/types/planner.types";
 import { resolvePlannerDayPeriod } from "@/features/planner/utils/resolve-planner-day-period";
 import { resolveIncompleteSectionDefaultExpanded } from "@/features/planner/utils/resolve-incomplete-section-expanded";
 import {
@@ -19,27 +17,6 @@ import {
 type PlannerDayContentProps = {
   dayPlan?: PlannerDayPlan;
 };
-
-function CompletedMealItem({ meal }: { meal: PlannerRegisteredMeal }) {
-  return (
-    <div className="flex items-start gap-3 py-2.5">
-      <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary">
-        <CheckCircle2 className="size-3" strokeWidth={2.5} aria-hidden="true" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-2">
-          <p className="text-sm font-medium text-foreground/70">{meal.mealTypeName}</p>
-          <p className="text-xs text-foreground/40">{meal.timeLabel}</p>
-        </div>
-        {meal.detail ? (
-          <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">
-            {meal.detail}
-          </p>
-        ) : null}
-      </div>
-    </div>
-  );
-}
 
 export function PlannerDayContent({ dayPlan }: PlannerDayContentProps) {
   if (!dayPlan) return null;

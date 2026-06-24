@@ -6,6 +6,7 @@ import { Circle, Pencil, Salad } from "lucide-react";
 type PlannedEntryCardProps = {
   entry: PlannerEntry;
   onSelect?: () => void;
+  className?: string;
 };
 
 function MealMetaLabels({
@@ -92,7 +93,7 @@ function FeaturedHeroTime({ timeLabel }: { timeLabel: string }) {
   );
 }
 
-export function PlannedEntryCard({ entry, onSelect }: PlannedEntryCardProps) {
+export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCardProps) {
   const isFeatured = entry.variant === "featured";
   const isNote = entry.kind === "note";
   const isMissed = entry.status === "missed";
@@ -110,6 +111,7 @@ export function PlannedEntryCard({ entry, onSelect }: PlannedEntryCardProps) {
           className={cn(
             "flex flex-col gap-2 border border-primary/10 bg-mint/50 px-4 py-3.5 shadow-none",
             onSelect && "cursor-pointer active:scale-[0.99]",
+            className,
           )}
           role={onSelect ? "button" : undefined}
           tabIndex={onSelect ? 0 : undefined}
@@ -159,6 +161,7 @@ export function PlannedEntryCard({ entry, onSelect }: PlannedEntryCardProps) {
           isFeatured && "border-primary/15 bg-mint/40 px-3 py-2.5",
           isMissed && "border-foreground/8 bg-foreground/[0.015]",
           onSelect && "cursor-pointer active:scale-[0.99]",
+          className,
         )}
         role={onSelect ? "button" : undefined}
         tabIndex={onSelect ? 0 : undefined}
@@ -233,6 +236,7 @@ export function PlannedEntryCard({ entry, onSelect }: PlannedEntryCardProps) {
           "gap-2 border-foreground/6 bg-card/10 px-3.5 py-3 shadow-none",
         isMissed && "border-foreground/8 bg-foreground/[0.015]",
         onSelect && "cursor-pointer active:scale-[0.99]",
+        className,
       )}
       role={onSelect ? "button" : undefined}
       tabIndex={onSelect ? 0 : undefined}
