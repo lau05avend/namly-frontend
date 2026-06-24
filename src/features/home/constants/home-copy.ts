@@ -33,7 +33,7 @@ export const HOME_COPY = {
     recommendation: "Recomendación del día",
     upcomingEmptyTitle: "Tu menú del día aún está por descubrirse",
     upcomingEmptyHint:
-      "Puedes empezar planeando tus siguientes comidas cuando quieras",
+      "Empieza planeando tus siguientes comidas cuando quieras",
   },
   nextMeal: {
     ariaLabel: (slotLabel: string) => `Próxima comida: ${slotLabel}`,

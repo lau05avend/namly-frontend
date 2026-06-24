@@ -1,4 +1,4 @@
-export type RhythmActivityIntensity = 0 | 0.5 | 1;
+export type RhythmActivityIntensity = 0 | 1 | 2 | 3;
 
 export type RhythmActivityDay = {
   dayLabel: string;
@@ -34,9 +34,12 @@ export type RhythmInsightIcon =
   | "recipe"
   | "explore";
 
+export type RhythmInsightTone = "warm" | "calm" | "neutral" | "positive";
+
 export type RhythmHabitInsight = {
   id: string;
   icon: RhythmInsightIcon;
+  tone: RhythmInsightTone;
   message: string;
 };
 
@@ -44,10 +47,6 @@ export type RhythmHabits = {
   hasEnoughData: boolean;
   insights: RhythmHabitInsight[];
   timeSlotDistribution?: RhythmTimeSlotDistribution[];
-  mostConsistentMealType?: string;
-  preferredTimeSlot?: string;
-  diversityInsight?: string;
-  tagInsight?: string;
 };
 
 export type RhythmLifetime = {
@@ -60,7 +59,7 @@ export type RhythmLifetime = {
 };
 
 export type RhythmSummary = {
-  weeklySummary: RhythmWeeklySummary;
-  habits: RhythmHabits;
-  lifetime: RhythmLifetime;
+  weeklySummary: RhythmWeeklySummary | null;
+  habits: RhythmHabits | null;
+  lifetime: RhythmLifetime | null;
 };

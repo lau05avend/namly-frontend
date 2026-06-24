@@ -7,7 +7,7 @@ export const HOME_HERO_SURFACES = {
 
 /** Shared section cards on Home — solid surfaces, no glass layering. */
 export const HOME_SECTION_SURFACES = {
-  recap: "rounded-2xl border border-foreground/6 bg-card shadow-none",
+  recap: "rounded-2xl border border-foreground/6 bg-card/40 shadow-none",
   upcomingEmpty: "rounded-2xl border border-foreground/6 shadow-none",
   recommendation: "rounded-2xl border border-foreground/6 bg-card shadow-none",
 } as const;

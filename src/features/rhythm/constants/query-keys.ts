@@ -1,4 +1,5 @@
 export const rhythmQueryKeys = {
   all: ["rhythm"] as const,
-  summary: () => [...rhythmQueryKeys.all, "summary"] as const,
+  analytics: (weekStart: string) =>
+    [...rhythmQueryKeys.all, "analytics", weekStart] as const,
 };

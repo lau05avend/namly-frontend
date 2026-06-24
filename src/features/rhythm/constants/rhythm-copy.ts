@@ -7,8 +7,13 @@ export const RHYTHM_COPY = {
   weekly: {
     activeDays: (active: number, total: number) =>
       `${active} de ${total} días activos`,
-    weekComparisonValue: (percent: number) => `+${percent}%`,
-    weekComparisonLabel: "Más actividad que la semana pasada",
+    weekComparisonValue: (percent: number) => {
+      if (percent > 0) {
+        return `+${percent}%`;
+      }
+
+      return `${percent}%`;
+    },
     averageCompletionValue: (percent: number) => `${percent}%`,
     averageCompletionLabel: "Promedio esta semana",
   },
@@ -18,7 +23,8 @@ export const RHYTHM_COPY = {
       "Registra unas comidas más y aquí verás patrones suaves sobre tu rutina.",
   },
   lifetime: {
-    longestStreak: (days: number) => `Tu mejor racha: ${days} días`,
+    longestStreak: (days: number) =>
+      days === 1 ? "Tu mejor racha: 1 día" : `Tu mejor racha: ${days} días`,
     bestWeek: (percent: number) =>
       `Tu mejor semana: ${percent}% de cumplimiento`,
     totalMeals: (count: number) => `Has registrado ${count} comidas`,

@@ -1,10 +1,14 @@
-import { RHYTHM_INSIGHT_ICON_COLORS } from "@/features/rhythm/constants/rhythm-theme";
-import type { RhythmInsightIcon } from "@/features/rhythm/types/rhythm.types";
+import { RHYTHM_SURFACES } from "@/features/rhythm/constants/rhythm-surfaces";
+import type {
+  RhythmInsightIcon,
+  RhythmInsightTone,
+} from "@/features/rhythm/types/rhythm.types";
 import { cn } from "@/lib/utils";
 import {
   ChefHat,
   Clock3,
   Compass,
+  Smile,
   Sparkles,
   Sun,
   type LucideIcon,
@@ -18,14 +22,23 @@ const INSIGHT_ICONS: Record<RhythmInsightIcon, LucideIcon> = {
   explore: Compass,
 };
 
+const INSIGHT_ICON_SURFACES: Record<RhythmInsightTone, string> = {
+  warm: RHYTHM_SURFACES.insightIconWarm,
+  calm: RHYTHM_SURFACES.insightIconCalm,
+  positive: RHYTHM_SURFACES.insightIconPositive,
+  neutral: RHYTHM_SURFACES.insightIconNeutral,
+};
+
 type RhythmInsightItemProps = {
   icon: RhythmInsightIcon;
+  tone?: RhythmInsightTone;
   message: string;
   className?: string;
 };
 
 export function RhythmInsightItem({
   icon,
+  tone = "neutral",
   message,
   className,
 }: RhythmInsightItemProps) {
@@ -34,19 +47,29 @@ export function RhythmInsightItem({
   return (
     <div
       className={cn(
-        "flex items-start gap-3.5 border-b border-foreground/6 py-3.5 last:border-b-0",
+        "flex items-center gap-3 border-b border-foreground/[0.05] py-3 first:pt-0 last:border-b-0",
         className,
       )}
     >
-      <Icon
+      <span
         className={cn(
-          "mt-0.5 size-5 shrink-0",
-          RHYTHM_INSIGHT_ICON_COLORS[icon],
+          "flex size-9 shrink-0 items-center justify-center rounded-full",
+          INSIGHT_ICON_SURFACES[tone],
         )}
-        strokeWidth={2}
+      >
+        <Icon className="size-4" strokeWidth={2} aria-hidden />
+      </span>
+
+      <p className="min-w-0 flex-1 text-sm leading-relaxed text-foreground/75">
+        {message}
+      </p>
+
+      <span
+        className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
         aria-hidden
-      />
-      <p className="text-sm leading-relaxed text-foreground/75">{message}</p>
+      >
+        <Smile className="size-3.5" strokeWidth={2.25} />
+      </span>
     </div>
   );
 }

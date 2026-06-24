@@ -18,7 +18,7 @@ export function RhythmWeeklyActivityRow({ days }: RhythmWeeklyActivityRowProps) 
           role="listitem"
           className="flex flex-1 flex-col items-center gap-2"
         >
-          <span className="text-[11px] font-medium text-foreground/40">
+          <span className="text-[11px] font-medium tracking-wide text-foreground/38">
             {day.dayLabel}
           </span>
           <RhythmActivityDot

@@ -5,16 +5,16 @@ import { RhythmLifetimeSection } from "@/features/rhythm/components/rhythm-lifet
 import { RhythmLoading } from "@/features/rhythm/components/rhythm-loading";
 import { RhythmWeeklySection } from "@/features/rhythm/components/rhythm-weekly-section";
 import { RHYTHM_COPY } from "@/features/rhythm/constants/rhythm-copy";
-import { useRhythmSummary } from "@/features/rhythm/queries/use-rhythm-summary";
+import { useRhythmAnalytics } from "@/features/rhythm/queries/use-rhythm-analytics";
 
 export function RhythmView() {
-  const { data, isPending, isError, refetch } = useRhythmSummary();
+  const { data, isPending, isError, refetch } = useRhythmAnalytics();
 
   if (isPending) {
     return <RhythmLoading />;
   }
 
-  if (isError || !data) {
+  if (isError && !data) {
     return (
       <div className="flex flex-col items-center gap-3 py-10 text-center">
         <p className="text-sm text-foreground/60">{RHYTHM_COPY.loadError}</p>
@@ -29,11 +29,30 @@ export function RhythmView() {
     );
   }
 
+  if (!data) {
+    return null;
+  }
+
+  const hasContent =
+    data.weeklySummary || data.habits || data.lifetime;
+
+  if (!hasContent) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-sm text-foreground/60">{RHYTHM_COPY.loadError}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-10 pb-2">
-      <RhythmWeeklySection summary={data.weeklySummary} />
-      <RhythmHabitsSection habits={data.habits} />
-      <RhythmLifetimeSection lifetime={data.lifetime} />
+    <div className="flex flex-col gap-4 pb-2">
+      {data.weeklySummary ? (
+        <RhythmWeeklySection summary={data.weeklySummary} />
+      ) : null}
+      {data.habits ? <RhythmHabitsSection habits={data.habits} /> : null}
+      {data.lifetime ? (
+        <RhythmLifetimeSection lifetime={data.lifetime} />
+      ) : null}
     </div>
   );
 }

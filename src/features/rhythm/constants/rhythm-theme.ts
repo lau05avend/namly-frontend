@@ -1,4 +1,8 @@
-import type { RhythmInsightIcon, RhythmTimeSlotId } from "@/features/rhythm/types/rhythm.types";
+import type {
+  RhythmInsightIcon,
+  RhythmInsightTone,
+  RhythmTimeSlotId,
+} from "@/features/rhythm/types/rhythm.types";
 
 export const RHYTHM_INSIGHT_ICON_COLORS: Record<RhythmInsightIcon, string> = {
   meal: "text-cta",
@@ -6,6 +10,13 @@ export const RHYTHM_INSIGHT_ICON_COLORS: Record<RhythmInsightIcon, string> = {
   variety: "text-highlight",
   recipe: "text-primary",
   explore: "text-cta",
+};
+
+export const RHYTHM_INSIGHT_TONE_COLORS: Record<RhythmInsightTone, string> = {
+  warm: "text-cta",
+  calm: "text-primary",
+  neutral: "text-foreground/55",
+  positive: "text-primary",
 };
 
 export const RHYTHM_TIME_SLOT_DOT_COLORS: Record<

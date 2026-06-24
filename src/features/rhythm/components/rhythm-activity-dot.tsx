@@ -15,24 +15,21 @@ export function RhythmActivityDot({
   return (
     <div
       className={cn(
-        "flex size-9 items-center justify-center rounded-full",
-        isToday && "ring-2 ring-foreground/15 ring-offset-2 ring-offset-background",
+        "flex size-8 items-center justify-center rounded-full",
+        isToday && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background",
         className,
       )}
     >
       <span
         className={cn(
-          "relative block size-5 overflow-hidden rounded-full border-2",
-          intensity === 0 && "border-foreground/12 bg-transparent",
-          intensity === 0.5 && "border-highlight bg-highlight/25",
-          intensity === 1 && "border-primary bg-primary",
+          "block size-[1.125rem] rounded-full",
+          intensity === 0 && "border-[1.5px] border-foreground/14 bg-transparent",
+          intensity === 1 && "bg-primary/35",
+          intensity === 2 && "bg-primary/65",
+          intensity === 3 && "bg-primary",
         )}
         aria-hidden
-      >
-        {intensity === 0.5 ? (
-          <span className="absolute inset-y-0 left-0 w-1/2 bg-highlight" />
-        ) : null}
-      </span>
+      />
     </div>
   );
 }
