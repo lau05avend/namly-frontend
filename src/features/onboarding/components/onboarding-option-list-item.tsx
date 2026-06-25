@@ -9,6 +9,8 @@ type OnboardingOptionListItemProps = {
   iconName: string;
   selected: boolean;
   onSelect: () => void;
+  density?: "default" | "compact" | "embedded";
+  multiSelect?: boolean;
 };
 
 export function OnboardingOptionListItem({
@@ -16,35 +18,92 @@ export function OnboardingOptionListItem({
   iconName,
   selected,
   onSelect,
+  density = "default",
+  multiSelect = false,
 }: OnboardingOptionListItemProps) {
+  const isCompact = density === "compact";
+  const isEmbedded = density === "embedded";
+
+  if (isEmbedded) {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-pressed={selected}
+        className={cn(
+          "flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 text-left text-xs transition-colors",
+          selected
+            ? "bg-mint/55 font-medium text-primary"
+            : "text-foreground/68 hover:bg-foreground/[0.03]",
+        )}
+      >
+        <DynamicLucideIcon
+          name={iconName}
+          className={cn(
+            "size-3.5 shrink-0",
+            selected ? "text-primary" : "text-foreground/40",
+          )}
+        />
+        <span className="min-w-0 flex-1 leading-snug">{label}</span>
+        <span
+          className={cn(
+            "size-3.5 shrink-0 border",
+            multiSelect ? "rounded-[4px]" : "rounded-full",
+            selected
+              ? "border-primary bg-primary"
+              : "border-foreground/18 bg-transparent",
+          )}
+          aria-hidden
+        />
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        "flex w-full cursor-pointer items-center gap-3 rounded-3xl border px-4 py-3.5 text-left text-sm font-medium transition-colors",
+        "flex w-full cursor-pointer items-center text-left font-medium transition-colors",
+        isCompact
+          ? "gap-2.5 rounded-xl border px-2.5 py-2 text-xs"
+          : "gap-3 rounded-3xl border px-4 py-3.5 text-sm",
         selected
-          ? "border-primary bg-mint text-primary"
-          : "border-foreground/10 bg-card text-foreground/80 hover:border-primary/30 hover:bg-mint/30",
+          ? isCompact
+            ? "border-primary/35 bg-mint/45 text-primary"
+            : "border-primary bg-mint text-primary"
+          : isCompact
+            ? "border-foreground/8 bg-card/50 text-foreground/75 hover:border-primary/20 hover:bg-mint/20"
+            : "border-foreground/10 bg-card text-foreground/80 hover:border-primary/30 hover:bg-mint/30",
       )}
     >
       <span
         className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-2xl",
-          selected ? "bg-primary/15 text-primary" : "bg-mint/60 text-foreground/50",
+          "flex shrink-0 items-center justify-center",
+          isCompact ? "size-7 rounded-lg" : "size-9 rounded-2xl",
+          selected
+            ? "bg-primary/12 text-primary"
+            : isCompact
+              ? "bg-mint/50 text-foreground/45"
+              : "bg-mint/60 text-foreground/50",
         )}
       >
-        <DynamicLucideIcon name={iconName} className="size-4" />
+        <DynamicLucideIcon
+          name={iconName}
+          className={isCompact ? "size-3.5" : "size-4"}
+        />
       </span>
       <span className="min-w-0 flex-1 leading-snug">{label}</span>
-      <ChevronRight
-        className={cn(
-          "size-4 shrink-0",
-          selected ? "text-primary" : "text-foreground/25",
-        )}
-        aria-hidden
-      />
+      {!isCompact ? (
+        <ChevronRight
+          className={cn(
+            "size-4 shrink-0",
+            selected ? "text-primary" : "text-foreground/25",
+          )}
+          aria-hidden
+        />
+      ) : null}
     </button>
   );
 }

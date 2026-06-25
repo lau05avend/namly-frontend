@@ -23,10 +23,24 @@ export type OnboardingQuestionApiDto = {
   options: OnboardingOptionApiDto[];
 };
 
+export type OnboardingResponseApiDto = {
+  questionId: string;
+  optionIds: string[];
+  customValue: string | null;
+};
+
 export type SubmitOnboardingResponsesApiPayload = {
   responses: {
     questionId: string;
     optionIds: string[];
     customValue?: string;
+  }[];
+};
+
+export type PatchOnboardingResponsesApiPayload = {
+  responses: {
+    questionId: string;
+    optionIds: string[];
+    customValue?: string | null;
   }[];
 };

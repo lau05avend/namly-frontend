@@ -33,7 +33,7 @@ export function ProfileScreen() {
 
   return (
     <div className="relative min-h-dvh bg-background pb-28">
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-8 px-4 pt-safe">
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 pt-safe">
         <header>
           <h1 className="text-center text-lg font-bold text-foreground">
             {PROFILE_COPY.title}
@@ -62,6 +62,7 @@ export function ProfileScreen() {
             <ProfileSummary profile={profile} />
             <ProfileSettingsList
               onEditProfile={() => router.push("/profile/edit")}
+              onEditPreferences={() => router.push("/profile/preferences")}
               onSignOut={() => void handleSignOut()}
               isSigningOut={isSigningOut}
             />

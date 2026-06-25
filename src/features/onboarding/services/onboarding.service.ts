@@ -1,9 +1,14 @@
 import {
   mapQuestions,
+  mapResponsesFromApi,
+  mapResponsesToPatchPayload,
   mapResponsesToSubmitPayload,
   toApiSubmitPayload,
 } from "@/features/onboarding/mappers/onboarding.mapper";
-import type { OnboardingQuestionApiDto } from "@/features/onboarding/types/onboarding-api.types";
+import type {
+  OnboardingQuestionApiDto,
+  OnboardingResponseApiDto,
+} from "@/features/onboarding/types/onboarding-api.types";
 import type {
   OnboardingQuestion,
   OnboardingResponsesMap,
@@ -18,6 +23,14 @@ export async function fetchOnboardingQuestions(): Promise<OnboardingQuestion[]> 
   return mapQuestions(data);
 }
 
+export async function fetchOnboardingResponses(): Promise<OnboardingResponsesMap> {
+  const data = await apiClient<OnboardingResponseApiDto[]>(
+    "/api/v1/onboarding/responses",
+  );
+
+  return mapResponsesFromApi(data);
+}
+
 export async function submitOnboardingResponses(
   responses: OnboardingResponsesMap,
 ): Promise<void> {
@@ -26,5 +39,17 @@ export async function submitOnboardingResponses(
   await apiClient<void>("/api/v1/onboarding/responses", {
     method: "POST",
     body: toApiSubmitPayload(payload),
+  });
+}
+
+export async function patchOnboardingResponses(
+  current: OnboardingResponsesMap,
+  previous: OnboardingResponsesMap,
+): Promise<void> {
+  const payload = mapResponsesToPatchPayload(current, previous);
+
+  await apiClient<void>("/api/v1/onboarding/responses", {
+    method: "PATCH",
+    body: payload,
   });
 }
