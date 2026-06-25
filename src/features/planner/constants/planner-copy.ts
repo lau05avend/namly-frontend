@@ -29,4 +29,22 @@ export const PLANNER_COPY = {
   },
   fabLabel: "Agregar al plan",
   quickNoteBadge: "Nota rápida",
+  detail: {
+    back: "Volver al plan",
+    loadError: "No pudimos cargar esta planeación. Intenta de nuevo.",
+    recipesLabel: "Recetas",
+    recipeCount: (count: number) =>
+      count === 1 ? "1 receta" : `${count} recetas`,
+    noteLabel: "Nota",
+    openRecipeAria: (title: string) => `Ver receta ${title}`,
+    registeredMealLabel: "",
+    registeredMealContextLabel: "Comida registrada",
+    openRegisteredMealAria: "Ver comida registrada",
+    status: {
+      next: "Próxima comida",
+      upcoming: "Programada",
+      missed: "Sin completar",
+      completed: "Completada",
+    },
+  },
 } as const;

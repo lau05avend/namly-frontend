@@ -18,6 +18,14 @@ export type ScheduledMealRecipeApiDto = {
   sortOrder: number;
 };
 
+export type ScheduledMealCompletionMealLogApiDto = {
+  id: string;
+  mediaUrl: string | null;
+  loggedAt: string;
+  content: string | null;
+  tags: string[];
+};
+
 export type ScheduledMealApiDto = {
   id: string;
   mealTypeId: string;
@@ -28,6 +36,10 @@ export type ScheduledMealApiDto = {
   expressNote: string | null;
   recipes?: ScheduledMealRecipeApiDto[];
   status: ScheduledMealStatusApi;
+};
+
+export type ScheduledMealDetailApiDto = ScheduledMealApiDto & {
+  completionMealLog: ScheduledMealCompletionMealLogApiDto | null;
 };
 
 export type ScheduledMealsCalendarApiResponse = {

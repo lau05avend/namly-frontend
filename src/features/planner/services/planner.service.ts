@@ -1,12 +1,15 @@
 import { toMonthKey } from "@/features/planner/constants/query-keys";
+import { mapScheduledMealDetail } from "@/features/planner/mappers/planner-detail.mapper";
 import {
   mapCalendarResponse,
   mapDayResponse,
 } from "@/features/planner/mappers/planner.mapper";
 import type {
   ScheduledMealApiDto,
+  ScheduledMealDetailApiDto,
   ScheduledMealsCalendarApiResponse,
 } from "@/features/planner/types/planner-api.types";
+import type { PlannerScheduledMealDetail } from "@/features/planner/types/planner-detail.types";
 import type {
   PlannerDayPlan,
   PlannerMonthActivity,
@@ -21,6 +24,16 @@ export async function fetchPlannerDay(
   );
 
   return mapDayResponse(meals, dateKey);
+}
+
+export async function fetchPlannerScheduledMeal(
+  scheduledMealId: string,
+): Promise<PlannerScheduledMealDetail> {
+  const meal = await apiClient<ScheduledMealDetailApiDto>(
+    `/api/v1/scheduled-meals/${scheduledMealId}`,
+  );
+
+  return mapScheduledMealDetail(meal);
 }
 
 export async function fetchPlannerMonthActivity(
