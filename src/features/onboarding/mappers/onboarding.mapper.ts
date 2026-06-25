@@ -6,15 +6,21 @@ import type {
   OnboardingOptionApiDto,
   OnboardingQuestionApiDto,
   OnboardingOptionsLayoutApi,
+  OnboardingResponseApiDto,
+  PatchOnboardingResponsesApiPayload,
   SubmitOnboardingResponsesApiPayload,
 } from "@/features/onboarding/types/onboarding-api.types";
 import type {
   OnboardingOption,
   OnboardingOptionsLayout,
   OnboardingQuestion,
+  OnboardingResponseDraft,
   OnboardingResponsesMap,
   SubmitOnboardingPayload,
 } from "@/features/onboarding/types/onboarding.types";
+import {
+  areResponseDraftsEqual,
+} from "@/features/onboarding/utils/onboarding-response.utils";
 
 type RawRecord = Record<string, unknown>;
 
@@ -134,6 +140,21 @@ export function mapQuestions(
     .map(mapQuestion);
 }
 
+export function mapResponsesFromApi(
+  dtos: OnboardingResponseApiDto[],
+): OnboardingResponsesMap {
+  return dtos.reduce<OnboardingResponsesMap>((accumulator, dto) => {
+    const customValue = dto.customValue?.trim();
+
+    accumulator[dto.questionId] = {
+      optionIds: dto.optionIds ?? [],
+      ...(customValue ? { customValue } : {}),
+    };
+
+    return accumulator;
+  }, {});
+}
+
 export function mapResponsesToSubmitPayload(
   responses: OnboardingResponsesMap,
 ): SubmitOnboardingPayload {
@@ -152,6 +173,55 @@ export function mapResponsesToSubmitPayload(
         : {}),
     })),
   };
+}
+
+function toPatchResponseEntry(
+  questionId: string,
+  currentDraft: OnboardingResponseDraft,
+  previousDraft: OnboardingResponseDraft | undefined,
+): PatchOnboardingResponsesApiPayload["responses"][number] {
+  const customTrimmed = currentDraft.customValue?.trim();
+  const previousHadCustom = Boolean(previousDraft?.customValue?.trim());
+
+  return {
+    questionId,
+    optionIds: currentDraft.optionIds,
+    ...(customTrimmed
+      ? { customValue: customTrimmed }
+      : previousHadCustom
+        ? { customValue: null }
+        : {}),
+  };
+}
+
+export function mapResponsesToPatchPayload(
+  current: OnboardingResponsesMap,
+  previous: OnboardingResponsesMap,
+): PatchOnboardingResponsesApiPayload {
+  const questionIds = new Set([
+    ...Object.keys(current),
+    ...Object.keys(previous),
+  ]);
+
+  const responses = [...questionIds].flatMap((questionId) => {
+    const currentDraft = current[questionId] ?? { optionIds: [] };
+    const previousDraft = previous[questionId];
+
+    if (areResponseDraftsEqual(currentDraft, previousDraft)) {
+      return [];
+    }
+
+    const hasOptions = currentDraft.optionIds.length > 0;
+    const hasCustom = Boolean(currentDraft.customValue?.trim());
+
+    if (!hasOptions && !hasCustom) {
+      return [];
+    }
+
+    return [toPatchResponseEntry(questionId, currentDraft, previousDraft)];
+  });
+
+  return { responses };
 }
 
 export function toApiSubmitPayload(

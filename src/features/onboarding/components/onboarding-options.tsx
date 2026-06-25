@@ -13,6 +13,8 @@ type OnboardingOptionsProps = {
   layout: OnboardingOptionsLayout;
   selectedOptionIds: string[];
   onSelectOption: (optionId: string) => void;
+  density?: "default" | "compact" | "embedded";
+  multiSelect?: boolean;
 };
 
 export function OnboardingOptions({
@@ -20,10 +22,20 @@ export function OnboardingOptions({
   layout,
   selectedOptionIds,
   onSelectOption,
+  density = "default",
+  multiSelect = false,
 }: OnboardingOptionsProps) {
+  const isCompact = density === "compact";
+  const isEmbedded = density === "embedded";
+
   if (layout === "list") {
     return (
-      <div className="flex flex-col gap-2">
+      <div
+        className={cn(
+          "flex flex-col",
+          isEmbedded ? "gap-0.5" : isCompact ? "gap-1.5" : "gap-2",
+        )}
+      >
         {options.map((option) => (
           <OnboardingOptionListItem
             key={option.id}
@@ -31,6 +43,8 @@ export function OnboardingOptions({
             iconName={option.iconName}
             selected={selectedOptionIds.includes(option.id)}
             onSelect={() => onSelectOption(option.id)}
+            density={density}
+            multiSelect={multiSelect}
           />
         ))}
       </div>
@@ -38,7 +52,12 @@ export function OnboardingOptions({
   }
 
   return (
-    <div className={cn("grid grid-cols-2 gap-2")}>
+    <div
+      className={cn(
+        "grid grid-cols-2",
+        isEmbedded ? "gap-1.5" : isCompact ? "gap-1.5" : "gap-2",
+      )}
+    >
       {options.map((option) => (
         <OnboardingOptionChip
           key={option.id}
@@ -46,6 +65,7 @@ export function OnboardingOptions({
           iconName={option.iconName}
           selected={selectedOptionIds.includes(option.id)}
           onSelect={() => onSelectOption(option.id)}
+          density={density}
         />
       ))}
     </div>

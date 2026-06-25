@@ -6,8 +6,16 @@ export const plannerQueryKeys = {
   monthActivity: (monthKey: string) =>
     [...plannerQueryKeys.all, "month-activity", monthKey] as const,
   mealTypes: () => [...plannerQueryKeys.all, "meal-types"] as const,
-  planDefaults: (date?: string, mealTypeId?: string) =>
-    [...plannerQueryKeys.all, "plan-defaults", date ?? "", mealTypeId ?? ""] as const,
+  planDefaults: (date?: string, mealTypeId?: string, scheduledMealId?: string) =>
+    [
+      ...plannerQueryKeys.all,
+      "plan-defaults",
+      date ?? "",
+      mealTypeId ?? "",
+      scheduledMealId ?? "",
+    ] as const,
+  scheduledMeal: (scheduledMealId: string) =>
+    [...plannerQueryKeys.all, "scheduled-meal", scheduledMealId] as const,
 };
 
 export function toMonthKey(date: Date): string {

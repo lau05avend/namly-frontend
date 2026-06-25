@@ -9,6 +9,7 @@ type PlanMealPageProps = {
   searchParams: Promise<{
     date?: string;
     slot?: string;
+    edit?: string;
   }>;
 };
 
@@ -17,5 +18,11 @@ export default async function PlanMealPage({
 }: PlanMealPageProps) {
   const params = await searchParams;
 
-  return <PlanMealScreen initialDate={params.date} initialSlot={params.slot} />;
+  return (
+    <PlanMealScreen
+      initialDate={params.date}
+      initialSlot={params.slot}
+      editId={params.edit}
+    />
+  );
 }

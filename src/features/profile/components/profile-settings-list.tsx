@@ -1,33 +1,40 @@
 "use client";
 
-import { SectionHeader } from "@/components/ui/section-header";
+import { ProfileSettingsGroup } from "@/features/profile/components/profile-settings-group";
 import { ProfileSettingsRow } from "@/features/profile/components/profile-settings-row";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
-import { LogOut, UserRound } from "lucide-react";
+import {
+  Languages,
+  LayoutList,
+  LogOut,
+  Palette,
+  Ruler,
+  ShieldAlert,
+  UserRound,
+} from "lucide-react";
 
 type ProfileSettingsListProps = {
   onEditProfile: () => void;
+  onEditPreferences: () => void;
   onSignOut: () => void;
   isSigningOut?: boolean;
 };
 
 export function ProfileSettingsList({
   onEditProfile,
+  onEditPreferences,
   onSignOut,
   isSigningOut = false,
 }: ProfileSettingsListProps) {
   return (
-    <section className="flex flex-col gap-3">
-      <SectionHeader title={PROFILE_COPY.accountSection} />
-
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-5">
+      <ProfileSettingsGroup title={PROFILE_COPY.sections.account}>
         <ProfileSettingsRow
           title={PROFILE_COPY.editProfile.title}
           subtitle={PROFILE_COPY.editProfile.subtitle}
           icon={UserRound}
           onSelect={onEditProfile}
         />
-
         <ProfileSettingsRow
           title={PROFILE_COPY.signOut.title}
           subtitle={
@@ -39,8 +46,47 @@ export function ProfileSettingsList({
           onSelect={onSignOut}
           disabled={isSigningOut}
           destructive
+          isLast
         />
-      </div>
-    </section>
+      </ProfileSettingsGroup>
+
+      <ProfileSettingsGroup title={PROFILE_COPY.sections.personalPreferences}>
+        <ProfileSettingsRow
+          title={PROFILE_COPY.allergies.title}
+          subtitle={PROFILE_COPY.allergies.subtitle}
+          icon={ShieldAlert}
+          onSelect={onEditPreferences}
+          isLast
+        />
+      </ProfileSettingsGroup>
+
+      <ProfileSettingsGroup title={PROFILE_COPY.sections.mealTypes}>
+        <ProfileSettingsRow
+          title={PROFILE_COPY.mealTypes.title}
+          subtitle={PROFILE_COPY.mealTypes.subtitle}
+          icon={LayoutList}
+          isLast
+        />
+      </ProfileSettingsGroup>
+
+      <ProfileSettingsGroup title={PROFILE_COPY.sections.appPreferences}>
+        <ProfileSettingsRow
+          title={PROFILE_COPY.units.title}
+          icon={Ruler}
+          valueLabel={PROFILE_COPY.units.value}
+        />
+        <ProfileSettingsRow
+          title={PROFILE_COPY.language.title}
+          icon={Languages}
+          valueLabel={PROFILE_COPY.language.value}
+        />
+        <ProfileSettingsRow
+          title={PROFILE_COPY.theme.title}
+          icon={Palette}
+          valueLabel={PROFILE_COPY.theme.value}
+          isLast
+        />
+      </ProfileSettingsGroup>
+    </div>
   );
 }

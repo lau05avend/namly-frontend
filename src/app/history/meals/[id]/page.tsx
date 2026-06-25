@@ -13,6 +13,7 @@ type HistoryMealLogPageProps = {
   }>;
   searchParams: Promise<{
     date?: string;
+    returnTo?: string;
   }>;
 };
 
@@ -21,7 +22,7 @@ export default async function HistoryMealLogPage({
   searchParams,
 }: HistoryMealLogPageProps) {
   const { id } = await params;
-  const { date } = await searchParams;
+  const { date, returnTo } = await searchParams;
 
   if (!id.trim()) {
     redirect("/history");
@@ -31,5 +32,7 @@ export default async function HistoryMealLogPage({
     redirect("/history");
   }
 
-  return <HistoryMealLogScreen logId={id} dateKey={date} />;
+  return (
+    <HistoryMealLogScreen logId={id} dateKey={date} returnTo={returnTo} />
+  );
 }

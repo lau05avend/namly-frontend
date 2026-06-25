@@ -100,7 +100,7 @@ export function EditProfileForm({
         </div>
       </section>
 
-      <section className="flex flex-col gap-3">
+      {/* <section className="flex flex-col gap-3">
         <SectionHeader title={PROFILE_COPY.linkedAccountSection} />
         <div className="relative">
           <Input
@@ -116,7 +116,7 @@ export function EditProfileForm({
             Google
           </span>
         </div>
-      </section>
+      </section> */}
 
       <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
         {isSaving ? PROFILE_COPY.saving : PROFILE_COPY.saveChanges}

@@ -6,6 +6,7 @@ export type PlanMealDefaultsParams = {
   date?: string;
   mealTypeId?: string;
   mealSlot?: MealSlot;
+  scheduledMealId?: string;
 };
 
 export type PlanMealDefaults = PlanMealFormValues;

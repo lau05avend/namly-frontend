@@ -13,6 +13,7 @@ import { usePlanMealForm } from "@/features/planner/hooks/use-plan-meal-form";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
 import { usePlanMealDefaults } from "@/features/planner/queries/use-plan-meal-defaults";
 import { useSavePlanMeal } from "@/features/planner/queries/use-save-plan-meal";
+import { useUpdatePlanMeal } from "@/features/planner/queries/use-update-plan-meal";
 import type {
   PlanMealDefaults,
   PlanMealDefaultsParams,
@@ -23,10 +24,13 @@ import { MEAL_SLOTS } from "@/constants/meal-slots";
 type PlanMealScreenProps = {
   initialDate?: string;
   initialSlot?: string;
+  editId?: string;
 };
 
 type PlanMealFormProps = {
   defaults: PlanMealDefaults;
+  editId?: string;
+  previousEntryDate?: string;
 };
 
 function parseMealSlot(value?: string): MealSlot | undefined {
@@ -36,17 +40,30 @@ function parseMealSlot(value?: string): MealSlot | undefined {
     : undefined;
 }
 
-function PlanMealForm({ defaults }: PlanMealFormProps) {
+function PlanMealForm({ defaults, editId, previousEntryDate }: PlanMealFormProps) {
   const router = useRouter();
   const [saveError, setSaveError] = useState<string | null>(null);
   const form = usePlanMealForm(defaults);
-  useSyncMealTimeOnOpen(form.setValue);
+  const isEditMode = Boolean(editId);
+  useSyncMealTimeOnOpen(form.setValue, !isEditMode);
   const saveMutation = useSavePlanMeal();
+  const updateMutation = useUpdatePlanMeal();
+  const isSaving = saveMutation.isPending || updateMutation.isPending;
 
   const handleSave = form.handleSubmit(async (values) => {
     setSaveError(null);
 
     try {
+      if (editId) {
+        await updateMutation.mutateAsync({
+          scheduledMealId: editId,
+          payload: values,
+          previousEntryDate,
+        });
+        router.replace(`/planner/${editId}?date=${values.date}`);
+        return;
+      }
+
       await saveMutation.mutateAsync(values);
       const params = new URLSearchParams({ date: values.date });
       router.push(`/planner?${params.toString()}`);
@@ -60,7 +77,11 @@ function PlanMealForm({ defaults }: PlanMealFormProps) {
   return (
     <FormProvider {...form}>
       <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col bg-background">
-        <PlanMealHeader onSave={handleSave} isSaving={saveMutation.isPending} />
+        <PlanMealHeader
+          onSave={handleSave}
+          isSaving={isSaving}
+          isEditMode={isEditMode}
+        />
         {saveError ? (
           <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
         ) : null}
@@ -73,21 +94,26 @@ function PlanMealForm({ defaults }: PlanMealFormProps) {
 export function PlanMealScreen({
   initialDate,
   initialSlot,
+  editId,
 }: PlanMealScreenProps) {
   const params: PlanMealDefaultsParams = {
     date: initialDate,
     mealSlot: parseMealSlot(initialSlot),
+    scheduledMealId: editId,
   };
 
   const {
     isPending: mealTypesPending,
     isError: mealTypesError,
   } = useMealTypes();
-  const { data: defaults, isPending: defaultsPending, isError: defaultsError } =
-    usePlanMealDefaults(params);
+  const {
+    data: defaults,
+    isPending: defaultsPending,
+    isError: defaultsError,
+  } = usePlanMealDefaults(params);
 
-  const isLoading =
-    (mealTypesPending || defaultsPending) && !defaults;
+  const isLoading = (mealTypesPending || defaultsPending) && !defaults;
+  const isEditMode = Boolean(editId);
 
   if (isLoading) {
     return (
@@ -97,7 +123,7 @@ export function PlanMealScreen({
     );
   }
 
-  if (mealTypesError || defaultsError || !defaults) {
+  if ((!isEditMode && mealTypesError) || defaultsError || !defaults) {
     return (
       <p className="px-4 pt-10 text-center text-sm text-foreground/60">
         {PLAN_MEAL_COPY.errors.loadForm}
@@ -107,8 +133,10 @@ export function PlanMealScreen({
 
   return (
     <PlanMealForm
-      key={`${initialDate ?? ""}-${initialSlot ?? ""}`}
+      key={`${editId ?? ""}-${initialDate ?? ""}-${initialSlot ?? ""}`}
       defaults={defaults}
+      editId={editId}
+      previousEntryDate={isEditMode ? defaults.date : undefined}
     />
   );
 }

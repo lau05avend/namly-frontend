@@ -4,10 +4,14 @@ import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
 import { ArrowLeft } from "lucide-react";
 
 type EditProfileHeaderProps = {
+  title?: string;
   onCancel: () => void;
 };
 
-export function EditProfileHeader({ onCancel }: EditProfileHeaderProps) {
+export function EditProfileHeader({
+  title = PROFILE_COPY.editTitle,
+  onCancel,
+}: EditProfileHeaderProps) {
   return (
     <header className="sticky top-0 z-30 -mx-4 flex items-center gap-3 border-b border-foreground/5 bg-background/95 px-4 py-3 backdrop-blur-sm pt-safe">
       <button
@@ -19,7 +23,7 @@ export function EditProfileHeader({ onCancel }: EditProfileHeaderProps) {
         <ArrowLeft className="size-5" />
       </button>
       <h1 className="flex-1 text-center text-base font-bold text-foreground">
-        {PROFILE_COPY.editTitle}
+        {title}
       </h1>
       <span className="size-10" aria-hidden />
     </header>

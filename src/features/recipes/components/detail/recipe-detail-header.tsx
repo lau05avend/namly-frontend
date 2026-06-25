@@ -12,6 +12,7 @@ type RecipeDetailHeaderProps = {
   onEdit?: () => void;
   onDelete?: () => void;
   onBack?: () => void;
+  returnTo?: string | null;
   className?: string;
 };
 
@@ -19,6 +20,7 @@ export function RecipeDetailHeader({
   onEdit,
   onDelete,
   onBack,
+  returnTo,
   className,
 }: RecipeDetailHeaderProps) {
   const router = useRouter();
@@ -31,7 +33,12 @@ export function RecipeDetailHeader({
       return;
     }
 
-    router.replace("/recipes");
+    if (returnTo) {
+      router.replace(returnTo);
+      return;
+    }
+
+    router.back();
   };
 
   return (

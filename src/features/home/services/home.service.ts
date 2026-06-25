@@ -1,3 +1,4 @@
+import { toDateKey } from "@/features/calendar/utils/date";
 import { mapHomeApiResponse } from "@/features/home/mappers/home.mapper";
 import type { HomeSummaryApiDto } from "@/features/home/types/home-api.types";
 import type { HomeSummary } from "@/features/home/types/home.types";
@@ -9,7 +10,7 @@ function resolveReferenceDate(referenceDate?: string): string {
     return debugDate;
   }
 
-  return referenceDate ?? new Date().toISOString().slice(0, 10);
+  return referenceDate ?? toDateKey(new Date());
 }
 
 export async function fetchHomeSummary(

@@ -18,13 +18,19 @@ import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import { useDeleteRecipe } from "@/features/recipes/queries/use-delete-recipe";
 import { useRecipeDetail } from "@/features/recipes/queries/use-recipe-detail";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
+import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
 
 type RecipeDetailScreenProps = {
   recipeId: string;
+  returnTo?: string;
 };
 
-export function RecipeDetailScreen({ recipeId }: RecipeDetailScreenProps) {
+export function RecipeDetailScreen({
+  recipeId,
+  returnTo,
+}: RecipeDetailScreenProps) {
   const router = useRouter();
+  const safeReturnTo = resolveInternalReturnPath(returnTo);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteRecipe();
   const {
@@ -65,6 +71,7 @@ export function RecipeDetailScreen({ recipeId }: RecipeDetailScreenProps) {
       />
 
       <RecipeDetailHeader
+        returnTo={safeReturnTo}
         onEdit={recipe?.canEdit ? handleEdit : undefined}
         onDelete={
           recipe?.canDelete ? () => setIsDeleteOpen(true) : undefined

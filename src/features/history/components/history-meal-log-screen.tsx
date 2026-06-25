@@ -19,21 +19,39 @@ import { useHistoryDay } from "@/features/history/queries/use-history-day";
 import {
   fetchHistoryMealLog,
 } from "@/features/history/services/history.service";
+import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
 
 type HistoryMealLogScreenProps = {
   logId: string;
   dateKey: string;
+  returnTo?: string;
 };
+
+function buildMealLogPath(
+  targetLogId: string,
+  dateKey: string,
+  returnTo: string | null,
+): string {
+  const params = new URLSearchParams({ date: dateKey });
+
+  if (returnTo) {
+    params.set("returnTo", returnTo);
+  }
+
+  return `/history/meals/${targetLogId}?${params.toString()}`;
+}
 
 export function HistoryMealLogScreen({
   logId,
   dateKey,
+  returnTo,
 }: HistoryMealLogScreenProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteMealLog();
   const parsedDate = parseDateKey(dateKey);
+  const safeReturnTo = resolveInternalReturnPath(returnTo);
   const { data: day, isPending, isError } = useHistoryDay(dateKey);
 
   const logIds = useMemo(() => day?.logs.map((log) => log.id) ?? [], [day?.logs]);
@@ -68,17 +86,26 @@ export function HistoryMealLogScreen({
 
     const firstLog = day.logs[0];
     if (firstLog) {
-      router.replace(`/history/meals/${firstLog.id}?date=${dateKey}`);
+      router.replace(buildMealLogPath(firstLog.id, dateKey, safeReturnTo));
     }
-  }, [dateKey, day, logId, logIds, router]);
+  }, [dateKey, day, logId, logIds, router, safeReturnTo]);
+
+  const handleBack = useCallback(() => {
+    if (safeReturnTo) {
+      router.replace(safeReturnTo);
+      return;
+    }
+
+    router.replace("/history");
+  }, [router, safeReturnTo]);
 
   const handleActiveLogChange = useCallback(
     (nextLogId: string) => {
-      router.replace(`/history/meals/${nextLogId}?date=${dateKey}`, {
+      router.replace(buildMealLogPath(nextLogId, dateKey, safeReturnTo), {
         scroll: false,
       });
     },
-    [dateKey, router],
+    [dateKey, router, safeReturnTo],
   );
 
   const handlePrevious = useCallback(() => {
@@ -115,15 +142,17 @@ export function HistoryMealLogScreen({
 
       const remainingIds = logIds.filter((id) => id !== logId);
       if (remainingIds.length > 0) {
-        router.replace(`/history/meals/${remainingIds[0]}?date=${dateKey}`);
+        router.replace(
+          buildMealLogPath(remainingIds[0], dateKey, safeReturnTo),
+        );
         return;
       }
 
-      router.replace("/history");
+      router.replace(safeReturnTo ?? "/history");
     } catch {
       toast.error(HISTORY_COPY.deleteMealError);
     }
-  }, [dateKey, deleteMutation, logId, logIds, router]);
+  }, [dateKey, deleteMutation, logId, logIds, router, safeReturnTo]);
 
   if (!parsedDate) {
     return null;
@@ -136,6 +165,7 @@ export function HistoryMealLogScreen({
         loggedAtTime={activeSummary?.loggedAtTime}
         onEdit={handleEdit}
         onDelete={() => setIsDeleteOpen(true)}
+        onBack={handleBack}
       />
 
       <HistoryMealLogDeleteSheet

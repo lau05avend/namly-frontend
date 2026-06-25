@@ -9,12 +9,17 @@ type RecipeDetailPageProps = {
   params: Promise<{
     recipeId: string;
   }>;
+  searchParams: Promise<{
+    returnTo?: string;
+  }>;
 };
 
 export default async function RecipeDetailPage({
   params,
+  searchParams,
 }: RecipeDetailPageProps) {
   const { recipeId } = await params;
+  const { returnTo } = await searchParams;
 
-  return <RecipeDetailScreen recipeId={recipeId} />;
+  return <RecipeDetailScreen recipeId={recipeId} returnTo={returnTo} />;
 }

@@ -27,7 +27,7 @@ function resolveMealSlot(mealTypeName: string): MealSlot {
   return MEAL_TYPE_NAME_TO_SLOT[mealTypeName] ?? "snack";
 }
 
-function formatPlannedTimeLabel(plannedTime: string): string {
+export function formatPlannedTimeLabel(plannedTime: string): string {
   const [hours, minutes] = plannedTime.split(":").map(Number);
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
