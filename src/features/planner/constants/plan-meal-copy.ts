@@ -1,6 +1,8 @@
 export const PLAN_MEAL_COPY = {
   title: "Planear comida",
+  editTitle: "Editar planeación",
   save: "Guardar plan",
+  update: "Guardar cambios",
   back: "Volver",
   sections: {
     date: "Fecha y hora",

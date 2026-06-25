@@ -10,3 +10,12 @@ export type CreateScheduledMealApiPayload = {
 };
 
 export type CreateScheduledMealApiResponse = ScheduledMealApiDto;
+
+export type UpdateScheduledMealApiPayload = {
+  mealTypeId?: string;
+  entryDate?: string;
+  plannedTime?: string;
+  isExpress?: boolean;
+  expressNote?: string | null;
+  recipeIds?: string[];
+};

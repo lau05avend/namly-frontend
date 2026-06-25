@@ -40,6 +40,15 @@ export const PLANNER_COPY = {
     registeredMealLabel: "",
     registeredMealContextLabel: "Comida registrada",
     openRegisteredMealAria: "Ver comida registrada",
+    editPlan: "Editar planeación",
+    deletePlan: "Eliminar planeación",
+    deletePlanTitle: "¿Eliminar esta planeación?",
+    deletePlanDescription:
+      "Se quitará del plan. Si ya registraste la comida, el registro no se borra.",
+    deletePlanConfirm: "Eliminar planeación",
+    deletePlanCancel: "Cancelar",
+    deletePlanSuccess: "Planeación eliminada",
+    deletePlanError: "No pudimos eliminar la planeación. Intenta de nuevo.",
     status: {
       next: "Próxima comida",
       upcoming: "Programada",

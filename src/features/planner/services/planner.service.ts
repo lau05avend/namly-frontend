@@ -36,6 +36,14 @@ export async function fetchPlannerScheduledMeal(
   return mapScheduledMealDetail(meal);
 }
 
+export async function deleteScheduledMeal(
+  scheduledMealId: string,
+): Promise<void> {
+  await apiClient<void>(`/api/v1/scheduled-meals/${scheduledMealId}`, {
+    method: "DELETE",
+  });
+}
+
 export async function fetchPlannerMonthActivity(
   month: Date,
 ): Promise<PlannerMonthActivity> {

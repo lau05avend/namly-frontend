@@ -19,6 +19,7 @@ export type PlannerCompletionMealLog = {
 
 export type PlannerScheduledMealDetail = {
   id: string;
+  mealTypeId: string;
   entryDate: string;
   plannedTime: string;
   timeLabel: string;

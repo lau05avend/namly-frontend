@@ -82,6 +82,7 @@ export function mapScheduledMealDetail(
 
   return {
     id: meal.id,
+    mealTypeId: meal.mealTypeId,
     entryDate: meal.entryDate,
     plannedTime: meal.plannedTime,
     timeLabel: formatPlannedTimeLabel(meal.plannedTime),

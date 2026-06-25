@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 
 export const PLANNER_ENTRY_DETAIL_CONTENT_OFFSET_CLASS =
   "pt-[calc(env(safe-area-inset-top)+4.5rem)]";
@@ -12,14 +12,19 @@ type PlannerEntryDetailHeaderProps = {
   title: string;
   subtitle?: string;
   onBack?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 export function PlannerEntryDetailHeader({
   title,
   subtitle,
   onBack,
+  onEdit,
+  onDelete,
 }: PlannerEntryDetailHeaderProps) {
   const router = useRouter();
+  const showActions = Boolean(onEdit || onDelete);
 
   const handleBack = () => {
     if (onBack) {
@@ -51,7 +56,34 @@ export function PlannerEntryDetailHeader({
           ) : null}
         </div>
 
-        <span className="ml-auto size-10 shrink-0" aria-hidden />
+        {onEdit ? (
+          <button
+            type="button"
+            onClick={onEdit}
+            aria-label={PLANNER_COPY.detail.editPlan}
+            className="relative z-10 ml-auto flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/45 transition-colors hover:bg-mint/60 hover:text-primary"
+          >
+            <Pencil className="size-4" strokeWidth={2} aria-hidden />
+          </button>
+        ) : null}
+
+        {onDelete ? (
+          <button
+            type="button"
+            onClick={onDelete}
+            aria-label={PLANNER_COPY.detail.deletePlan}
+            className={cn(
+              "relative z-10 flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/45 transition-colors hover:bg-cta/10 hover:text-cta",
+              !onEdit && "ml-auto",
+            )}
+          >
+            <Trash2 className="size-4" strokeWidth={2} aria-hidden />
+          </button>
+        ) : null}
+
+        {!showActions ? (
+          <span className="ml-auto size-10 shrink-0" aria-hidden />
+        ) : null}
       </div>
     </div>
   );
