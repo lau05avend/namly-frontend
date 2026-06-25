@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { toDateKey } from "@/features/calendar/utils/date";
 import type { HomeSummary } from "@/features/home/types/home.types";
 
 function capitalize(value: string): string {
@@ -7,7 +8,7 @@ function capitalize(value: string): string {
 }
 
 function buildSummary(referenceDate: Date): HomeSummary {
-  const date = referenceDate.toISOString().slice(0, 10);
+  const date = toDateKey(referenceDate);
 
   return {
     date,
