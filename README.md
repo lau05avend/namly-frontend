@@ -78,6 +78,12 @@ Variables requeridas (ver comentarios en `.env.example`):
 
 El frontend corre en el puerto **3001** por defecto. El backend NestJS suele estar en el **3000**.
 
+## Despliegue (Vercel)
+
+- Commitea `pnpm-lock.yaml` junto con `package.json` (la versión de pnpm se fija con `packageManager`).
+- Configura las mismas variables de `.env.example` en el panel de Vercel.
+- Si `pnpm install` falla con `ERR_INVALID_THIS`, verifica que Corepack use la versión declarada en `packageManager` (pnpm 9.15.9). En algunos proyectos ayuda añadir `ENABLE_EXPERIMENTAL_COREPACK=1` en las variables de entorno de Vercel.
+
 ## Desarrollo
 
 ```bash
