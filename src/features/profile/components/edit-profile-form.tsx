@@ -1,8 +1,8 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { GoogleIcon } from "@/components/icons/google-icon";
+import { MediaSourcePicker } from "@/components/media/media-source-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -29,6 +29,7 @@ export function EditProfileForm({
   onSubmit,
 }: EditProfileFormProps) {
   const displayNameFieldId = useId();
+  const [isMediaSourceOpen, setIsMediaSourceOpen] = useState(false);
   const {
     control,
     register,
@@ -57,10 +58,20 @@ export function EditProfileForm({
         avatarUrl={displayAvatarUrl}
         previewUrl={avatarPicker.previewUrl}
         isSaving={isSaving}
-        inputRef={avatarPicker.inputRef}
-        onOpenFilePicker={avatarPicker.openFilePicker}
+        galleryInputRef={avatarPicker.galleryInputRef}
+        cameraInputRef={avatarPicker.cameraInputRef}
+        onOpenMediaPicker={() => setIsMediaSourceOpen(true)}
         onFileChange={avatarPicker.handleFileChange}
         onClearSelection={avatarPicker.clearSelection}
+      />
+
+      <MediaSourcePicker
+        open={isMediaSourceOpen}
+        onOpenChange={setIsMediaSourceOpen}
+        context="profile"
+        onTakePhoto={avatarPicker.openCamera}
+        onChooseFromGallery={avatarPicker.openGallery}
+        galleryThumbnail={avatarPicker.previewUrl}
       />
 
       {fieldError ? (

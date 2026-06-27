@@ -27,7 +27,7 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
   const queryClient = useQueryClient();
   const timelineRef = useRef<HistoryTimelineCalendarHandle>(null);
   const viewMode = initialView;
-  const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
+  const { openRegisterWithCamera, launchUi } = useRegisterMealLaunch();
 
   const handleToggleView = useCallback(() => {
     const nextView: HistoryViewMode =
@@ -87,7 +87,7 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
         icon="camera"
         onClick={handleFabClick}
       />
-      {cameraInput}
+      {launchUi}
       <BottomNav activeId="history" />
     </div>
   );

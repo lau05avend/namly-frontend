@@ -1,10 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { validateAvatarFile } from "@/features/profile/services/avatar-storage.service";
+import {
+  AVATAR_IMAGE_ACCEPT,
+  validateAvatarFile,
+} from "@/features/profile/services/avatar-storage.service";
+
+export { AVATAR_IMAGE_ACCEPT };
 
 export function useAvatarPicker() {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const pendingFileRef = useRef<File | null>(null);
   const previewObjectUrlRef = useRef<string | null>(null);
 
@@ -24,8 +30,12 @@ export function useAvatarPicker() {
     };
   }, [revokePreview]);
 
-  const openFilePicker = useCallback(() => {
-    inputRef.current?.click();
+  const openGallery = useCallback(() => {
+    galleryInputRef.current?.click();
+  }, []);
+
+  const openCamera = useCallback(() => {
+    cameraInputRef.current?.click();
   }, []);
 
   const handleFileChange = useCallback(
@@ -72,10 +82,12 @@ export function useAvatarPicker() {
   }, [revokePreview]);
 
   return {
-    inputRef,
+    galleryInputRef,
+    cameraInputRef,
     previewUrl,
     pickError,
-    openFilePicker,
+    openGallery,
+    openCamera,
     handleFileChange,
     clearSelection,
     getPendingFile,

@@ -1,10 +1,10 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PhotoMealCard } from "@/components/meal-register/photo-meal-card";
+import { MediaSourcePicker } from "@/components/media/media-source-picker";
 import { PlannerSection } from "@/components/planner/planner-section";
-import { PhotoSourceSheet } from "@/features/meal-register/components/photo-source-sheet";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import {
   MEAL_PHOTO_ACCEPT,
@@ -12,6 +12,7 @@ import {
   type MealPhotoPickerRefs,
   type MealPhotoPickerState,
 } from "@/features/meal-register/hooks/use-meal-photo-picker";
+import { getRecentMealPhotoThumbnail } from "@/features/meal-register/utils/recent-meal-photo-cache";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
 
 type RegisterPhotoSectionProps = {
@@ -37,6 +38,11 @@ export function RegisterPhotoSection({
   const { openGallery, openCamera, handleFileChange } = actions;
   const photoError = pickError ?? errors.photoUrl?.message;
   const displayPhotoUrl = previewUrl ?? photoUrl ?? undefined;
+
+  const galleryThumbnail = useMemo(
+    () => (isSourceOpen ? getRecentMealPhotoThumbnail() : null),
+    [isSourceOpen],
+  );
 
   useLayoutEffect(() => {
     if (!previewUrl) {
@@ -73,22 +79,17 @@ export function RegisterPhotoSection({
 
       <PhotoMealCard
         photoUrl={displayPhotoUrl}
-        onPickPhoto={() => {
-          if (displayPhotoUrl) {
-            setIsSourceOpen(true);
-            return;
-          }
-
-          openCamera();
-        }}
+        onPickPhoto={() => setIsSourceOpen(true)}
         error={photoError}
       />
 
-      <PhotoSourceSheet
+      <MediaSourcePicker
         open={isSourceOpen}
         onOpenChange={setIsSourceOpen}
+        context="meal"
         onTakePhoto={openCamera}
         onChooseFromGallery={openGallery}
+        galleryThumbnail={galleryThumbnail}
       />
     </PlannerSection>
   );

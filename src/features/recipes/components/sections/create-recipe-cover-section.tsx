@@ -1,14 +1,15 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { PhotoSourceSheet } from "@/features/meal-register/components/photo-source-sheet";
+import { MediaSourcePicker } from "@/components/media/media-source-picker";
 import {
   MEAL_PHOTO_ACCEPT,
   type MealPhotoPickerActions,
   type MealPhotoPickerRefs,
   type MealPhotoPickerState,
 } from "@/features/meal-register/hooks/use-meal-photo-picker";
+import { getRecentMealPhotoThumbnail } from "@/features/meal-register/utils/recent-meal-photo-cache";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-recipe.schema";
 import { ImagePlus } from "lucide-react";
@@ -92,6 +93,11 @@ export function CreateRecipeCoverSection({
   const { openGallery, openCamera, handleFileChange } = actions;
   const displayPhotoUrl = previewUrl ?? undefined;
 
+  const galleryThumbnail = useMemo(
+    () => (isSourceOpen ? getRecentMealPhotoThumbnail() : null),
+    [isSourceOpen],
+  );
+
   useLayoutEffect(() => {
     if (!previewUrl?.startsWith("blob:") || coverUrl === previewUrl) {
       return;
@@ -126,11 +132,13 @@ export function CreateRecipeCoverSection({
         error={pickError}
       />
 
-      <PhotoSourceSheet
+      <MediaSourcePicker
         open={isSourceOpen}
         onOpenChange={setIsSourceOpen}
+        context="recipe"
         onTakePhoto={openCamera}
         onChooseFromGallery={openGallery}
+        galleryThumbnail={galleryThumbnail}
       />
     </>
   );

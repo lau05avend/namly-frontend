@@ -12,6 +12,8 @@ type BottomSheetProps = {
   children?: ReactNode;
   footer?: ReactNode;
   className?: string;
+  contentClassName?: string;
+  footerClassName?: string;
   scrollableContent?: boolean;
   compact?: boolean;
 };
@@ -24,6 +26,8 @@ export function BottomSheet({
   children,
   footer,
   className,
+  contentClassName,
+  footerClassName,
   scrollableContent = true,
   compact = false,
 }: BottomSheetProps) {
@@ -74,6 +78,7 @@ export function BottomSheet({
                 scrollableContent
                   ? "overflow-y-auto"
                   : "flex flex-col overflow-hidden",
+                contentClassName,
               )}
             >
               {children}
@@ -85,6 +90,7 @@ export function BottomSheet({
               className={cn(
                 "shrink-0 border-t border-foreground/8 px-4 pb-safe",
                 compact ? "pt-4" : "pt-3",
+                footerClassName,
               )}
             >
               {footer}

@@ -18,8 +18,6 @@ export const REGISTER_MEAL_COPY = {
     add: "Tomar foto",
     change: "Cambiar foto",
     emptyHint: "La foto es obligatoria para guardar el registro",
-    sourceSheetTitle: "Añadir foto",
-    sourceSheetDescription: "Elige cómo quieres añadir la foto de tu comida.",
     takePhoto: "Tomar foto",
     chooseFromGallery: "Elegir de galería",
     cancel: "Cancelar",

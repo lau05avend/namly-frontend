@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProfileAvatar } from "@/features/profile/components/profile-avatar";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
+import { AVATAR_IMAGE_ACCEPT } from "@/features/profile/services/avatar-storage.service";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -12,8 +13,9 @@ type EditProfileAvatarSectionProps = {
   avatarUrl: string;
   previewUrl: string | null;
   isSaving: boolean;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  onOpenFilePicker: () => void;
+  galleryInputRef: React.RefObject<HTMLInputElement | null>;
+  cameraInputRef: React.RefObject<HTMLInputElement | null>;
+  onOpenMediaPicker: () => void;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClearSelection: () => void;
 };
@@ -23,8 +25,9 @@ export function EditProfileAvatarSection({
   avatarUrl,
   previewUrl,
   isSaving,
-  inputRef,
-  onOpenFilePicker,
+  galleryInputRef,
+  cameraInputRef,
+  onOpenMediaPicker,
   onFileChange,
   onClearSelection,
 }: EditProfileAvatarSectionProps) {
@@ -62,9 +65,17 @@ export function EditProfileAvatarSection({
 
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <input
-            ref={inputRef}
+            ref={galleryInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
+            accept={AVATAR_IMAGE_ACCEPT}
+            className="sr-only"
+            onChange={onFileChange}
+          />
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept={AVATAR_IMAGE_ACCEPT}
+            capture="environment"
             className="sr-only"
             onChange={onFileChange}
           />
@@ -73,7 +84,7 @@ export function EditProfileAvatarSection({
             type="button"
             variant="outline"
             size="sm"
-            onClick={onOpenFilePicker}
+            onClick={onOpenMediaPicker}
             disabled={isSaving}
             className="w-auto self-start rounded-2xl px-4"
           >

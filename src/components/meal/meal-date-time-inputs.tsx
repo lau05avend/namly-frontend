@@ -24,7 +24,7 @@ export function MealDateTimeInputs({
         value={date}
         onChange={(event) => onDateChange(event.target.value)}
         aria-label={dateLabel}
-        className="min-h-8 w-[65%] shrink-0 bg-transparent py-1 text-sm font-medium leading-normal text-foreground/70 outline-none"
+        className="min-h-8 w-[53%] shrink-0 bg-transparent py-1 text-sm font-medium leading-normal text-foreground/70 outline-none"
       />
       <span className="h-5 w-px shrink-0 bg-foreground/10" aria-hidden />
       <input
