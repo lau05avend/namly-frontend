@@ -21,4 +21,6 @@ export const recipeQueryKeys = {
   }) => [...recipeQueryKeys.all, "list", params] as const,
   editForm: (recipeId: string) =>
     [...recipeQueryKeys.all, "edit-form", recipeId] as const,
+  coverDisplayUrl: (coverRef: string) =>
+    [...recipeQueryKeys.all, "cover-display-url", coverRef] as const,
 };

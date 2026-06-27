@@ -24,6 +24,7 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
   const form = useCreateRecipeForm(initialValues);
   const photoPicker = useMealPhotoPicker({
     initialRemoteMediaUrl: initialValues.coverUrl,
+    remoteMediaKind: "recipe-cover",
   });
   const updateMutation = useUpdateRecipe();
   const [saveError, setSaveError] = useState<string | null>(null);

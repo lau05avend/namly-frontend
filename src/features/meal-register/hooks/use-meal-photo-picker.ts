@@ -10,6 +10,7 @@ import {
 } from "react";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
 import { validateMealPhotoFile, normalizeMealPhotoFile } from "@/features/meal-register/services/meal-photo-storage.service";
 import {
   prepareMealPhotoFile,
@@ -46,6 +47,8 @@ export type MealPhotoPickerActions = {
 export type MealPhotoPickerInitialState = {
   initialFile?: File | null;
   initialRemoteMediaUrl?: string | null;
+  /** Use signed URLs for meal logs; public URLs for recipe covers. */
+  remoteMediaKind?: "meal-photo" | "recipe-cover";
 };
 
 export type MealPhotoPicker = {
@@ -99,6 +102,7 @@ export function useMealPhotoPicker(
   const initialRemoteMediaUrl = initial?.initialRemoteMediaUrl?.trim()
     ? initial.initialRemoteMediaUrl.trim()
     : null;
+  const remoteMediaKind = initial?.remoteMediaKind ?? "meal-photo";
 
   const [initialPhotoState] = useState(() =>
     buildInitialPhotoState(initialFile),
@@ -114,9 +118,16 @@ export function useMealPhotoPicker(
   const [hasLocalFile, setHasLocalFile] = useState(Boolean(initialPhotoState.file));
   const [pickError, setPickError] = useState(initialPhotoState.pickError);
   const [isPreparing, setIsPreparing] = useState(false);
-  const { displayUrl: resolvedRemoteUrl } = useResolvedMealPhotoUrl(
-    initialRemoteMediaUrl ?? undefined,
+  const { displayUrl: resolvedMealPhotoUrl } = useResolvedMealPhotoUrl(
+    remoteMediaKind === "meal-photo" ? (initialRemoteMediaUrl ?? undefined) : undefined,
   );
+  const { displayUrl: resolvedRecipeCoverUrl } = useResolvedRecipeCoverUrl(
+    remoteMediaKind === "recipe-cover" ? (initialRemoteMediaUrl ?? undefined) : undefined,
+  );
+  const resolvedRemoteUrl =
+    remoteMediaKind === "recipe-cover"
+      ? resolvedRecipeCoverUrl
+      : resolvedMealPhotoUrl;
   const displayPreviewUrl =
     previewUrl ??
     (initialRemoteMediaUrl && !hasLocalFile ? (resolvedRemoteUrl ?? null) : null);

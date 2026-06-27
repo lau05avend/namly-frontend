@@ -1,10 +1,9 @@
 import {
   normalizeMealPhotoFile,
-  uploadMealPhoto,
   validateMealPhotoFile,
 } from "@/features/meal-register/services/meal-photo-storage.service";
-import { buildMealPhotoObjectUrl } from "@/features/meal-register/utils/meal-photo-storage.utils";
-import { SUPABASE_MEAL_PHOTO_BUCKET } from "@/lib/env/supabase";
+import { buildRecipeCoverPublicUrl } from "@/features/recipes/utils/recipe-cover-storage.utils";
+import { SUPABASE_RECIPE_COVER_BUCKET } from "@/lib/env/supabase";
 import { supabase } from "@/lib/supabase/client";
 
 export async function uploadRecipeCover(
@@ -22,7 +21,7 @@ export async function uploadRecipeCover(
   const path = `${userId}/recipe-cover-${Date.now()}.${safeExtension}`;
 
   const { error: uploadError } = await supabase.storage
-    .from(SUPABASE_MEAL_PHOTO_BUCKET)
+    .from(SUPABASE_RECIPE_COVER_BUCKET)
     .upload(path, normalized, {
       cacheControl: "3600",
       upsert: false,
@@ -37,5 +36,5 @@ export async function uploadRecipeCover(
     );
   }
 
-  return buildMealPhotoObjectUrl(path);
+  return buildRecipeCoverPublicUrl(path);
 }

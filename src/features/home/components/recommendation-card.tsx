@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfaceCard } from "@/components/ui/surface-card";
-import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
 import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import type { HomeRecommendation } from "@/features/home/types/home.types";
 import { Sparkles } from "lucide-react";
@@ -13,7 +13,7 @@ type RecommendationCardProps = {
 
 export function RecommendationCard({ recommendation }: RecommendationCardProps) {
   const hasImage = Boolean(recommendation.imageUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+  const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
     recommendation.imageUrl ?? undefined,
   );
   const showImage = Boolean(displayUrl) && !isResolving;

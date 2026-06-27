@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
 import { getRecipeOriginBadgeStyles } from "@/features/recipes/constants/recipe-filters";
 import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { resolveRecipeOriginBadgeId } from "@/features/recipes/utils/resolve-recipe-origin";
@@ -130,7 +130,7 @@ export function RecipeCover({
   children,
 }: RecipeCoverProps) {
   const hasCover = Boolean(coverUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+  const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
     coverUrl ?? undefined,
   );
   const showImage = Boolean(displayUrl) && !isResolving;

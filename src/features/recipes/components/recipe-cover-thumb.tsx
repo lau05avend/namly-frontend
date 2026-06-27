@@ -1,6 +1,6 @@
 "use client";
 
-import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
 import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export function RecipeCoverThumb({
   className,
 }: RecipeCoverThumbProps) {
   const hasCover = Boolean(coverUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+  const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
     coverUrl ?? undefined,
   );
   const showImage = Boolean(displayUrl) && !isResolving;
