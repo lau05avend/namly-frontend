@@ -1,6 +1,7 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { HistoryScrollToTodayButton } from "@/features/history/components/history-scroll-to-today-button";
 import { HistoryTimelineMonth } from "@/features/history/components/history-timeline-month";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { useHistoryTimeline } from "@/features/history/queries/use-history-timeline";
@@ -55,18 +56,22 @@ export const HistoryTimelineCalendar = forwardRef<
   const bottomAnchorRef = useRef<HTMLDivElement>(null);
   const didInitialScrollRef = useRef(false);
   const scrollHeightBeforeOlderRef = useRef(0);
+  const [isCalendarReady, setIsCalendarReady] = useState(false);
+  const [showScrollToToday, setShowScrollToToday] = useState(false);
+
+  const scrollToToday = useCallback(() => {
+    bottomAnchorRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, []);
 
   useImperativeHandle(
     ref,
     () => ({
-      scrollToToday: () => {
-        bottomAnchorRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      },
+      scrollToToday,
     }),
-    [],
+    [scrollToToday],
   );
 
   const {
@@ -88,7 +93,31 @@ export const HistoryTimelineCalendar = forwardRef<
 
     didInitialScrollRef.current = true;
     bottomAnchorRef.current?.scrollIntoView({ block: "end" });
+    setIsCalendarReady(true);
   }, [isPending, months.length]);
+
+  useEffect(() => {
+    if (!isCalendarReady) {
+      return;
+    }
+
+    const anchor = bottomAnchorRef.current;
+
+    if (!anchor) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowScrollToToday(!entry?.isIntersecting);
+      },
+      { rootMargin: "120px 0px 0px 0px", threshold: 0 },
+    );
+
+    observer.observe(anchor);
+
+    return () => observer.disconnect();
+  }, [isCalendarReady, months.length]);
 
   useEffect(() => {
     if (scrollHeightBeforeOlderRef.current === 0 || isFetchingNextPage) {
@@ -116,46 +145,53 @@ export const HistoryTimelineCalendar = forwardRef<
   };
 
   return (
-    <div className="flex flex-col gap-5 pb-4 pt-2">
-      {hasNextPage ? <TimelineSentinel onVisible={loadOlderMonths} /> : null}
+    <>
+      <HistoryScrollToTodayButton
+        visible={showScrollToToday}
+        onClick={scrollToToday}
+      />
 
-      {isFetchingNextPage ? (
-        <p className="text-center text-xs text-foreground/40">Cargando…</p>
-      ) : null}
+      <div className="flex flex-col gap-5 pb-4 pt-2">
+        {hasNextPage ? <TimelineSentinel onVisible={loadOlderMonths} /> : null}
 
-      {isPending ? (
-        <div className="flex flex-col gap-8">
-          <div className="h-5 w-28 animate-pulse rounded-md bg-foreground/8" />
-          <div className="grid grid-cols-7 gap-1">
-            {Array.from({ length: 28 }).map((_, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5"
-              >
-                <div className="size-9 animate-pulse rounded-full bg-foreground/6" />
-                <div className="size-1.5" />
-              </div>
-            ))}
+        {isFetchingNextPage ? (
+          <p className="text-center text-xs text-foreground/40">Cargando…</p>
+        ) : null}
+
+        {isPending ? (
+          <div className="flex flex-col gap-8">
+            <div className="h-5 w-28 animate-pulse rounded-md bg-foreground/8" />
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 28 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5"
+                >
+                  <div className="size-9 animate-pulse rounded-full bg-foreground/6" />
+                  <div className="size-1.5" />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      {isError ? (
-        <p className="text-center text-sm text-foreground/60">
-          {HISTORY_COPY.loadError}
-        </p>
-      ) : null}
+        {isError ? (
+          <p className="text-center text-sm text-foreground/60">
+            {HISTORY_COPY.loadError}
+          </p>
+        ) : null}
 
-      {monthsChronological.map((month) => (
-        <HistoryTimelineMonth
-          key={month.monthKey}
-          monthKey={month.monthKey}
-          timeline={month}
-          onDayPress={onDayPress}
-        />
-      ))}
+        {monthsChronological.map((month) => (
+          <HistoryTimelineMonth
+            key={month.monthKey}
+            monthKey={month.monthKey}
+            timeline={month}
+            onDayPress={onDayPress}
+          />
+        ))}
 
-      <div ref={bottomAnchorRef} aria-hidden className="h-px w-full" />
-    </div>
+        <div ref={bottomAnchorRef} aria-hidden className="h-px w-full" />
+      </div>
+    </>
   );
 });
