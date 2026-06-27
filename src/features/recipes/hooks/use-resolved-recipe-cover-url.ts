@@ -8,6 +8,7 @@ import {
   isLegacyRecipeCoverInMealPhotoBucket,
   resolveRecipeCoverDisplayUrlSync,
 } from "@/features/recipes/utils/recipe-cover-storage.utils";
+import { getMediaUrlQueryOptions } from "@/lib/media/media-url-query-options";
 
 export function useResolvedRecipeCoverUrl(coverUrl?: string) {
   const trimmed = coverUrl?.trim() ?? "";
@@ -25,7 +26,7 @@ export function useResolvedRecipeCoverUrl(coverUrl?: string) {
     queryKey: recipeQueryKeys.coverDisplayUrl(trimmed),
     queryFn: () => createMealPhotoSignedUrl(legacyStoragePath!),
     enabled: needsLegacySignedUrl,
-    staleTime: 55 * 60 * 1000,
+    ...getMediaUrlQueryOptions(55 * 60 * 1000),
   });
 
   if (!trimmed) {
