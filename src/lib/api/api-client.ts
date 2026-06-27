@@ -1,5 +1,6 @@
 import { getAccessToken } from "@/lib/api/auth";
 import { ApiError, parseApiError } from "@/lib/api/errors";
+import { handleUnauthorizedSession } from "@/lib/api/handle-unauthorized-session";
 import { BACKEND_API_URL } from "@/lib/env";
 
 export type ApiClientOptions = Omit<RequestInit, "body"> & {
@@ -30,7 +31,13 @@ export async function apiClient<TResponse>(
   });
 
   if (!response.ok) {
-    throw await parseApiError(response);
+    const error = await parseApiError(response);
+
+    if (error.status === 401) {
+      void handleUnauthorizedSession();
+    }
+
+    throw error;
   }
 
   if (response.status === 204) {
