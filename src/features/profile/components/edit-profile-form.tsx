@@ -45,7 +45,7 @@ export function EditProfileForm({
 
   return (
     <form
-      className="flex flex-col gap-8 pb-8"
+      className="flex w-full min-w-0 flex-col gap-8 overflow-x-hidden pb-8"
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit();

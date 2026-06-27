@@ -54,7 +54,7 @@ export function RegisterMealContent({
   pinnedEntryDate = null,
 }: RegisterMealContentProps) {
   return (
-    <div className="flex flex-col gap-6 px-4 pt-3 pb-5">
+    <div className="flex w-full min-w-0 flex-col gap-6 overflow-x-hidden px-4 pt-3 pb-5">
       <RegisterPhotoSection
         refs={photoPicker.refs}
         state={photoPicker.state}

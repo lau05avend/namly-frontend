@@ -31,7 +31,7 @@ export function FormScreenHeader({
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 -mx-1 border-b border-foreground/8 bg-background/95 backdrop-blur-sm pt-3 pb-1",
+        "sticky top-0 z-30 border-b border-foreground/8 bg-background pt-1 pb-1",
         className,
       )}
     >
