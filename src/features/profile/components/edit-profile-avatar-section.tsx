@@ -1,5 +1,6 @@
 "use client";
 
+import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProfileAvatar } from "@/features/profile/components/profile-avatar";
@@ -13,6 +14,7 @@ type EditProfileAvatarSectionProps = {
   avatarUrl: string;
   previewUrl: string | null;
   isSaving: boolean;
+  isPreparing?: boolean;
   galleryInputRef: React.RefObject<HTMLInputElement | null>;
   cameraInputRef: React.RefObject<HTMLInputElement | null>;
   onOpenMediaPicker: () => void;
@@ -25,6 +27,7 @@ export function EditProfileAvatarSection({
   avatarUrl,
   previewUrl,
   isSaving,
+  isPreparing = false,
   galleryInputRef,
   cameraInputRef,
   onOpenMediaPicker,
@@ -56,6 +59,8 @@ export function EditProfileAvatarSection({
             />
           )}
 
+          {isPreparing ? <MediaPreparingOverlay variant="circle" /> : null}
+
           {isSaving ? (
             <div className="absolute inset-0 flex items-center justify-center rounded-full bg-foreground/20">
               <Loader2 className="size-6 animate-spin text-white" aria-hidden />
@@ -85,7 +90,7 @@ export function EditProfileAvatarSection({
             variant="outline"
             size="sm"
             onClick={onOpenMediaPicker}
-            disabled={isSaving}
+            disabled={isSaving || isPreparing}
             className="w-auto self-start rounded-2xl px-4"
           >
             {PROFILE_COPY.changePhoto}
@@ -95,7 +100,7 @@ export function EditProfileAvatarSection({
             <button
               type="button"
               onClick={onClearSelection}
-              disabled={isSaving}
+              disabled={isSaving || isPreparing}
               className={cn(
                 "w-fit cursor-pointer text-sm font-medium text-foreground/55 transition-colors",
                 "hover:text-foreground disabled:opacity-50",

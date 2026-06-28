@@ -90,6 +90,7 @@ function RegisterMealForm({
   );
   const photoPicker = useMealPhotoPicker({
     initialFile: initialPhotoFile,
+    prepareInitialFileOnMount: Boolean(initialPhotoFile),
     initialRemoteMediaUrl: isEditing ? initialRemoteMediaUrl : null,
   });
   const form = useRegisterMealForm(defaults);

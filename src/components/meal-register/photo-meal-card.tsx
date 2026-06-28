@@ -1,5 +1,6 @@
 "use client";
 
+import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import { Camera } from "lucide-react";
 
@@ -7,6 +8,7 @@ type PhotoMealCardProps = {
   photoUrl?: string;
   onPickPhoto: () => void;
   error?: string | null;
+  isPreparing?: boolean;
 };
 
 function PhotoMealCardError({ message }: { message: string }) {
@@ -24,7 +26,20 @@ export function PhotoMealCard({
   photoUrl,
   onPickPhoto,
   error,
+  isPreparing = false,
 }: PhotoMealCardProps) {
+  if (isPreparing && !photoUrl) {
+    return (
+      <div className="flex flex-col gap-2">
+        <MediaPreparingOverlay
+          variant="placeholder"
+          className="aspect-[16/10] w-full"
+        />
+        {error ? <PhotoMealCardError message={error} /> : null}
+      </div>
+    );
+  }
+
   if (!photoUrl) {
     return (
       <div className="flex flex-col gap-2">
@@ -57,13 +72,16 @@ export function PhotoMealCard({
           alt=""
           className="size-full object-cover"
         />
-        <button
-          type="button"
-          onClick={onPickPhoto}
-          className="absolute right-3 bottom-3 cursor-pointer rounded-full bg-card/95 px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm"
-        >
-          {REGISTER_MEAL_COPY.photo.change}
-        </button>
+        {isPreparing ? <MediaPreparingOverlay variant="overlay" /> : null}
+        {!isPreparing ? (
+          <button
+            type="button"
+            onClick={onPickPhoto}
+            className="absolute right-3 bottom-3 cursor-pointer rounded-full bg-card/95 px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm"
+          >
+            {REGISTER_MEAL_COPY.photo.change}
+          </button>
+        ) : null}
       </div>
       {error ? <PhotoMealCardError message={error} /> : null}
     </div>

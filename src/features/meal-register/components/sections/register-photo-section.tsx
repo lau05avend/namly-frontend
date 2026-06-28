@@ -34,7 +34,7 @@ export function RegisterPhotoSection({
   } = useFormContext<RegisterMealFormValues>();
   const photoUrl = watch("photoUrl");
   const { galleryInputRef, cameraInputRef } = refs;
-  const { previewUrl, pickError } = state;
+  const { previewUrl, pickError, isPreparing } = state;
   const { openGallery, openCamera, handleFileChange } = actions;
   const photoError = pickError ?? errors.photoUrl?.message;
   const displayPhotoUrl = previewUrl ?? photoUrl ?? undefined;
@@ -79,6 +79,7 @@ export function RegisterPhotoSection({
 
       <PhotoMealCard
         photoUrl={displayPhotoUrl}
+        isPreparing={isPreparing}
         onPickPhoto={() => setIsSourceOpen(true)}
         error={photoError}
       />

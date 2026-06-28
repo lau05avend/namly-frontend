@@ -58,6 +58,7 @@ export function EditProfileForm({
         avatarUrl={displayAvatarUrl}
         previewUrl={avatarPicker.previewUrl}
         isSaving={isSaving}
+        isPreparing={avatarPicker.isPreparing}
         galleryInputRef={avatarPicker.galleryInputRef}
         cameraInputRef={avatarPicker.cameraInputRef}
         onOpenMediaPicker={() => setIsMediaSourceOpen(true)}

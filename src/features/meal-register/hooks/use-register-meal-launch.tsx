@@ -2,16 +2,16 @@
 
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { MediaSourcePicker } from "@/components/media/media-source-picker";
-import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
-import { MEAL_PHOTO_ACCEPT } from "@/features/meal-register/hooks/use-meal-photo-picker";
 import {
-  prepareMealPhotoFile,
-  shouldShowMealPhotoPreparing,
-} from "@/features/meal-register/utils/compress-meal-photo";
+  MEAL_PHOTO_ACCEPT,
+} from "@/features/meal-register/hooks/use-meal-photo-picker";
+import {
+  normalizeMealPhotoFile,
+  validateMealPhotoType,
+} from "@/features/meal-register/services/meal-photo-storage.service";
 import { showMealPhotoPickError } from "@/features/meal-register/utils/meal-photo-feedback";
-import { cacheRecentMealPhotoThumbnail, getRecentMealPhotoThumbnail } from "@/features/meal-register/utils/recent-meal-photo-cache";
+import { getRecentMealPhotoThumbnail } from "@/features/meal-register/utils/recent-meal-photo-cache";
 import { setPendingRegisterLaunch } from "@/features/meal-register/utils/register-meal-launch";
 
 type OpenRegisterWithCameraOptions = {
@@ -38,41 +38,28 @@ export function useRegisterMealLaunch() {
     [],
   );
 
-  const navigateWithPreparedFile = useCallback(
-    async (file: File) => {
-      const shouldShowPreparing = shouldShowMealPhotoPreparing(file);
-      const toastId = shouldShowPreparing
-        ? toast.loading(REGISTER_MEAL_COPY.photo.preparing)
-        : undefined;
+  const navigateWithFile = useCallback(
+    (file: File) => {
+      const normalizedFile = normalizeMealPhotoFile(file);
+      const typeError = validateMealPhotoType(normalizedFile);
 
-      try {
-        const preparedFile = await prepareMealPhotoFile(file);
-        void cacheRecentMealPhotoThumbnail(preparedFile);
-
-        const date = launchDateRef.current;
-        launchDateRef.current = undefined;
-
-        setPendingRegisterLaunch({ file: preparedFile, date });
-
-        const params = new URLSearchParams();
-        if (date) {
-          params.set("date", date);
-        }
-
-        const query = params.toString();
-        router.push(query ? `/meals/register?${query}` : "/meals/register");
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : REGISTER_MEAL_COPY.photo.errors.prepareFailed;
-
-        showMealPhotoPickError(message);
-      } finally {
-        if (toastId !== undefined) {
-          toast.dismiss(toastId);
-        }
+      if (typeError) {
+        showMealPhotoPickError(typeError);
+        return;
       }
+
+      const date = launchDateRef.current;
+      launchDateRef.current = undefined;
+
+      setPendingRegisterLaunch({ file: normalizedFile, date });
+
+      const params = new URLSearchParams();
+      if (date) {
+        params.set("date", date);
+      }
+
+      const query = params.toString();
+      router.push(query ? `/meals/register?${query}` : "/meals/register");
     },
     [router],
   );
@@ -86,9 +73,9 @@ export function useRegisterMealLaunch() {
         return;
       }
 
-      void navigateWithPreparedFile(file);
+      navigateWithFile(file);
     },
-    [navigateWithPreparedFile],
+    [navigateWithFile],
   );
 
   const openCamera = useCallback(() => {

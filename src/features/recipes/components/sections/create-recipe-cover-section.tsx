@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
 import { MediaSourcePicker } from "@/components/media/media-source-picker";
 import {
   MEAL_PHOTO_ACCEPT,
@@ -35,12 +36,26 @@ function RecipeCoverCard({
   photoUrl,
   onPickPhoto,
   error,
+  isPreparing = false,
 }: {
   photoUrl?: string;
   onPickPhoto: () => void;
   error?: string | null;
+  isPreparing?: boolean;
 }) {
   const copy = RECIPES_COPY.create.cover;
+
+  if (isPreparing && !photoUrl) {
+    return (
+      <div className="flex flex-col gap-2">
+        <MediaPreparingOverlay
+          variant="placeholder"
+          className="h-24 w-full rounded-2xl"
+        />
+        {error ? <CoverError message={error} /> : null}
+      </div>
+    );
+  }
 
   if (!photoUrl) {
     return (
@@ -67,13 +82,22 @@ function RecipeCoverCard({
       <div className="relative h-28 overflow-hidden rounded-2xl bg-foreground/5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={photoUrl} alt="" className="size-full object-cover" />
-        <button
-          type="button"
-          onClick={onPickPhoto}
-          className="absolute right-2.5 bottom-2.5 cursor-pointer rounded-full bg-card/95 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm"
-        >
-          {copy.change}
-        </button>
+        {isPreparing ? (
+          <MediaPreparingOverlay
+            variant="overlay"
+            className="rounded-2xl"
+            spinnerSize={28}
+          />
+        ) : null}
+        {!isPreparing ? (
+          <button
+            type="button"
+            onClick={onPickPhoto}
+            className="absolute right-2.5 bottom-2.5 cursor-pointer rounded-full bg-card/95 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm"
+          >
+            {copy.change}
+          </button>
+        ) : null}
       </div>
       {error ? <CoverError message={error} /> : null}
     </div>
@@ -89,7 +113,7 @@ export function CreateRecipeCoverSection({
   const { setValue, watch } = useFormContext<CreateRecipeFormValues>();
   const coverUrl = watch("coverUrl");
   const { galleryInputRef, cameraInputRef } = refs;
-  const { previewUrl, pickError } = state;
+  const { previewUrl, pickError, isPreparing } = state;
   const { openGallery, openCamera, handleFileChange } = actions;
   const displayPhotoUrl = previewUrl ?? undefined;
 
@@ -128,6 +152,7 @@ export function CreateRecipeCoverSection({
 
       <RecipeCoverCard
         photoUrl={displayPhotoUrl}
+        isPreparing={isPreparing}
         onPickPhoto={() => setIsSourceOpen(true)}
         error={pickError}
       />

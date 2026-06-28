@@ -39,21 +39,6 @@ function canvasToBlob(
   });
 }
 
-async function readImageDimensions(
-  file: File,
-): Promise<{ width: number; height: number }> {
-  const bitmap = await createImageBitmap(file);
-
-  try {
-    return {
-      width: bitmap.width,
-      height: bitmap.height,
-    };
-  } finally {
-    bitmap.close();
-  }
-}
-
 function shouldCompressMealPhoto(
   file: File,
   dimensions: { width: number; height: number },
@@ -65,8 +50,13 @@ function shouldCompressMealPhoto(
   return Math.max(dimensions.width, dimensions.height) > MAX_DIMENSION;
 }
 
-async function compressRasterImage(file: File): Promise<Blob> {
-  const bitmap = await createImageBitmap(file);
+async function compressRasterImage(bitmap: ImageBitmap): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    throw new Error(REGISTER_MEAL_COPY.photo.errors.prepareFailed);
+  }
 
   try {
     for (const maxEdge of DIMENSION_STEPS) {
@@ -75,15 +65,8 @@ async function compressRasterImage(file: File): Promise<Blob> {
         bitmap.height,
         maxEdge,
       );
-      const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
-
-      const context = canvas.getContext("2d");
-      if (!context) {
-        throw new Error(REGISTER_MEAL_COPY.photo.errors.prepareFailed);
-      }
-
       context.drawImage(bitmap, 0, 0, width, height);
 
       for (const quality of QUALITY_STEPS) {
@@ -95,7 +78,8 @@ async function compressRasterImage(file: File): Promise<Blob> {
       }
     }
   } finally {
-    bitmap.close();
+    canvas.width = 0;
+    canvas.height = 0;
   }
 
   throw new Error(REGISTER_MEAL_COPY.photo.errors.compressFailed);
@@ -125,23 +109,28 @@ export async function prepareMealPhotoFile(file: File): Promise<File> {
     return normalizedFile;
   }
 
-  const dimensions = await readImageDimensions(normalizedFile);
+  const bitmap = await createImageBitmap(normalizedFile);
 
-  if (!shouldCompressMealPhoto(normalizedFile, dimensions)) {
-    return normalizedFile;
+  try {
+    const dimensions = {
+      width: bitmap.width,
+      height: bitmap.height,
+    };
+
+    if (!shouldCompressMealPhoto(normalizedFile, dimensions)) {
+      return normalizedFile;
+    }
+
+    const compressedBlob = await compressRasterImage(bitmap);
+    const preparedFile = toPreparedFile(normalizedFile, compressedBlob);
+    const sizeError = validateMealPhotoFile(preparedFile);
+
+    if (sizeError) {
+      throw new Error(sizeError);
+    }
+
+    return preparedFile;
+  } finally {
+    bitmap.close();
   }
-
-  const compressedBlob = await compressRasterImage(normalizedFile);
-  const preparedFile = toPreparedFile(normalizedFile, compressedBlob);
-  const sizeError = validateMealPhotoFile(preparedFile);
-
-  if (sizeError) {
-    throw new Error(sizeError);
-  }
-
-  return preparedFile;
-}
-
-export function shouldShowMealPhotoPreparing(file: File): boolean {
-  return file.size > MEAL_PHOTO_MAX_SIZE_BYTES;
 }

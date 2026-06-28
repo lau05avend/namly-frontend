@@ -21,7 +21,6 @@ export const REGISTER_MEAL_COPY = {
     takePhoto: "Tomar foto",
     chooseFromGallery: "Elegir de galería",
     cancel: "Cancelar",
-    preparing: "Preparando foto…",
     errors: {
       title: "No pudimos usar esa foto",
       tooLarge:

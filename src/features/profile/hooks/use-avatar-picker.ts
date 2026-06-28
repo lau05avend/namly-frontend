@@ -16,6 +16,7 @@ export function useAvatarPicker() {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [pickError, setPickError] = useState<string | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
 
   const revokePreview = useCallback(() => {
     if (previewObjectUrlRef.current) {
@@ -39,7 +40,7 @@ export function useAvatarPicker() {
   }, []);
 
   const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       event.target.value = "";
 
@@ -47,19 +48,29 @@ export function useAvatarPicker() {
         return;
       }
 
-      const validationError = validateAvatarFile(file);
-      if (validationError) {
-        setPickError(validationError);
-        return;
+      setIsPreparing(true);
+
+      try {
+        const validationError = validateAvatarFile(file);
+        if (validationError) {
+          setPickError(validationError);
+          return;
+        }
+
+        await createImageBitmap(file);
+
+        setPickError(null);
+        revokePreview();
+
+        const objectUrl = URL.createObjectURL(file);
+        previewObjectUrlRef.current = objectUrl;
+        pendingFileRef.current = file;
+        setPreviewUrl(objectUrl);
+      } catch {
+        setPickError("No pudimos usar esa foto. Intenta con otra imagen.");
+      } finally {
+        setIsPreparing(false);
       }
-
-      setPickError(null);
-      revokePreview();
-
-      const objectUrl = URL.createObjectURL(file);
-      previewObjectUrlRef.current = objectUrl;
-      pendingFileRef.current = file;
-      setPreviewUrl(objectUrl);
     },
     [revokePreview],
   );
@@ -70,6 +81,7 @@ export function useAvatarPicker() {
     revokePreview();
     setPreviewUrl(null);
     setPickError(null);
+    setIsPreparing(false);
   }, [revokePreview]);
 
   const getPendingFile = useCallback(() => pendingFileRef.current, []);
@@ -79,6 +91,7 @@ export function useAvatarPicker() {
     revokePreview();
     setPreviewUrl(null);
     setPickError(null);
+    setIsPreparing(false);
   }, [revokePreview]);
 
   return {
@@ -86,6 +99,7 @@ export function useAvatarPicker() {
     cameraInputRef,
     previewUrl,
     pickError,
+    isPreparing,
     openGallery,
     openCamera,
     handleFileChange,
