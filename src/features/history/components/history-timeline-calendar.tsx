@@ -151,7 +151,7 @@ export const HistoryTimelineCalendar = forwardRef<
         onClick={scrollToToday}
       />
 
-      <div className="flex flex-col gap-5 pb-4 pt-2">
+      <div className="flex flex-col gap-4 pt-2">
         {hasNextPage ? <TimelineSentinel onVisible={loadOlderMonths} /> : null}
 
         {isFetchingNextPage ? (

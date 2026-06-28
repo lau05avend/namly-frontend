@@ -63,7 +63,7 @@ export function HistoryScreen({ initialView = "calendar" }: HistoryScreenProps) 
   }, [openRegisterWithCamera]);
 
   return (
-    <div className="relative min-h-dvh bg-background pb-28">
+    <div className="relative bg-background pb-32">
       <ScreenTopBar>
         <HistoryHeader
           viewMode={viewMode}
