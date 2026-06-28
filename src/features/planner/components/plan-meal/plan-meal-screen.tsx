@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { PlanMealContent } from "@/features/planner/components/plan-meal/plan-meal-content";
+import { FormAlert } from "@/components/ui/form-alert";
 import { PlanMealHeader } from "@/features/planner/components/plan-meal/plan-meal-header";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
@@ -83,7 +84,7 @@ function PlanMealForm({ defaults, editId, previousEntryDate }: PlanMealFormProps
           isEditMode={isEditMode}
         />
         {saveError ? (
-          <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
+          <FormAlert message={saveError} centered className="mx-4 mt-3" />
         ) : null}
         <PlanMealContent />
       </div>

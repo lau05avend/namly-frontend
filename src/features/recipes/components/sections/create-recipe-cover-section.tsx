@@ -4,6 +4,7 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
 import { MediaSourcePicker } from "@/components/media/media-source-picker";
+import { FormAlert } from "@/components/ui/form-alert";
 import {
   MEAL_PHOTO_ACCEPT,
   type MealPhotoPickerActions,
@@ -22,14 +23,7 @@ type CreateRecipeCoverSectionProps = {
 };
 
 function CoverError({ message }: { message: string }) {
-  return (
-    <p
-      role="alert"
-      className="rounded-xl border border-cta/25 bg-cta/8 px-3 py-2.5 text-xs leading-relaxed font-medium text-cta"
-    >
-      {message}
-    </p>
-  );
+  return <FormAlert message={message} />;
 }
 
 function RecipeCoverCard({

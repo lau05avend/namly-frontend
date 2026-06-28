@@ -29,7 +29,7 @@ export function ExpressNoteField({
       <p className="text-xs text-foreground/45">
         {PLAN_MEAL_COPY.express.hint}
       </p>
-      {error ? <p className="text-xs text-cta">{error}</p> : null}
+      {error ? <p className="text-xs text-destructive">{error}</p> : null}
     </SurfaceCard>
   );
 }

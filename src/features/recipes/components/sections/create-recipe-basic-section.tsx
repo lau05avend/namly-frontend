@@ -26,7 +26,7 @@ export function CreateRecipeBasicSection() {
           className="w-full bg-transparent text-2xl font-semibold leading-tight text-foreground placeholder:text-foreground/30 focus-visible:outline-none"
         />
         {errors.title?.message ? (
-          <p className="text-xs text-cta">{errors.title.message}</p>
+          <p className="text-xs text-destructive">{errors.title.message}</p>
         ) : null}
       </div>
 

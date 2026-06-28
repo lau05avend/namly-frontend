@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { FormAlert } from "@/components/ui/form-alert";
 import { OnboardingEmpty } from "@/features/onboarding/components/onboarding-empty";
 import { OnboardingLoading } from "@/features/onboarding/components/onboarding-loading";
 import { useOnboardingResponsesEditor } from "@/features/onboarding/hooks/use-onboarding-responses-editor";
@@ -128,6 +129,7 @@ export function OnboardingPreferencesScreen() {
         <EditProfileHeader
           title={PROFILE_COPY.preferences.title}
           onCancel={handleCancel}
+          withSave={false}
         />
         <div className="flex flex-1 flex-col items-center justify-center gap-3 py-10 text-center">
           <p className="text-sm text-foreground/60">
@@ -154,6 +156,7 @@ export function OnboardingPreferencesScreen() {
         <EditProfileHeader
           title={PROFILE_COPY.preferences.title}
           onCancel={handleCancel}
+          withSave={false}
         />
         <OnboardingEmpty />
       </div>
@@ -165,6 +168,7 @@ export function OnboardingPreferencesScreen() {
       <EditProfileHeader
         title={PROFILE_COPY.preferences.title}
         onCancel={handleCancel}
+        withSave={false}
       />
 
       <div className="flex flex-1 flex-col gap-4 pt-4">
@@ -216,13 +220,12 @@ export function OnboardingPreferencesScreen() {
           </Button>
 
           {hasInvalidChanges && editor.isDirty ? (
-            <p className="text-center text-sm text-cta" role="alert">
-              {PROFILE_COPY.preferences.saveValidationError}
-            </p>
+            <FormAlert
+              message={PROFILE_COPY.preferences.saveValidationError}
+              centered
+            />
           ) : saveError ? (
-            <p className="text-center text-sm text-cta" role="alert">
-              {saveError}
-            </p>
+            <FormAlert message={saveError} centered />
           ) : null}
         </div>
       </div>

@@ -138,7 +138,7 @@ export function RecipeStepCard({
       </div>
 
       {descriptionError ? (
-        <p className="mt-1 pl-7 text-xs text-cta">{descriptionError}</p>
+        <p className="mt-1 pl-7 text-xs text-destructive">{descriptionError}</p>
       ) : null}
     </li>
   );

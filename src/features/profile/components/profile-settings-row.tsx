@@ -57,7 +57,7 @@ export function ProfileSettingsRow({
         <span
           className={cn(
             "flex size-8 shrink-0 items-center justify-center rounded-xl bg-mint/60 text-primary",
-            destructive && "bg-cta/10 text-cta",
+            destructive && "bg-destructive/10 text-destructive",
           )}
         >
           <Icon className="size-4" aria-hidden />
@@ -68,7 +68,7 @@ export function ProfileSettingsRow({
         <p
           className={cn(
             "text-sm font-semibold text-foreground",
-            destructive && "text-cta",
+            destructive && "text-destructive",
           )}
         >
           {title}

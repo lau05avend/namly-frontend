@@ -141,7 +141,7 @@ export function CreateRecipeIngredientsSection() {
       />
 
       {errors.ingredients?.message ? (
-        <p className="text-xs text-cta">{String(errors.ingredients.message)}</p>
+        <p className="text-xs text-destructive">{String(errors.ingredients.message)}</p>
       ) : null}
 
       <MeasurementUnitPickerSheet

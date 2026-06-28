@@ -3,30 +3,26 @@
 import { useId, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { MediaSourcePicker } from "@/components/media/media-source-picker";
-import { Button } from "@/components/ui/button";
+import { FormAlert } from "@/components/ui/form-alert";
+import { FormFieldError } from "@/components/ui/form-field-error";
 import { Input } from "@/components/ui/input";
-import { SectionHeader } from "@/components/ui/section-header";
 import { EditProfileAvatarSection } from "@/features/profile/components/edit-profile-avatar-section";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
 import type { AvatarPicker } from "@/features/profile/hooks/use-avatar-picker";
 import type { ProfileFormValues } from "@/features/profile/schemas/profile.schema";
 
 type EditProfileFormProps = {
-  email: string;
   persistedAvatarUrl: string;
   avatarPicker: AvatarPicker;
   isSaving: boolean;
   saveError: string | null;
-  onSubmit: () => void;
 };
 
 export function EditProfileForm({
-  email,
   persistedAvatarUrl,
   avatarPicker,
   isSaving,
   saveError,
-  onSubmit,
 }: EditProfileFormProps) {
   const displayNameFieldId = useId();
   const [isMediaSourceOpen, setIsMediaSourceOpen] = useState(false);
@@ -41,30 +37,57 @@ export function EditProfileForm({
   const avatarUrl = watch("avatarUrl");
   const displayAvatarUrl = avatarUrl || persistedAvatarUrl;
 
-  const fieldError = avatarPicker.pickError ?? saveError;
-
   return (
-    <form
-      className="flex w-full min-w-0 flex-col gap-8 overflow-x-hidden pb-8"
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSubmit();
-      }}
-    >
+    <div className="flex w-full min-w-0 flex-col gap-10 overflow-x-hidden px-4 pb-28 pt-8">
       <input type="hidden" {...register("avatarUrl")} />
 
-      <EditProfileAvatarSection
-        displayName={displayName}
-        avatarUrl={displayAvatarUrl}
-        previewUrl={avatarPicker.previewUrl}
-        isSaving={isSaving}
-        isPreparing={avatarPicker.isPreparing}
-        galleryInputRef={avatarPicker.galleryInputRef}
-        cameraInputRef={avatarPicker.cameraInputRef}
-        onOpenMediaPicker={() => setIsMediaSourceOpen(true)}
-        onFileChange={avatarPicker.handleFileChange}
-        onClearSelection={avatarPicker.clearSelection}
-      />
+      <div className="flex flex-col items-center gap-3">
+        <EditProfileAvatarSection
+          displayName={displayName}
+          avatarUrl={displayAvatarUrl}
+          previewUrl={avatarPicker.previewUrl}
+          isSaving={isSaving}
+          isPreparing={avatarPicker.isPreparing}
+          galleryInputRef={avatarPicker.galleryInputRef}
+          cameraInputRef={avatarPicker.cameraInputRef}
+          onOpenMediaPicker={() => setIsMediaSourceOpen(true)}
+          onFileChange={avatarPicker.handleFileChange}
+          onClearSelection={avatarPicker.clearSelection}
+        />
+
+        {avatarPicker.pickError ? (
+          <FormAlert message={avatarPicker.pickError} centered className="w-full" />
+        ) : null}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor={displayNameFieldId}
+          className="text-[11px] font-semibold tracking-wider text-primary uppercase"
+        >
+          {PROFILE_COPY.displayNameLabel}
+        </label>
+        <Controller
+          name="displayName"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              id={displayNameFieldId}
+              type="text"
+              autoComplete="name"
+              placeholder={PROFILE_COPY.displayNamePlaceholder}
+              aria-invalid={errors.displayName ? true : undefined}
+              className="h-12 text-[15px]"
+            />
+          )}
+        />
+        {errors.displayName ? (
+          <FormFieldError message={errors.displayName.message ?? ""} />
+        ) : null}
+      </div>
+
+      {saveError ? <FormAlert message={saveError} centered /> : null}
 
       <MediaSourcePicker
         open={isMediaSourceOpen}
@@ -74,65 +97,6 @@ export function EditProfileForm({
         onChooseFromGallery={avatarPicker.openGallery}
         galleryThumbnail={avatarPicker.previewUrl}
       />
-
-      {fieldError ? (
-        <p className="text-sm text-cta" role="alert">
-          {fieldError}
-        </p>
-      ) : null}
-
-      <section className="flex flex-col gap-3">
-        <SectionHeader title={PROFILE_COPY.nameSection} />
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={displayNameFieldId}
-            className="text-xs font-semibold tracking-wide text-foreground/55 uppercase"
-          >
-            {PROFILE_COPY.displayNameLabel}
-          </label>
-          <Controller
-            name="displayName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                id={displayNameFieldId}
-                type="text"
-                autoComplete="name"
-                placeholder={PROFILE_COPY.displayNamePlaceholder}
-                aria-invalid={Boolean(errors.displayName)}
-              />
-            )}
-          />
-          {errors.displayName ? (
-            <p className="text-sm text-cta" role="alert">
-              {errors.displayName.message}
-            </p>
-          ) : null}
-        </div>
-      </section>
-
-      {/* <section className="flex flex-col gap-3">
-        <SectionHeader title={PROFILE_COPY.linkedAccountSection} />
-        <div className="relative">
-          <Input
-            type="email"
-            value={email}
-            readOnly
-            tabIndex={-1}
-            aria-readonly="true"
-            className="cursor-default pr-24"
-          />
-          <span className="pointer-events-none absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-1.5 rounded-full bg-card px-2 py-1 text-xs font-medium text-foreground/60 shadow-sm">
-            <GoogleIcon className="size-3.5" />
-            Google
-          </span>
-        </div>
-      </section> */}
-
-      <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
-        {isSaving ? PROFILE_COPY.saving : PROFILE_COPY.saveChanges}
-      </Button>
-    </form>
+    </div>
   );
 }

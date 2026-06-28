@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FormProvider, type FieldErrors } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FormAlert } from "@/components/ui/form-alert";
 import { CreateRecipeContent } from "@/features/recipes/components/create-recipe-content";
 import { CreateRecipeHeader } from "@/features/recipes/components/create-recipe-header";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
@@ -74,7 +75,7 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
           isSaving={updateMutation.isPending}
         />
         {saveError ? (
-          <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
+          <FormAlert message={saveError} centered className="mx-4 mt-3" />
         ) : null}
         <CreateRecipeContent photoPicker={photoPicker} />
       </form>

@@ -112,7 +112,7 @@ export function PlanMealRecipesSection() {
           />
 
           {errors.recipes?.message ? (
-            <p className="text-xs text-cta">
+            <p className="text-xs text-destructive">
               {String(errors.recipes.message)}
             </p>
           ) : null}

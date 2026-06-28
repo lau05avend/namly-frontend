@@ -1,6 +1,7 @@
 "use client";
 
 import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
+import { FormAlert } from "@/components/ui/form-alert";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import { Camera } from "lucide-react";
 
@@ -12,14 +13,7 @@ type PhotoMealCardProps = {
 };
 
 function PhotoMealCardError({ message }: { message: string }) {
-  return (
-    <p
-      role="alert"
-      className="rounded-xl border border-cta/25 bg-cta/8 px-3 py-2.5 text-xs leading-relaxed font-medium text-cta"
-    >
-      {message}
-    </p>
-  );
+  return <FormAlert message={message} />;
 }
 
 export function PhotoMealCard({

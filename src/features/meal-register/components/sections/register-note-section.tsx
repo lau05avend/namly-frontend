@@ -30,7 +30,7 @@ export function RegisterNoteSection() {
         />
       </SurfaceCard>
       {errors.note?.message ? (
-        <p className="text-xs text-cta">{errors.note.message}</p>
+        <p className="text-xs text-destructive">{errors.note.message}</p>
       ) : null}
     </PlannerSection>
   );

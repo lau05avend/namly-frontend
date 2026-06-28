@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { prepareMealPhotoFile } from "@/features/meal-register/utils/compress-meal-photo";
+import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
 import {
   AVATAR_IMAGE_ACCEPT,
-  validateAvatarFile,
 } from "@/features/profile/services/avatar-storage.service";
 
 export { AVATAR_IMAGE_ACCEPT };
@@ -39,8 +40,36 @@ export function useAvatarPicker() {
     cameraInputRef.current?.click();
   }, []);
 
+  const applyFile = useCallback(
+    async (file: File) => {
+      setIsPreparing(true);
+
+      try {
+        const preparedFile = await prepareMealPhotoFile(file);
+
+        setPickError(null);
+        revokePreview();
+
+        const objectUrl = URL.createObjectURL(preparedFile);
+        previewObjectUrlRef.current = objectUrl;
+        pendingFileRef.current = preparedFile;
+        setPreviewUrl(objectUrl);
+        return true;
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : PROFILE_COPY.uploadError;
+
+        setPickError(message);
+        return false;
+      } finally {
+        setIsPreparing(false);
+      }
+    },
+    [revokePreview],
+  );
+
   const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       event.target.value = "";
 
@@ -48,31 +77,9 @@ export function useAvatarPicker() {
         return;
       }
 
-      setIsPreparing(true);
-
-      try {
-        const validationError = validateAvatarFile(file);
-        if (validationError) {
-          setPickError(validationError);
-          return;
-        }
-
-        await createImageBitmap(file);
-
-        setPickError(null);
-        revokePreview();
-
-        const objectUrl = URL.createObjectURL(file);
-        previewObjectUrlRef.current = objectUrl;
-        pendingFileRef.current = file;
-        setPreviewUrl(objectUrl);
-      } catch {
-        setPickError("No pudimos usar esa foto. Intenta con otra imagen.");
-      } finally {
-        setIsPreparing(false);
-      }
+      void applyFile(file);
     },
-    [revokePreview],
+    [applyFile],
   );
 
   /** Clears a local selection and restores the persisted avatar preview. */

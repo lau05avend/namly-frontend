@@ -7,11 +7,12 @@ type FormScreenHeaderProps = {
   title: string;
   subtitle?: string;
   backLabel: string;
-  saveLabel: string;
+  saveLabel?: string;
   onBack: () => void;
   onSave?: () => void;
   isSaving?: boolean;
   saveType?: "button" | "submit";
+  hideSave?: boolean;
   className?: string;
 };
 
@@ -26,6 +27,7 @@ export function FormScreenHeader({
   onSave,
   isSaving = false,
   saveType = "button",
+  hideSave = false,
   className,
 }: FormScreenHeaderProps) {
   return (
@@ -57,18 +59,22 @@ export function FormScreenHeader({
           ) : null}
         </div>
 
-        <button
-          type={saveType}
-          onClick={saveType === "button" ? onSave : undefined}
-          disabled={isSaving}
-          aria-label={saveLabel}
-          className={cn(
-            "flex cursor-pointer items-center justify-center justify-self-end rounded-full bg-primary text-white shadow-sm shadow-primary/15 transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-45",
-            ACTION_SLOT,
-          )}
-        >
-          <Check className="size-4" strokeWidth={2.5} aria-hidden />
-        </button>
+        {hideSave ? (
+          <span className={ACTION_SLOT} aria-hidden />
+        ) : (
+          <button
+            type={saveType}
+            onClick={saveType === "button" ? onSave : undefined}
+            disabled={isSaving}
+            aria-label={saveLabel}
+            className={cn(
+              "flex cursor-pointer items-center justify-center justify-self-end rounded-full bg-primary text-white shadow-sm shadow-primary/15 transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-45",
+              ACTION_SLOT,
+            )}
+          >
+            <Check className="size-4" strokeWidth={2.5} aria-hidden />
+          </button>
+        )}
       </div>
     </header>
   );

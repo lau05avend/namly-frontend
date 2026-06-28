@@ -122,7 +122,7 @@ export function RecipeIngredientRow({
       </div>
 
       {nameError || quantityError ? (
-        <p className="mt-1 text-xs text-cta">{nameError ?? quantityError}</p>
+        <p className="mt-1 text-xs text-destructive">{nameError ?? quantityError}</p>
       ) : null}
     </li>
   );

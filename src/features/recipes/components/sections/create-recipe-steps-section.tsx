@@ -97,7 +97,7 @@ export function CreateRecipeStepsSection() {
       <PlannerDashedAddButton label={copy.add} onClick={addStep} variant="compact" />
 
       {errors.steps?.message ? (
-        <p className="text-xs text-cta">{String(errors.steps.message)}</p>
+        <p className="text-xs text-destructive">{String(errors.steps.message)}</p>
       ) : null}
     </>
   );

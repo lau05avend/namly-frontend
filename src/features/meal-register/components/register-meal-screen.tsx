@@ -5,6 +5,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FormAlert } from "@/components/ui/form-alert";
 import { RegisterMealContent } from "@/features/meal-register/components/register-meal-content";
 import { RegisterMealHeader } from "@/features/meal-register/components/register-meal-header";
 import { RegisterPlanDateResetSheet } from "@/features/meal-register/components/register-plan-date-reset-sheet";
@@ -359,7 +360,7 @@ function RegisterMealForm({
           }
         />
         {saveError ? (
-          <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
+          <FormAlert message={saveError} centered className="mx-4 mt-3" />
         ) : null}
         <RegisterMealContent
           photoPicker={photoPicker}
