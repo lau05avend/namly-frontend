@@ -63,6 +63,7 @@ export function ProfileScreen() {
             <ProfileSettingsList
               onEditProfile={() => router.push("/profile/edit")}
               onEditPreferences={() => router.push("/profile/preferences")}
+              onManageMealTypes={() => router.push("/profile/meal-types")}
               onSignOut={() => void handleSignOut()}
               isSigningOut={isSigningOut}
             />

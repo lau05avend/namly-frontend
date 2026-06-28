@@ -55,8 +55,8 @@ export const PROFILE_COPY = {
     loadError: "No pudimos cargar tus preferencias. Intenta de nuevo.",
   },
   mealTypes: {
-    title: "Gestionar tipos",
-    subtitle: "Crear, ocultar y ordenar",
+    title: "Tipos de comida",
+    subtitle: "Crear, editar y ordenar",
   },
   units: {
     title: "Unidades de medida",

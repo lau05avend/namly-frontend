@@ -16,6 +16,7 @@ import {
 type ProfileSettingsListProps = {
   onEditProfile: () => void;
   onEditPreferences: () => void;
+  onManageMealTypes: () => void;
   onSignOut: () => void;
   isSigningOut?: boolean;
 };
@@ -23,6 +24,7 @@ type ProfileSettingsListProps = {
 export function ProfileSettingsList({
   onEditProfile,
   onEditPreferences,
+  onManageMealTypes,
   onSignOut,
   isSigningOut = false,
 }: ProfileSettingsListProps) {
@@ -65,6 +67,7 @@ export function ProfileSettingsList({
           title={PROFILE_COPY.mealTypes.title}
           subtitle={PROFILE_COPY.mealTypes.subtitle}
           icon={LayoutList}
+          onSelect={onManageMealTypes}
           isLast
         />
       </ProfileSettingsGroup>

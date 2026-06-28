@@ -69,19 +69,22 @@ export function MeasurementUnitPickerSheet({
       onOpenChange={handleOpenChange}
       title={copy.unitPickerTitle}
       compact
+      scrollableContent={false}
     >
-      <div className="flex flex-col gap-3 pb-5">
-        <div className="relative">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/35" />
-          <Input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder={copy.unitSearchPlaceholder}
-            className="h-11 pl-9 text-sm"
-          />
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="shrink-0 border-b border-foreground/6 pb-3 pt-1">
+          <div className="relative">
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/35" />
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={copy.unitSearchPlaceholder}
+              className="h-11 pl-9 text-sm"
+            />
+          </div>
         </div>
 
-        <ul className="flex max-h-56 flex-col gap-1 overflow-y-auto">
+        <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto py-3 pb-4">
           {filteredUnits.map((unit) => {
             const selected = unit.id === selectedUnitId;
 
