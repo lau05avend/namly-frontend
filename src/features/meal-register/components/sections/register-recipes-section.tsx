@@ -21,9 +21,9 @@ import {
 } from "@dnd-kit/sortable";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
-import { PlannerSection } from "@/components/planner/planner-section";
 import { RecipePlanCard } from "@/components/planner/recipe-plan-card";
 import { AddRecipesSheet } from "@/features/planner/components/plan-meal/add-recipes-sheet";
+import { RegisterFormSection } from "@/features/meal-register/components/register-form-section";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import { buildMenuSummaryLabel } from "@/features/planner/utils/plan-menu-summary.utils";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
@@ -71,16 +71,15 @@ export function RegisterRecipesSection() {
 
   return (
     <>
-      <PlannerSection
-        label={
+      <RegisterFormSection
+        title={
           isEmpty
             ? PLAN_MEAL_COPY.sections.menuEmpty
             : PLAN_MEAL_COPY.sections.menuFilled
         }
+        hint={isEmpty ? PLAN_MEAL_COPY.recipes.menuEmptyHint : undefined}
         description={
-          isEmpty
-            ? PLAN_MEAL_COPY.recipes.menuEmptyHint
-            : buildMenuSummaryLabel(selectedRecipes)
+          isEmpty ? undefined : buildMenuSummaryLabel(selectedRecipes)
         }
       >
         <div className="flex flex-col gap-3">
@@ -121,7 +120,7 @@ export function RegisterRecipesSection() {
             </p>
           ) : null}
         </div>
-      </PlannerSection>
+      </RegisterFormSection>
 
       <AddRecipesSheet
         open={isPickerOpen}

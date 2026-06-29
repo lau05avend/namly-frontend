@@ -24,7 +24,7 @@ export function MealTypeFormSection({ label }: MealTypeFormSectionProps) {
         <>
           <PlannerSection
             label={label}
-            headerAccessory={<MealTypeHabitualInfoHint />}
+            headerAccessory={<MealTypeHabitualInfoHint placement="bottom" />}
             headerTrailing={
               <MealTypeViewAllLink onPress={() => setIsSheetOpen(true)} />
             }

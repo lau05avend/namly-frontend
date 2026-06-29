@@ -3,9 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PlanMatchCard } from "@/components/meal-register/plan-match-card";
-import { PlannerSection } from "@/components/planner/planner-section";
 import { LinkPlanSheet } from "@/features/meal-register/components/link-plan-sheet";
-import { RegisterPlanInfoHint } from "@/features/meal-register/components/register-plan-info-hint";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import type {
   PlanLinkStatus,
@@ -278,31 +276,30 @@ export function RegisterPlanSection({
     });
   };
 
+  const planContent = (
+    <PlanMatchCard
+      status={planStatus}
+      suggestion={suggestion}
+      onLink={() => {
+        if (suggestion) {
+          onLinkSuggestion(suggestion, formDate || defaultPickerDate);
+        }
+      }}
+      onUnlink={() => {
+        setPickerDraft(null);
+        onUnlink();
+      }}
+      onSearchPlans={() => {
+        setPickerBrowseDate(getValues("date") || defaultPickerDate);
+        setPickerSession((session) => session + 1);
+        setIsPickerOpen(true);
+      }}
+    />
+  );
+
   return (
     <>
-      <PlannerSection
-        label={REGISTER_MEAL_COPY.sections.plan}
-        headerAccessory={<RegisterPlanInfoHint />}
-      >
-        <PlanMatchCard
-          status={planStatus}
-          suggestion={suggestion}
-          onLink={() => {
-            if (suggestion) {
-              onLinkSuggestion(suggestion, formDate || defaultPickerDate);
-            }
-          }}
-          onUnlink={() => {
-            setPickerDraft(null);
-            onUnlink();
-          }}
-          onSearchPlans={() => {
-            setPickerBrowseDate(getValues("date") || defaultPickerDate);
-            setPickerSession((session) => session + 1);
-            setIsPickerOpen(true);
-          }}
-        />
-      </PlannerSection>
+      {planContent}
 
       <LinkPlanSheet
         key={`picker-${pickerSession}`}

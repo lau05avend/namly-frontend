@@ -141,7 +141,7 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
                 strokeWidth={1.5}
                 aria-hidden="true"
               />
-              <span className="truncate text-sm leading-snug text-foreground/90">
+              <span className="text-sm leading-snug text-foreground/90">
                 {entry.title}
               </span>
             </div>

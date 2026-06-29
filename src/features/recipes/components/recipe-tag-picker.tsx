@@ -360,7 +360,7 @@ export function RecipeTagPicker({
                 isEditing={editingTagId === tag.id}
                 onEditStart={() => handleEditStart(tag.id)}
                 onEditEnd={handleEditEnd}
-                onToggle={() => removeSelectedTag(tag.id)}
+                onToggle={openSheet}
                 onRemove={() => removeSelectedTag(tag.id)}
                 onRename={(name) => handleRenameTag(tag, name, "form")}
               />

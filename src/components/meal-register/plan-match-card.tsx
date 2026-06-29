@@ -258,3 +258,27 @@ export function PlanMatchCard({
     </div>
   );
 }
+
+type PlanMatchCardPreviewProps = {
+  status: PlanCompactRowVariant;
+  suggestion: ScheduledMealSuggestion;
+};
+
+export function PlanMatchCardPreview({
+  status,
+  suggestion,
+}: PlanMatchCardPreviewProps) {
+  const secondaryLine = resolveSuggestionSecondaryLine(suggestion);
+  const label =
+    status === "linked"
+      ? REGISTER_MEAL_COPY.plan.linkedLabel
+      : REGISTER_MEAL_COPY.plan.suggestedLabel;
+
+  return (
+    <PlanMatchCardShell
+      variant={status}
+      label={label}
+      secondaryLine={secondaryLine}
+    />
+  );
+}

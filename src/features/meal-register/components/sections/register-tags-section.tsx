@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ClearSelectionButton } from "@/components/ui/clear-selection-button";
 import { RecipeTagChip } from "@/features/recipes/components/recipe-tag-chip";
 import { AddMealLogTagsSheet } from "@/features/meal-register/components/add-meal-log-tags-sheet";
+import { RegisterFormSection } from "@/features/meal-register/components/register-form-section";
+import { RegisterTagsInfoHint } from "@/features/meal-register/components/register-tags-info-hint";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
 import { useMealLogTags } from "@/features/tags/queries/use-meal-log-tags";
 import { Plus } from "lucide-react";
 
 const copy = REGISTER_MEAL_COPY.tags;
+
+type RegisterTagsAddLinkProps = {
+  onClick: () => void;
+};
+
+function RegisterTagsAddLink({ onClick }: RegisterTagsAddLinkProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex w-fit shrink-0 cursor-pointer items-center gap-1 text-[13px] font-medium text-primary/60 transition-colors hover:text-primary"
+    >
+      <Plus className="size-3.5" strokeWidth={2.25} aria-hidden />
+      {copy.add}
+    </button>
+  );
+}
 
 export function RegisterTagsSection() {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -35,77 +54,57 @@ export function RegisterTagsSection() {
     setValue("tags", [], { shouldDirty: true });
   };
 
+  const openPicker = () => setIsPickerOpen(true);
+
+  const sectionShell = (children: ReactNode) => (
+    <RegisterFormSection
+      title={REGISTER_MEAL_COPY.sections.tags}
+      headerAccessory={<RegisterTagsInfoHint />}
+      className="gap-1"
+    >
+      {children}
+    </RegisterFormSection>
+  );
+
   if (isPending) {
-    return (
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-sm font-semibold text-foreground/80">
-            {copy.tagsEmpty}
-          </h2>
-          <p className="text-xs text-foreground/40">{copy.tagsEmptyHint}</p>
-        </div>
-        <p className="text-sm text-foreground/50">{copy.loading}</p>
-      </section>
+    return sectionShell(
+      <p className="text-sm text-foreground/50">{copy.loading}</p>,
     );
   }
 
   if (isError) {
-    return (
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-sm font-semibold text-foreground/80">
-            {copy.tagsEmpty}
-          </h2>
-          <p className="text-xs text-foreground/40">{copy.tagsEmptyHint}</p>
-        </div>
-        <p className="text-sm text-foreground/60">{copy.loadError}</p>
-      </section>
+    return sectionShell(
+      <p className="text-sm text-foreground/60">{copy.loadError}</p>,
     );
   }
 
   return (
     <>
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-sm font-semibold text-foreground/80">
-            {copy.tagsEmpty}
-          </h2>
-          <p className="text-xs text-foreground/40">{copy.tagsEmptyHint}</p>
-        </div>
+      {sectionShell(
+        <div className="flex flex-wrap items-center gap-1.5">
+          {selectedTags.map((tag) => (
+            <RecipeTagChip
+              key={tag.id}
+              tag={tag}
+              selected
+              onToggle={openPicker}
+              onRemove={() => removeTag(tag.id)}
+            />
+          ))}
 
-        <div className="flex flex-col gap-3">
           {selectedTags.length > 0 ? (
-            <div className="flex flex-wrap items-center gap-1.5">
-              {selectedTags.map((tag) => (
-                <RecipeTagChip
-                  key={tag.id}
-                  tag={tag}
-                  selected
-                  onToggle={() => removeTag(tag.id)}
-                  onRemove={() => removeTag(tag.id)}
-                />
-              ))}
-
-              <ClearSelectionButton
-                onClick={clearTags}
-                size="xs"
-                className="shrink-0 text-foreground/35 hover:text-foreground/55"
-              >
-                {copy.clear}
-              </ClearSelectionButton>
-            </div>
+            <ClearSelectionButton
+              onClick={clearTags}
+              size="xs"
+              className="shrink-0 text-foreground/35 hover:text-foreground/55"
+            >
+              {copy.clear}
+            </ClearSelectionButton>
           ) : null}
 
-          <button
-            type="button"
-            onClick={() => setIsPickerOpen(true)}
-            className="inline-flex w-fit cursor-pointer items-center gap-1 text-[13px] font-medium text-primary/60 transition-colors hover:text-primary"
-          >
-            <Plus className="size-3.5" strokeWidth={2.25} aria-hidden />
-            {copy.add}
-          </button>
-        </div>
-      </section>
+          <RegisterTagsAddLink onClick={openPicker} />
+        </div>,
+      )}
 
       <AddMealLogTagsSheet
         open={isPickerOpen}

@@ -6,11 +6,13 @@ export const REGISTER_MEAL_COPY = {
   back: "Volver",
   sections: {
     photo: "",
-    note: "¿Algo que quieras contar?",
-    mood: "¿Cómo te sentiste?",
+    note: "¿Algo que quieras recordar?",
+    mood: "¿Cómo te hizo sentir esta comida?",
     when: "Fecha y hora",
     plan: "¿Parte de tu plan?",
     mealType: "Tipo de comida",
+    context: "Organiza tu comida",
+    tags: "¿Cómo la describirías?",
   },
   photo: {
     add: "Tomar foto",
@@ -30,7 +32,7 @@ export const REGISTER_MEAL_COPY = {
     },
   },
   note: {
-    placeholder: "Cómo te sentiste, un detalle, lo que quieras recordar…",
+    placeholder: "Cómo te sentiste, un detalle, una nota personal…",
   },
   when: {
     dateLabel: "Fecha",
@@ -40,8 +42,8 @@ export const REGISTER_MEAL_COPY = {
     suggestedLabel: "Sugerencia",
     link: "Vincular",
     seeOthers: "Buscar más",
-    linkedLabel: "Vinculado",
-    noMatch: "Nada planificado cerca de esta hora",
+    linkedLabel: "Vinculada",
+    noMatch: "",
     searchPlan: "Buscar en tu plan",
     expressDetail: "Nota rápida",
     pickerTitle: "Elegir del plan",
@@ -54,11 +56,8 @@ export const REGISTER_MEAL_COPY = {
     cancel: "Cancelar",
     info: {
       ariaLabel: "Información sobre vincular al plan",
-      title: "Vincular al plan",
-      linkBullet:
-        "Conecta este registro con una comida que ya planificaste.",
-      autofillBullet:
-        "Al vincular, el formulario se rellena con el tipo de comida y las recetas de tu plan.",
+      title: "Si vinculas:",
+      autofillBullet: "Rellenamos tipo de comida y recetas por ti.",
       unlinkBullet:
         "Puedes desvincular cuando quieras; se restaura lo que tenías antes.",
     },
@@ -70,12 +69,32 @@ export const REGISTER_MEAL_COPY = {
       cancel: "Mejor no",
     },
   },
+  context: {
+    collapsedEmpty: "Toca para añadir plan, tipo de comida o recetas",
+    collapsedSummary: {
+      noPlan: "Sin plan",
+      noMealType: "Sin tipo",
+      noRecipes: "Sin recetas",
+      recipesSelected: (recipeCount: number) =>
+        recipeCount === 1
+          ? "1 receta seleccionada"
+          : `${recipeCount} recetas seleccionadas`,
+    },
+    expandAriaLabel: "Expandir organización de tu comida",
+    collapseAriaLabel: "Contraer organización de tu comida",
+    info: {
+      ariaLabel: "Información sobre organizar tu comida",
+      body: "Complementa tu registro con tipo de comida, recetas y, si quieres, una vinculación con tu plan. Todo es opcional.",
+    },
+  },
   tags: {
-    tagsEmpty: "Clasifica tu comida",
-    tagsEmptyHint: "Elige una o varias etiquetas para describirla.",
     add: "Agregar etiquetas",
     clear: "Limpiar",
-    sheetTitle: "Clasifica tu comida",
+    info: {
+      ariaLabel: "Qué son las etiquetas en tu registro",
+      body: "Detalles opcionales para recordar mejor esta comida después.",
+    },
+    sheetTitle: "Clasifica esta comida",
     sheetDescription: "Elige una o varias etiquetas para describirla.",
     searchPlaceholder: "Buscar etiqueta…",
     createNew: "Nueva",

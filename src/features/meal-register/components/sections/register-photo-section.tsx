@@ -4,7 +4,6 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PhotoMealCard } from "@/components/meal-register/photo-meal-card";
 import { MediaSourcePicker } from "@/components/media/media-source-picker";
-import { PlannerSection } from "@/components/planner/planner-section";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import {
   MEAL_PHOTO_ACCEPT,
@@ -60,7 +59,7 @@ export function RegisterPhotoSection({
   }, [photoUrl, previewUrl, setValue]);
 
   return (
-    <PlannerSection label={REGISTER_MEAL_COPY.sections.photo}>
+    <div className="flex flex-col gap-3">
       <input
         ref={galleryInputRef}
         type="file"
@@ -92,6 +91,6 @@ export function RegisterPhotoSection({
         onChooseFromGallery={openGallery}
         galleryThumbnail={galleryThumbnail}
       />
-    </PlannerSection>
+    </div>
   );
 }

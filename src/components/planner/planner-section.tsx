@@ -31,7 +31,7 @@ export function PlannerSection({
         >
           <div className="flex min-w-0 items-center gap-1.5">
             {label ? (
-              <h2 className="text-[11px] font-semibold tracking-wider text-primary uppercase">
+              <h2 className="text-[11px] font-semibold tracking-wider text-foreground uppercase">
                 {label}
               </h2>
             ) : null}

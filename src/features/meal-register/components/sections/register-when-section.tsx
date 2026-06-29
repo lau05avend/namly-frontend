@@ -4,7 +4,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { MealDateTimeInputs } from "@/components/meal/meal-date-time-inputs";
-import { PlannerSection } from "@/components/planner/planner-section";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
@@ -29,8 +28,7 @@ export function RegisterWhenSection({
   const time = watch("time");
 
   return (
-    <PlannerSection>
-      <SurfaceCard className="flex min-w-0 items-center gap-2.5 px-3.5 py-2.5">
+    <SurfaceCard className="flex min-w-0 items-center gap-2.5 px-3.5 py-2.5">
         <CalendarDays className="size-4 shrink-0 text-primary" aria-hidden />
         <Controller
           name="date"
@@ -78,6 +76,5 @@ export function RegisterWhenSection({
           )}
         />
       </SurfaceCard>
-    </PlannerSection>
   );
 }
