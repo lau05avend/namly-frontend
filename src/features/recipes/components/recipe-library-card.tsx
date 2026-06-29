@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   RecipeCardMetadata,
   RecipeCover,
+  RecipeCoverDurationBadge,
   RecipeFavoriteBadge,
   RecipeOriginBadge,
 } from "@/features/recipes/components/recipe-card-visuals";
@@ -31,6 +32,7 @@ export function RecipeLibraryCard({
     >
       <RecipeCover coverUrl={recipe.coverUrl}>
         <RecipeOriginBadge recipe={recipe} />
+        <RecipeCoverDurationBadge durationMinutes={recipe.durationMinutes} />
         <RecipeFavoriteBadge isFavorite={recipe.isFavorite} />
       </RecipeCover>
 

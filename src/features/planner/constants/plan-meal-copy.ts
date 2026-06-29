@@ -7,20 +7,23 @@ export const PLAN_MEAL_COPY = {
   sections: {
     date: "Fecha y hora",
     mealType: "Tipo de comida",
-    entryMode: "¿Cómo quieres registrarla?",
+    entryMode: "¿Cómo quieres registrar esta comida?",
     recipes: "Recetas",
+    menuEmpty: "Empieza tu menú",
+    menuFilled: "Menú planificado",
     express: "Nota rápida",
     reminders: "Recordatorios",
   },
   modes: {
-    recipe: "Recetas",
-    recipeHint: "Elige una o varias recetas para esta comida",
+    recipe: "Con recetas",
+    recipeHint: "Construye tu menú con una o varias recetas",
     express: "Nota rápida",
-    expressHint: "Anota lo que te gustaría comer",
+    expressHint: "Anota de forma rápida lo que te gustaría comer",
   },
   recipes: {
     add: "Agregar recetas",
-    empty: "Agrega una o varias recetas para esta comida.",
+    menuEmptyHint: "Elige una o varias recetas para esta comida.",
+    empty: "Empieza armando tu menú con las recetas que más te gusten.",
     reorder: "Reordenar",
     remove: "Quitar",
     titlePlaceholder: "Nombre de la receta",
@@ -45,6 +48,13 @@ export const PLAN_MEAL_COPY = {
     removeTag: (name: string) => `Quitar etiqueta ${name}`,
     confirmSelection: (count: number) =>
       count > 0 ? `Agregar recetas (${count})` : "Agregar recetas",
+    menuSummaryCount: (count: number) =>
+      count === 1 ? "1 receta" : `${count} recetas`,
+    menuSummaryWithDuration: (countLabel: string, duration: string) =>
+      `${countLabel} · ${duration} en total`,
+    menuSummaryWithPartialDuration: (countLabel: string, duration: string) =>
+      `${countLabel} · ${duration} en total`,
+    noDuration: "Sin duración configurada",
   },
   express: {
     placeholder: "Algo rápido para la tarde…",

@@ -31,6 +31,7 @@ function mapRecipeListItem(
     title: dto.title,
     coverUrl: dto.coverUrl,
     rating: dto.rating,
+    durationMinutes: dto.durationMinutes ?? null,
     isFavorite: dto.isFavorite,
     isHidden: dto.isHidden,
     isSuggested: origin.isSuggested,

@@ -10,6 +10,7 @@ export type RecipeListItem = {
   title: string;
   coverUrl: string | null;
   rating: number | null;
+  durationMinutes: number | null;
   isFavorite: boolean;
   isHidden: boolean;
   isSuggested?: boolean;

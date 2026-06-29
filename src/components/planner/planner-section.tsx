@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 type PlannerSectionProps = {
   label?: string;
+  description?: string;
   children: ReactNode;
   className?: string;
   headerAccessory?: ReactNode;
@@ -11,6 +12,7 @@ type PlannerSectionProps = {
 
 export function PlannerSection({
   label,
+  description,
   children,
   className,
   headerAccessory,
@@ -37,6 +39,9 @@ export function PlannerSection({
           </div>
           {headerTrailing}
         </div>
+      ) : null}
+      {description ? (
+        <p className="-mt-1 text-sm leading-snug text-foreground/50">{description}</p>
       ) : null}
       {children}
     </section>

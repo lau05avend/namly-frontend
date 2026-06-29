@@ -49,23 +49,28 @@ export function EntryModeSelector({ value, onChange }: EntryModeSelectorProps) {
             aria-checked={selected}
             onClick={() => onChange(mode.id)}
             className={cn(
-              "relative flex flex-col items-start gap-2 rounded-2xl border p-3 text-left transition-colors",
+              "relative flex min-w-0 cursor-pointer flex-col items-start gap-2 rounded-2xl border p-3 text-left transition-colors",
               selected
-                ? "border-primary/30 bg-mint/40"
-                : "border-foreground/8 bg-card hover:bg-mint/20",
+                ? "border-primary/30 bg-mint/35"
+                : "border-foreground/8 bg-card hover:bg-mint/15",
             )}
           >
             {selected ? (
               <Check
-                className="absolute top-3 right-3 size-4 text-primary/70"
+                className="absolute top-3 right-3 size-4 text-primary"
                 aria-hidden
               />
             ) : null}
-            <Icon className="size-4 text-primary" aria-hidden />
-            <span className="text-sm font-semibold text-foreground">
+
+            <Icon className="size-4 shrink-0 text-primary" aria-hidden />
+
+            <span className="pr-4 text-sm font-semibold leading-snug text-foreground">
               {mode.label}
             </span>
-            <span className="text-xs text-foreground/50">{mode.hint}</span>
+
+            <span className="text-xs leading-snug text-foreground/50">
+              {mode.hint}
+            </span>
           </button>
         );
       })}

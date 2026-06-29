@@ -71,43 +71,49 @@ export function RegisterRecipesSection() {
       <PlannerSection label={REGISTER_MEAL_COPY.sections.recipes}>
         <div className="flex flex-col gap-2">
           {fields.length > 0 ? (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={sortableIds}
-                strategy={verticalListSortingStrategy}
+            <>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+                onDragEnd={handleDragEnd}
               >
-                <ul className="relative overflow-hidden rounded-2xl border border-foreground/8 bg-card">
-                  {fields.map((field, index) => (
+                <SortableContext
+                  items={sortableIds}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <ul className="flex flex-col px-0.5">
+                    {fields.map((field, index) => (
                     <RecipePlanCard
                       key={field.fieldKey}
                       sortableId={field.fieldKey}
                       recipe={field}
-                      isFirst={index === 0}
                       isLast={index === fields.length - 1}
                       onRemove={() => remove(index)}
                     />
-                  ))}
-                </ul>
-              </SortableContext>
-            </DndContext>
-          ) : (
-            <ModuleEmptyState
-              module="recipes"
-              variant="inline"
-              title={PLAN_MEAL_COPY.recipes.empty}
-            />
-          )}
+                    ))}
+                  </ul>
+                </SortableContext>
+              </DndContext>
 
-          <PlannerDashedAddButton
-            label={REGISTER_MEAL_COPY.recipes.add}
-            onClick={() => setIsPickerOpen(true)}
-            className="py-2.5"
-          />
+              <PlannerDashedAddButton
+                label={REGISTER_MEAL_COPY.recipes.add}
+                onClick={() => setIsPickerOpen(true)}
+              />
+            </>
+          ) : (
+            <>
+              <ModuleEmptyState
+                module="recipes"
+                variant="inline"
+                title={PLAN_MEAL_COPY.recipes.empty}
+              />
+              <PlannerDashedAddButton
+                label={REGISTER_MEAL_COPY.recipes.add}
+                onClick={() => setIsPickerOpen(true)}
+              />
+            </>
+          )}
         </div>
       </PlannerSection>
 
