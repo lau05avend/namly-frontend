@@ -11,28 +11,7 @@ import type {
   PlanMealDefaultsParams,
 } from "@/features/planner/types/plan-meal.types";
 import { fetchRecipes } from "@/features/recipes/services/recipes.service";
-import type { RecipeListItem } from "@/features/recipes/types/recipe.types";
-
-function enrichRecipesWithDurations(
-  defaults: PlanMealDefaults,
-  catalog: RecipeListItem[],
-): PlanMealDefaults {
-  if (defaults.recipes.length === 0) {
-    return defaults;
-  }
-
-  const durationById = new Map(
-    catalog.map((recipe) => [recipe.id, recipe.durationMinutes]),
-  );
-
-  return {
-    ...defaults,
-    recipes: defaults.recipes.map((recipe) => ({
-      ...recipe,
-      durationMinutes: durationById.get(recipe.id) ?? null,
-    })),
-  };
-}
+import { enrichRecipesWithDurations } from "@/features/recipes/utils/enrich-recipes-with-durations";
 
 export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
   const mealTypesQuery = useMealTypes();
@@ -55,7 +34,10 @@ export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
         }
 
         const catalog = await fetchRecipes();
-        return enrichRecipesWithDurations(defaults, catalog);
+        return {
+          ...defaults,
+          recipes: enrichRecipesWithDurations(defaults.recipes, catalog),
+        };
       }
 
       return buildPlanMealDefaults(mealTypesQuery.data!, params);

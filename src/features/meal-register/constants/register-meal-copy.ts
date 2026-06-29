@@ -11,7 +11,6 @@ export const REGISTER_MEAL_COPY = {
     when: "Fecha y hora",
     plan: "¿Parte de tu plan?",
     mealType: "Tipo de comida",
-    recipes: "Recetas",
     tags: "Etiquetas",
   },
   photo: {
@@ -71,11 +70,6 @@ export const REGISTER_MEAL_COPY = {
       confirm: "Cambiar fecha",
       cancel: "Mejor no",
     },
-  },
-  recipes: {
-    add: "Añadir receta",
-    placeholder: "Nombre de la receta",
-    remove: "Quitar",
   },
   tags: {
     browse: "Etiquetas",

@@ -94,6 +94,7 @@ export function mapSuggestionRecipesToForm(
     id: recipe.recipeId ?? recipe.id,
     title: recipe.title,
     coverUrl: recipe.coverUrl,
+    durationMinutes: null,
   }));
 }
 

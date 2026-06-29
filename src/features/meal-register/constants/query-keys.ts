@@ -11,4 +11,6 @@ export const registerMealQueryKeys = {
     [...registerMealQueryKeys.all, "plan-picker", dateKey] as const,
   mealPhotoDisplayUrl: (mediaRef: string) =>
     [...registerMealQueryKeys.all, "meal-photo-display-url", mediaRef] as const,
+  editDefaults: (logId: string) =>
+    [...registerMealQueryKeys.all, "edit-defaults", logId] as const,
 };
