@@ -29,6 +29,7 @@ function mapRecipe(recipe: MealLogDetailRecipeApiDto): HistoryMealLogRecipe {
     title: recipe.title,
     coverUrl: recipe.coverUrl,
     sortOrder: recipe.sortOrder,
+    durationMinutes: recipe.durationMinutes ?? null,
   };
 }
 

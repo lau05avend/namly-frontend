@@ -7,6 +7,7 @@ import { Pencil, Salad, type LucideIcon } from "lucide-react";
 
 type HomeNextMealCardProps = {
   meal: NextMealDetail;
+  onPress?: () => void;
   className?: string;
 };
 
@@ -29,7 +30,11 @@ function NextMealConcept({
   );
 }
 
-export function HomeNextMealCard({ meal, className }: HomeNextMealCardProps) {
+export function HomeNextMealCard({
+  meal,
+  onPress,
+  className,
+}: HomeNextMealCardProps) {
   const kind = meal.kind ?? "meal";
   const isNote = kind === "note";
   const { visibleRecipes, hiddenCount } = getNextMealRecipeDisplay(meal);
@@ -39,9 +44,23 @@ export function HomeNextMealCard({ meal, className }: HomeNextMealCardProps) {
       className={cn(
         "flex h-full flex-col px-4 py-3.5",
         HOME_HERO_SURFACES.nextMeal,
+        onPress && "cursor-pointer transition-transform active:scale-[0.99]",
         className,
       )}
       aria-label={HOME_COPY.nextMeal.ariaLabel(meal.slotLabel)}
+      role={onPress ? "button" : undefined}
+      tabIndex={onPress ? 0 : undefined}
+      onClick={onPress}
+      onKeyDown={
+        onPress
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onPress();
+              }
+            }
+          : undefined
+      }
     >
       <div className="flex shrink-0 flex-col gap-1.5">
         <div className="flex items-center justify-between gap-3">

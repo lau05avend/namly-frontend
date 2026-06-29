@@ -31,6 +31,7 @@ export const HOME_COPY = {
         ? "1 comida registrada hoy"
         : `${count} comidas registradas hoy`,
     recommendation: "Recomendación del día",
+    recommendationOpenAria: (title: string) => `Ver receta recomendada: ${title}`,
     upcomingEmptyTitle: "Tu menú del día aún está por descubrirse",
     upcomingEmptyHint:
       "Empieza planeando tus siguientes comidas cuando quieras",

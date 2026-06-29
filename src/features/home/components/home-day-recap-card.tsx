@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { buildMealLogPath, HOME_PATH } from "@/lib/navigation/meal-routes";
 import { CompletedMealItem } from "@/components/meal/completed-meal-item";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
@@ -11,17 +13,24 @@ import { useState } from "react";
 
 type HomeDayRecapCardProps = {
   registeredToday: RegisteredTodaySummary;
+  dateKey: string;
   defaultExpanded?: boolean;
   className?: string;
 };
 
 export function HomeDayRecapCard({
   registeredToday,
+  dateKey,
   defaultExpanded = false,
   className,
 }: HomeDayRecapCardProps) {
+  const router = useRouter();
   const [expanded, setExpanded] = useState(defaultExpanded);
   const completedMeals = registeredToday.meals ?? [];
+
+  const handleRegisteredMealPress = (mealLogId: string) => {
+    router.push(buildMealLogPath(mealLogId, dateKey, HOME_PATH));
+  };
 
   return (
     <section
@@ -81,6 +90,7 @@ export function HomeDayRecapCard({
                           ...meal,
                           isExpress: false,
                         }}
+                        onSelect={() => handleRegisteredMealPress(meal.id)}
                       />
                     </li>
                   ))}

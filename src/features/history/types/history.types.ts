@@ -42,6 +42,7 @@ export type HistoryMealLogRecipe = {
   title: string;
   coverUrl: string | null;
   sortOrder: number;
+  durationMinutes: number | null;
 };
 
 export type HistoryMealLogTag = {

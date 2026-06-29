@@ -25,7 +25,7 @@ import { RecipePlanCard } from "@/components/planner/recipe-plan-card";
 import { AddRecipesSheet } from "@/features/planner/components/plan-meal/add-recipes-sheet";
 import { RegisterFormSection } from "@/features/meal-register/components/register-form-section";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
-import { buildMenuSummaryLabel } from "@/features/planner/utils/plan-menu-summary.utils";
+import { buildMenuSummaryDescription } from "@/features/planner/utils/plan-menu-summary.utils";
 import type { RegisterMealFormValues } from "@/features/meal-register/schemas/register-meal.schema";
 
 export function RegisterRecipesSection() {
@@ -79,7 +79,7 @@ export function RegisterRecipesSection() {
         }
         hint={isEmpty ? PLAN_MEAL_COPY.recipes.menuEmptyHint : undefined}
         description={
-          isEmpty ? undefined : buildMenuSummaryLabel(selectedRecipes)
+          isEmpty ? undefined : buildMenuSummaryDescription(selectedRecipes)
         }
       >
         <div className="flex flex-col gap-3">

@@ -1,3 +1,10 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import {
+  buildPlannerEntryPath,
+  HOME_PATH,
+} from "@/lib/navigation/meal-routes";
 import { HomeNextMealCard } from "@/features/home/components/home-next-meal-card";
 import { HomeNextMealEmptyCard } from "@/features/home/components/home-next-meal-empty-card";
 import { HomeDayRecapCard } from "@/features/home/components/home-day-recap-card";
@@ -19,6 +26,14 @@ type HomeTodayViewProps = {
 };
 
 export function HomeTodayView({ summary }: HomeTodayViewProps) {
+  const router = useRouter();
+
+  const handlePlannerMealPress = (scheduledMealId: string) => {
+    router.push(
+      buildPlannerEntryPath(scheduledMealId, summary.date, HOME_PATH),
+    );
+  };
+
   const progressPercent =
     summary.streak.mealsGoalToday > 0
       ? Math.round(
@@ -42,6 +57,7 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
               <HomeNextMealCard
                 meal={summary.nextMeal}
                 className={HOME_HERO_CARD_HEIGHT}
+                onPress={() => handlePlannerMealPress(summary.nextMeal!.id)}
               />
             ) : (
               <HomeNextMealEmptyCard className={HOME_HERO_CARD_HEIGHT} />
@@ -68,7 +84,10 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
           <ul className="flex flex-col gap-2">
             {summary.upcomingMeals.map((meal) => (
               <li key={meal.id}>
-                <PlannedEntryCard entry={mapUpcomingMealToPlannerEntry(meal)} />
+                <PlannedEntryCard
+                  entry={mapUpcomingMealToPlannerEntry(meal)}
+                  onSelect={() => handlePlannerMealPress(meal.id)}
+                />
               </li>
             ))}
           </ul>
@@ -77,7 +96,10 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
         )}
       </HomeSection>
 
-      <HomeDayRecapCard registeredToday={summary.registeredToday} />
+      <HomeDayRecapCard
+        registeredToday={summary.registeredToday}
+        dateKey={summary.date}
+      />
 
       {summary.recommendation ? (
         <HomeSection title={HOME_COPY.sections.recommendation}>

@@ -97,6 +97,7 @@ export function mapScheduledMealDetail(
       recipeId: recipe.recipeId,
       title: recipe.title,
       coverUrl: recipe.coverUrl,
+      durationMinutes: recipe.durationMinutes ?? null,
     })),
     headline: resolveHeadline(meal),
     completionMealLog: meal.completionMealLog

@@ -5,6 +5,7 @@ export type PlannerScheduledMealRecipe = {
   recipeId: string | null;
   title: string;
   coverUrl: string | null;
+  durationMinutes: number | null;
 };
 
 export type PlannerCompletionMealLog = {

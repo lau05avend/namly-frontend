@@ -16,6 +16,7 @@ export type ScheduledMealRecipeApiDto = {
   title: string;
   coverUrl: string | null;
   sortOrder: number;
+  durationMinutes?: number | null;
 };
 
 export type ScheduledMealCompletionMealLogApiDto = {

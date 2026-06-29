@@ -1,3 +1,5 @@
+import { RECIPE_NO_DURATION_LABEL } from "@/features/recipes/utils/format-recipe-duration";
+
 export const PLAN_MEAL_COPY = {
   title: "Planear comida",
   editTitle: "Editar planeación",
@@ -54,7 +56,7 @@ export const PLAN_MEAL_COPY = {
       `${countLabel} · ${duration} en total`,
     menuSummaryWithPartialDuration: (countLabel: string, duration: string) =>
       `${countLabel} · ${duration} en total`,
-    noDuration: "Sin duración configurada",
+    noDuration: RECIPE_NO_DURATION_LABEL,
   },
   express: {
     placeholder: "Algo rápido para la tarde…",

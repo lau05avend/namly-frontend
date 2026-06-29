@@ -2,6 +2,8 @@ import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 
 const MINUTES_LABEL = RECIPES_COPY.create.steps.durationLabel;
 
+export const RECIPE_NO_DURATION_LABEL = "Sin duración configurada";
+
 export function formatRecipeDuration(
   minutes: number | null | undefined,
 ): string | null {

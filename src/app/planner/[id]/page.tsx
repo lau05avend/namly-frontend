@@ -13,6 +13,7 @@ type PlannerEntryDetailPageProps = {
   }>;
   searchParams: Promise<{
     date?: string;
+    returnTo?: string;
   }>;
 };
 
@@ -21,7 +22,7 @@ export default async function PlannerEntryDetailPage({
   searchParams,
 }: PlannerEntryDetailPageProps) {
   const { id } = await params;
-  const { date } = await searchParams;
+  const { date, returnTo } = await searchParams;
 
   if (!id.trim()) {
     redirect("/planner");
@@ -31,5 +32,11 @@ export default async function PlannerEntryDetailPage({
     redirect("/planner");
   }
 
-  return <PlannerEntryDetailScreen scheduledMealId={id} dateKey={date} />;
+  return (
+    <PlannerEntryDetailScreen
+      scheduledMealId={id}
+      dateKey={date}
+      returnTo={returnTo}
+    />
+  );
 }

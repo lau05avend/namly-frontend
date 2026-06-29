@@ -6,6 +6,7 @@ import { MealPhotoImage } from "@/features/meal-register/components/meal-photo-i
 import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { PLANNER_DETAIL_SECTION_CLASS } from "@/features/planner/constants/planner-detail-surfaces";
 import type { PlannerCompletionMealLog } from "@/features/planner/types/planner-detail.types";
+import { buildPlannerEntryPath } from "@/lib/navigation/meal-routes";
 import { cn } from "@/lib/utils";
 import { ChevronRight, CircleCheck, ImageIcon } from "lucide-react";
 
@@ -14,6 +15,7 @@ type PlannerEntryDetailCompletionLogProps = {
   mealTypeName: string;
   scheduledMealId: string;
   entryDate: string;
+  returnTo?: string | null;
   className?: string;
 };
 
@@ -40,6 +42,7 @@ export function PlannerEntryDetailCompletionLog({
   mealTypeName,
   scheduledMealId,
   entryDate,
+  returnTo,
   className,
 }: PlannerEntryDetailCompletionLogProps) {
   const router = useRouter();
@@ -48,7 +51,7 @@ export function PlannerEntryDetailCompletionLog({
   const handleOpen = () => {
     const params = new URLSearchParams({
       date: mealLog.dateKey,
-      returnTo: `/planner/${scheduledMealId}?date=${entryDate}`,
+      returnTo: buildPlannerEntryPath(scheduledMealId, entryDate, returnTo),
     });
 
     router.push(`/history/meals/${mealLog.id}?${params.toString()}`);

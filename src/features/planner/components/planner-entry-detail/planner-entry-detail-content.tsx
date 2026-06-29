@@ -10,11 +10,13 @@ import { cn } from "@/lib/utils";
 
 type PlannerEntryDetailContentProps = {
   detail: PlannerScheduledMealDetail;
+  returnTo?: string | null;
   className?: string;
 };
 
 export function PlannerEntryDetailContent({
   detail,
+  returnTo,
   className,
 }: PlannerEntryDetailContentProps) {
   return (
@@ -30,6 +32,7 @@ export function PlannerEntryDetailContent({
           recipes={detail.recipes}
           scheduledMealId={detail.id}
           dateKey={detail.entryDate}
+          returnTo={returnTo}
         />
       ) : null}
 
@@ -39,6 +42,7 @@ export function PlannerEntryDetailContent({
           mealTypeName={detail.mealTypeName}
           scheduledMealId={detail.id}
           entryDate={detail.entryDate}
+          returnTo={returnTo}
         />
       ) : null}
     </div>

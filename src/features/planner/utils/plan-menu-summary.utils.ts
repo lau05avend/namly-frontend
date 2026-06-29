@@ -50,3 +50,13 @@ export function buildMenuSummaryLabel(recipes: RecipeWithDuration[]): string {
     durationLabel,
   );
 }
+
+export function buildMenuSummaryDescription(
+  recipes: RecipeWithDuration[],
+): string | undefined {
+  if (recipes.length === 0) {
+    return undefined;
+  }
+
+  return buildMenuSummaryLabel(recipes);
+}
