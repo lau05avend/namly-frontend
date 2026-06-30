@@ -8,6 +8,7 @@ import {
   MEAL_PHOTO_SIGNED_URL_TTL_SECONDS,
 } from "@/features/meal-register/utils/meal-photo-storage.utils";
 import { isRemoteImageUrl } from "@/features/profile/utils/avatar-storage.utils";
+import { getMediaUrlQueryOptions } from "@/lib/media/media-url-query-options";
 
 export function useResolvedMealPhotoUrl(mediaRef?: string) {
   const trimmed = mediaRef?.trim() ?? "";
@@ -21,7 +22,7 @@ export function useResolvedMealPhotoUrl(mediaRef?: string) {
     queryKey: registerMealQueryKeys.mealPhotoDisplayUrl(trimmed),
     queryFn: () => resolveMealPhotoDisplayUrl(trimmed),
     enabled: needsSignedUrl,
-    staleTime: (MEAL_PHOTO_SIGNED_URL_TTL_SECONDS - 300) * 1000,
+    ...getMediaUrlQueryOptions((MEAL_PHOTO_SIGNED_URL_TTL_SECONDS - 300) * 1000),
   });
 
   if (!trimmed) {

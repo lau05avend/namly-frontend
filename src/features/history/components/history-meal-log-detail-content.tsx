@@ -17,8 +17,13 @@ import type { HistoryMealLogDetail } from "@/features/history/types/history.type
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
 
+import { buildMealLogPath, buildPlannerEntryPath } from "@/lib/navigation/meal-routes";
+import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
+
 type HistoryMealLogDetailContentProps = {
   logId: string;
+  dateKey: string;
+  returnTo?: string;
   className?: string;
 };
 
@@ -28,10 +33,13 @@ function resolvePlanDate(log: HistoryMealLogDetail): string {
 
 export function HistoryMealLogDetailContent({
   logId,
+  dateKey,
+  returnTo,
   className,
 }: HistoryMealLogDetailContentProps) {
   const router = useRouter();
   const { data: log, isPending, isError } = useHistoryMealLog(logId);
+  const safeReturnTo = resolveInternalReturnPath(returnTo);
 
   if (isPending) {
     return (
@@ -49,12 +57,33 @@ export function HistoryMealLogDetailContent({
     );
   }
 
+  const mealLogReturnTo = buildMealLogPath(logId, dateKey, safeReturnTo);
+
   const handleOpenPlan = () => {
     if (!shouldShowPlanLink(log)) {
       return;
     }
 
-    router.push(`/planner?date=${resolvePlanDate(log)}`);
+    if (!log.scheduledMeal) {
+      router.push(`/planner?date=${resolvePlanDate(log)}`);
+      return;
+    }
+
+    router.push(
+      buildPlannerEntryPath(
+        log.scheduledMeal.id,
+        log.scheduledMeal.entryDate,
+        mealLogReturnTo,
+      ),
+    );
+  };
+
+  const handleRecipePress = (recipe: HistoryMealLogDetail["recipes"][number]) => {
+    const params = new URLSearchParams({
+      returnTo: mealLogReturnTo,
+    });
+
+    router.push(`/recipes/${recipe.recipeId}?${params.toString()}`);
   };
 
   return (
@@ -83,7 +112,10 @@ export function HistoryMealLogDetailContent({
 
         {log.content ? <HistoryMealLogNoteCard content={log.content} /> : null}
 
-        <HistoryMealLogRecipes recipes={log.recipes} />
+        <HistoryMealLogRecipes
+          recipes={log.recipes}
+          onRecipePress={handleRecipePress}
+        />
 
         <HistoryMealLogTags tags={log.tags} />
       </div>

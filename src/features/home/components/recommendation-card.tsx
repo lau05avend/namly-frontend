@@ -1,31 +1,99 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { SurfaceCard } from "@/components/ui/surface-card";
-import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import type { HomeRecommendation } from "@/features/home/types/home.types";
-import { Sparkles } from "lucide-react";
+import { getRecommendationHighlightTags } from "@/features/home/utils/recommendation-meta.utils";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
+import {
+  formatRecipeDuration,
+  formatRecipeDurationAriaLabel,
+} from "@/features/recipes/utils/format-recipe-duration";
+import { HOME_PATH } from "@/lib/navigation/meal-routes";
 import { cn } from "@/lib/utils";
+import { Sparkles } from "lucide-react";
 
 type RecommendationCardProps = {
   recommendation: HomeRecommendation;
 };
 
+function RecommendationMetadata({
+  tags,
+  durationLabel,
+  durationAria,
+}: {
+  tags: string[];
+  durationLabel: string | null;
+  durationAria: string | null;
+}) {
+  const hasDuration = Boolean(durationLabel && durationAria);
+  const hasTags = tags.length > 0;
+
+  if (!hasDuration && !hasTags) {
+    return null;
+  }
+
+  return (
+    <p className="line-clamp-2 text-xs leading-relaxed text-foreground/50">
+      {hasDuration ? (
+        <span aria-label={durationAria ?? undefined}>
+          <span className="tabular-nums">{durationLabel}</span>
+        </span>
+      ) : null}
+      {tags.map((tag, index) => (
+        <span key={`${tag}-${index}`}>
+          {hasDuration || index > 0 ? (
+            <span className="text-cta/50" aria-hidden>
+              {" · "}
+            </span>
+          ) : null}
+          {tag}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export function RecommendationCard({ recommendation }: RecommendationCardProps) {
+  const router = useRouter();
   const hasImage = Boolean(recommendation.imageUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
+  const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
     recommendation.imageUrl ?? undefined,
   );
   const showImage = Boolean(displayUrl) && !isResolving;
+  const highlightTags = getRecommendationHighlightTags(recommendation.meta);
+  const durationLabel = formatRecipeDuration(recommendation.totalDurationMinutes);
+  const durationAria = formatRecipeDurationAriaLabel(
+    recommendation.totalDurationMinutes,
+  );
+
+  const handlePress = () => {
+    const params = new URLSearchParams({
+      returnTo: HOME_PATH,
+    });
+    router.push(`/recipes/${recommendation.id}?${params.toString()}`);
+  };
 
   return (
     <SurfaceCard
       className={cn(
-        "flex items-center gap-3 rounded-2xl p-3 shadow-none",
+        "flex cursor-pointer flex-col overflow-hidden p-0 transition-transform active:scale-[0.99]",
         HOME_SECTION_SURFACES.recommendation,
       )}
+      role="button"
+      tabIndex={0}
+      aria-label={HOME_COPY.sections.recommendationOpenAria(recommendation.title)}
+      onClick={handlePress}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handlePress();
+        }
+      }}
     >
-      <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-mint">
+      <div className="relative aspect-[11/4] w-full shrink-0 overflow-hidden">
         {showImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -34,25 +102,33 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
             className="size-full object-cover"
           />
         ) : hasImage && isResolving ? (
-          <span className="block size-full bg-foreground/5" aria-hidden />
+          <span className="block size-full" aria-hidden />
         ) : (
           <span className="flex size-full items-center justify-center">
             <Sparkles
-              className="size-5 text-primary/45"
+              className="size-8 text-foreground/12"
               strokeWidth={1.5}
               aria-hidden="true"
             />
           </span>
         )}
+
+        <span
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-9 bg-gradient-to-t from-background via-background/15 to-transparent"
+          aria-hidden
+        />
       </div>
 
-      <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-semibold leading-snug text-foreground">
+      <div className="flex flex-col gap-1 px-4 pt-5 pb-5">
+        <h3 className="line-clamp-2 text-[17px] font-semibold leading-snug text-foreground">
           {recommendation.title}
         </h3>
-        <p className="mt-0.5 truncate text-xs text-foreground/50">
-          {recommendation.meta}
-        </p>
+
+        <RecommendationMetadata
+          tags={highlightTags}
+          durationLabel={durationLabel}
+          durationAria={durationAria}
+        />
       </div>
     </SurfaceCard>
   );

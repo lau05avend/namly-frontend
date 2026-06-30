@@ -1,3 +1,5 @@
+import { MealPrepDurationMeta } from "@/components/meal/meal-prep-duration-meta";
+import { buildMealRecipeCountBadge } from "@/features/planner/utils/meal-recipe-badge.utils";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import type { PlannerEntry } from "@/features/planner/types/planner.types";
 import { cn } from "@/lib/utils";
@@ -64,35 +66,6 @@ function MealMetaLabels({
   );
 }
 
-function splitTimeLabel(timeLabel: string): { time: string; period?: string } {
-  const match = timeLabel.match(/^(\d{1,2}:\d{2})\s+(.+)$/);
-  if (!match) {
-    return { time: timeLabel };
-  }
-
-  return {
-    time: match[1],
-    period: match[2].replace(/\s/g, "").toLowerCase(),
-  };
-}
-
-function FeaturedHeroTime({ timeLabel }: { timeLabel: string }) {
-  const { time, period } = splitTimeLabel(timeLabel);
-
-  return (
-    <p className="flex items-baseline justify-end gap-1 tabular-nums">
-      <span className="text-[15px] font-semibold leading-none text-foreground/50">
-        {time}
-      </span>
-      {period ? (
-        <span className="text-[10px] font-semibold tracking-wide text-foreground/50 uppercase">
-          {period}
-        </span>
-      ) : null}
-    </p>
-  );
-}
-
 export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCardProps) {
   const isFeatured = entry.variant === "featured";
   const isNote = entry.kind === "note";
@@ -103,6 +76,13 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
   const isCompactRecipeCard = recipeCount > 0 && !isFeatured;
   const recipeCountLabel =
     recipeCount === 1 ? "1 receta" : `${recipeCount} recetas`;
+  const compactRecipeBadge =
+    recipeCount > 0
+      ? (buildMealRecipeCountBadge(
+          recipeCount,
+          entry.totalDurationMinutes,
+        ) ?? recipeCountLabel)
+      : recipeCountLabel;
 
   if (isNote) {
     if (isFeatured) {
@@ -119,9 +99,11 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
         >
           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1.5">
             <div className="flex min-w-0 items-center gap-2">
-              <span className="text-[11px] font-bold tracking-wider text-foreground/45 uppercase">
-                {entry.slotLabel}
-              </span>
+              <p className="flex min-w-0 items-center gap-1.5 truncate text-[11px] font-bold tracking-wider text-foreground/45">
+                  <span className="shrink-0 uppercase">{entry.slotLabel}</span>
+                  <span className="shrink-0 text-foreground/25">·</span>
+                  <span className="shrink-0">{entry.timeLabel}</span>
+                </p>
               {entry.badge ? (
                 <span className="shrink-0 rounded-full bg-cta/15 px-2 py-0.5 text-[10px] font-semibold text-cta">
                   {entry.badge}
@@ -135,19 +117,15 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
               </span>
             ) : null}
 
-            <div className="col-start-1 row-start-2 flex min-w-0 items-center gap-2.5">
+            <div className="col-start-1 col-end-3 row-start-2 flex min-w-0 items-center gap-2.5">
               <Pencil
                 className="size-3 shrink-0 text-primary"
                 strokeWidth={1.5}
                 aria-hidden="true"
               />
-              <span className="truncate text-sm leading-snug text-foreground/90">
+              <span className="text-sm leading-snug text-foreground/90">
                 {entry.title}
               </span>
-            </div>
-
-            <div className="col-start-2 row-start-2 self-start justify-self-end pt-0.5">
-              <FeaturedHeroTime timeLabel={entry.timeLabel} />
             </div>
           </div>
         </SurfaceCard>
@@ -272,9 +250,11 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
         <div className={cn("flex flex-col", isFeatured ? "gap-1.5" : "gap-2")}>
           {isFeatured ? (
             <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1.5">
-              <span className="text-[11px] font-bold tracking-wider text-foreground/45 uppercase">
-                {entry.slotLabel}
-              </span>
+              <p className="flex min-w-0 items-center gap-1.5 truncate text-[11px] font-bold tracking-wider text-foreground/45">
+                  <span className="shrink-0 uppercase">{entry.slotLabel}</span>
+                  <span className="shrink-0 text-foreground/25">·</span>
+                  <span className="shrink-0">{entry.timeLabel}</span>
+                </p>
 
               {entry.countdownLabel ? (
                 <span className="justify-self-end rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
@@ -305,7 +285,9 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
               </ul>
 
               <div className="col-start-2 row-start-2 self-start justify-self-end pt-0.5">
-                <FeaturedHeroTime timeLabel={entry.timeLabel} />
+                <MealPrepDurationMeta
+                  totalDurationMinutes={entry.totalDurationMinutes}
+                />
               </div>
             </div>
           ) : (
@@ -325,7 +307,7 @@ export function PlannedEntryCard({ entry, onSelect, className }: PlannedEntryCar
                     </span>
                   </p>
                   <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    {recipeCountLabel}
+                    {compactRecipeBadge}
                   </span>
                 </div>
                 <ul className="mt-0.5 flex flex-col gap-1">

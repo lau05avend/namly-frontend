@@ -1,19 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { SectionHeader } from "@/components/ui/section-header";
+import { MediaPreparingOverlay } from "@/components/media/media-preparing-overlay";
 import { ProfileAvatar } from "@/features/profile/components/profile-avatar";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
+import { AVATAR_IMAGE_ACCEPT } from "@/features/profile/services/avatar-storage.service";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 
 type EditProfileAvatarSectionProps = {
   displayName: string;
   avatarUrl: string;
   previewUrl: string | null;
   isSaving: boolean;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  onOpenFilePicker: () => void;
+  isPreparing?: boolean;
+  galleryInputRef: React.RefObject<HTMLInputElement | null>;
+  cameraInputRef: React.RefObject<HTMLInputElement | null>;
+  onOpenMediaPicker: () => void;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onClearSelection: () => void;
 };
@@ -23,78 +25,97 @@ export function EditProfileAvatarSection({
   avatarUrl,
   previewUrl,
   isSaving,
-  inputRef,
-  onOpenFilePicker,
+  isPreparing = false,
+  galleryInputRef,
+  cameraInputRef,
+  onOpenMediaPicker,
   onFileChange,
   onClearSelection,
 }: EditProfileAvatarSectionProps) {
   const hasLocalPreview = Boolean(previewUrl);
   const persistedUrl = avatarUrl.trim() || undefined;
+  const isBusy = isSaving || isPreparing;
 
   return (
-    <section className="flex flex-col gap-4">
-      <SectionHeader title={PROFILE_COPY.avatarSection} />
-
-      <div className="flex items-center gap-4">
-        <div className="relative size-24 shrink-0">
-          {hasLocalPreview && previewUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element -- local preview only
-            <img
-              src={previewUrl}
-              alt={PROFILE_COPY.avatarAlt}
-              className="size-full rounded-full border border-foreground/8 object-cover"
-            />
-          ) : (
-            <ProfileAvatar
-              displayName={displayName}
-              avatarUrl={persistedUrl}
-              size="lg"
-              className="size-24"
-            />
-          )}
-
-          {isSaving ? (
-            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-foreground/20">
-              <Loader2 className="size-6 animate-spin text-white" aria-hidden />
-            </div>
-          ) : null}
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            className="sr-only"
-            onChange={onFileChange}
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={onOpenMediaPicker}
+        disabled={isBusy}
+        aria-label={PROFILE_COPY.changePhoto}
+        className={cn(
+          "group relative size-28 shrink-0 cursor-pointer rounded-full",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-card",
+          "disabled:cursor-not-allowed disabled:opacity-70",
+        )}
+      >
+        {hasLocalPreview && previewUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- local preview only
+          <img
+            src={previewUrl}
+            alt=""
+            className="size-full rounded-full border border-foreground/8 object-cover shadow-sm shadow-foreground/5"
           />
+        ) : (
+          <ProfileAvatar
+            displayName={displayName}
+            avatarUrl={persistedUrl}
+            size="lg"
+            className="size-28 shadow-sm shadow-foreground/5"
+          />
+        )}
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onOpenFilePicker}
-            disabled={isSaving}
-            className="w-auto self-start rounded-2xl px-4"
+        {!isBusy ? (
+          <span
+            className={cn(
+              "absolute right-0.5 bottom-0.5 flex size-8 items-center justify-center rounded-full",
+              "border-2 border-card bg-primary text-white shadow-sm shadow-primary/20",
+              "transition-transform group-hover:scale-105 group-active:scale-95",
+            )}
+            aria-hidden
           >
-            {PROFILE_COPY.changePhoto}
-          </Button>
+            <Pencil className="size-3.5" strokeWidth={2.25} />
+          </span>
+        ) : null}
 
-          {hasLocalPreview ? (
-            <button
-              type="button"
-              onClick={onClearSelection}
-              disabled={isSaving}
-              className={cn(
-                "w-fit cursor-pointer text-sm font-medium text-foreground/55 transition-colors",
-                "hover:text-foreground disabled:opacity-50",
-              )}
-            >
-              {PROFILE_COPY.removePhoto}
-            </button>
-          ) : null}
-        </div>
-      </div>
-    </section>
+        {isPreparing ? <MediaPreparingOverlay variant="circle" /> : null}
+
+        {isSaving ? (
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-foreground/20">
+            <Loader2 className="size-6 animate-spin text-white" aria-hidden />
+          </div>
+        ) : null}
+      </button>
+
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept={AVATAR_IMAGE_ACCEPT}
+        className="sr-only"
+        onChange={onFileChange}
+      />
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept={AVATAR_IMAGE_ACCEPT}
+        capture="environment"
+        className="sr-only"
+        onChange={onFileChange}
+      />
+
+      {hasLocalPreview ? (
+        <button
+          type="button"
+          onClick={onClearSelection}
+          disabled={isBusy}
+          className={cn(
+            "cursor-pointer text-xs font-medium text-foreground/45 transition-colors",
+            "hover:text-foreground/65 disabled:cursor-not-allowed disabled:opacity-50",
+          )}
+        >
+          {PROFILE_COPY.removePhoto}
+        </button>
+      ) : null}
+    </div>
   );
 }

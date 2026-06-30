@@ -67,6 +67,7 @@ function mapScheduledMealToNextMeal(
     countdownLabel: formatCountdownLabel(meal.entryDate, meal.plannedTime),
     items: meal.items,
     moreCount: meal.moreCount > 0 ? meal.moreCount : undefined,
+    totalDurationMinutes: meal.totalDurationMinutes ?? null,
   };
 }
 
@@ -82,6 +83,7 @@ function mapScheduledMealToUpcoming(
     title: meal.title,
     items: meal.items,
     moreCount: meal.moreCount > 0 ? meal.moreCount : undefined,
+    totalDurationMinutes: meal.totalDurationMinutes ?? null,
   };
 }
 
@@ -117,6 +119,7 @@ function mapRecommendation(
     title: recommendation.title,
     meta: recommendation.meta,
     imageUrl: recommendation.imageUrl,
+    totalDurationMinutes: recommendation.totalDurationMinutes ?? null,
   };
 }
 

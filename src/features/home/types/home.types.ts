@@ -20,6 +20,7 @@ export type NextMealDetail = {
   countdownLabel: string;
   items: NextMealItem[];
   moreCount?: number;
+  totalDurationMinutes?: number | null;
 };
 
 export type HomeStreak = {
@@ -38,6 +39,7 @@ export type UpcomingMealItem = {
   title: string;
   items?: NextMealItem[];
   moreCount?: number;
+  totalDurationMinutes?: number | null;
 };
 
 export type RegisteredTodaySummary = {
@@ -56,6 +58,7 @@ export type HomeRecommendation = {
   title: string;
   meta: string;
   imageUrl?: string | null;
+  totalDurationMinutes?: number | null;
 };
 
 export type HomeSummary = {

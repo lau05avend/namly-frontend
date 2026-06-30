@@ -18,6 +18,7 @@ export type HomeScheduledMealApiDto = {
   title: string;
   items: HomeMealItemApiDto[];
   moreCount: number;
+  totalDurationMinutes?: number | null;
 };
 
 export type HomeStreakApiDto = {
@@ -45,6 +46,7 @@ export type HomeRecommendationApiDto = {
   title: string;
   meta: string;
   imageUrl?: string | null;
+  totalDurationMinutes?: number | null;
 };
 
 export type HomeSummaryApiDto = {

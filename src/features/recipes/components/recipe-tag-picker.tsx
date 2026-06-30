@@ -360,7 +360,7 @@ export function RecipeTagPicker({
                 isEditing={editingTagId === tag.id}
                 onEditStart={() => handleEditStart(tag.id)}
                 onEditEnd={handleEditEnd}
-                onToggle={() => removeSelectedTag(tag.id)}
+                onToggle={openSheet}
                 onRemove={() => removeSelectedTag(tag.id)}
                 onRename={(name) => handleRenameTag(tag, name, "form")}
               />
@@ -409,7 +409,7 @@ export function RecipeTagPicker({
           </div>
         }
       >
-        <div className="flex flex-col gap-4 pb-4 mt-2">
+        <div className="flex flex-col gap-4 pb-4">
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/35" />
             <Input

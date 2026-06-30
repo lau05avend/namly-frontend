@@ -52,12 +52,17 @@ export function HistoryTimelineMonth({
             <div key={weekKey} className="grid grid-cols-7 gap-1">
               {week.map((day) => {
                 const dayKey = toDateKey(day);
+                const isCurrentMonth = isSameMonth(day, monthDate);
+
+                if (!isCurrentMonth) {
+                  return <div key={dayKey} aria-hidden />;
+                }
 
                 return (
                   <HistoryTimelineDayCell
                     key={dayKey}
                     date={day}
-                    isCurrentMonth={isSameMonth(day, monthDate)}
+                    isCurrentMonth
                     preview={timeline.previewByDate[dayKey]}
                     onPress={onDayPress}
                   />

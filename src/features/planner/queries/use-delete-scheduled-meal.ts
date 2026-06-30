@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { homeQueryKeys } from "@/features/home/constants/query-keys";
 import {
   plannerQueryKeys,
   toMonthKey,
@@ -24,6 +25,7 @@ export function useDeleteScheduledMeal() {
       );
 
       await Promise.all([
+        queryClient.invalidateQueries({ queryKey: homeQueryKeys.all }),
         queryClient.invalidateQueries({
           queryKey: plannerQueryKeys.day(variables.entryDate),
         }),

@@ -19,6 +19,7 @@ import { useHistoryDay } from "@/features/history/queries/use-history-day";
 import {
   fetchHistoryMealLog,
 } from "@/features/history/services/history.service";
+import { buildMealLogPath } from "@/lib/navigation/meal-routes";
 import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
 
 type HistoryMealLogScreenProps = {
@@ -26,20 +27,6 @@ type HistoryMealLogScreenProps = {
   dateKey: string;
   returnTo?: string;
 };
-
-function buildMealLogPath(
-  targetLogId: string,
-  dateKey: string,
-  returnTo: string | null,
-): string {
-  const params = new URLSearchParams({ date: dateKey });
-
-  if (returnTo) {
-    params.set("returnTo", returnTo);
-  }
-
-  return `/history/meals/${targetLogId}?${params.toString()}`;
-}
 
 export function HistoryMealLogScreen({
   logId,
@@ -201,6 +188,8 @@ export function HistoryMealLogScreen({
             <HistoryMealLogCarousel
               logIds={logIds}
               activeLogId={logId}
+              dateKey={dateKey}
+              returnTo={returnTo}
               onActiveLogChange={handleActiveLogChange}
             />
           </>

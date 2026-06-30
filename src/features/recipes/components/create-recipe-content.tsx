@@ -13,7 +13,7 @@ type CreateRecipeContentProps = {
 
 export function CreateRecipeContent({ photoPicker }: CreateRecipeContentProps) {
   return (
-    <div className="flex flex-col gap-7 px-4 pb-28 pt-4">
+    <div className="flex w-full min-w-0 flex-col gap-7 overflow-x-hidden px-4 pb-28 pt-4">
       <CreateRecipeBasicSection />
 
       <CreateRecipeCoverSection

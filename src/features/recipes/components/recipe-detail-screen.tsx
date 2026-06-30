@@ -18,7 +18,11 @@ import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
 import { useDeleteRecipe } from "@/features/recipes/queries/use-delete-recipe";
 import { useRecipeDetail } from "@/features/recipes/queries/use-recipe-detail";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
-import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
+import {
+  buildRecipeDetailPath,
+  buildRecipeEditPath,
+} from "@/lib/navigation/meal-routes";
 
 type RecipeDetailScreenProps = {
   recipeId: string;
@@ -30,7 +34,7 @@ export function RecipeDetailScreen({
   returnTo,
 }: RecipeDetailScreenProps) {
   const router = useRouter();
-  const safeReturnTo = resolveInternalReturnPath(returnTo);
+  const safeReturnTo = useReturnToSearchParam(returnTo);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteRecipe();
   const {
@@ -45,8 +49,13 @@ export function RecipeDetailScreen({
   const interactions = page?.interactions;
 
   const handleEdit = useCallback(() => {
-    router.push(`/recipes/${recipeId}/edit`);
-  }, [recipeId, router]);
+    router.push(
+      buildRecipeEditPath(
+        recipeId,
+        buildRecipeDetailPath(recipeId, safeReturnTo),
+      ),
+    );
+  }, [recipeId, router, safeReturnTo]);
 
   const handleDelete = useCallback(async () => {
     try {

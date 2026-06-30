@@ -1,31 +1,39 @@
 "use client";
 
+import { FormScreenHeader } from "@/components/navigation/form-screen-header";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
-import { ArrowLeft } from "lucide-react";
 
 type EditProfileHeaderProps = {
-  title?: string;
   onCancel: () => void;
+  title?: string;
+  subtitle?: string;
+  backLabel?: string;
+  isSaving?: boolean;
+  withSave?: boolean;
 };
 
 export function EditProfileHeader({
-  title = PROFILE_COPY.editTitle,
   onCancel,
+  title = PROFILE_COPY.editTitle,
+  subtitle,
+  backLabel = PROFILE_COPY.back,
+  isSaving = false,
+  withSave = true,
 }: EditProfileHeaderProps) {
+  const resolvedSubtitle =
+    subtitle ?? (withSave ? PROFILE_COPY.editProfile.subtitle : undefined);
+
   return (
-    <header className="sticky top-0 z-30 -mx-4 flex items-center gap-3 border-b border-foreground/5 bg-background/95 px-4 py-3 backdrop-blur-sm pt-safe">
-      <button
-        type="button"
-        onClick={onCancel}
-        aria-label={PROFILE_COPY.back}
-        className="flex size-10 cursor-pointer items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-mint/50"
-      >
-        <ArrowLeft className="size-5" />
-      </button>
-      <h1 className="flex-1 text-center text-base font-bold text-foreground">
-        {title}
-      </h1>
-      <span className="size-10" aria-hidden />
-    </header>
+    <FormScreenHeader
+      className="pt-safe"
+      title={title}
+      subtitle={resolvedSubtitle}
+      backLabel={backLabel}
+      saveLabel={PROFILE_COPY.saveChanges}
+      onBack={onCancel}
+      isSaving={isSaving}
+      saveType="submit"
+      hideSave={!withSave}
+    />
   );
 }

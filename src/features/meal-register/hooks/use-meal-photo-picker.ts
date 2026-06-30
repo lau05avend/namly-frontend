@@ -10,13 +10,13 @@ import {
 } from "react";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
 import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
 import { validateMealPhotoFile, normalizeMealPhotoFile } from "@/features/meal-register/services/meal-photo-storage.service";
 import {
   prepareMealPhotoFile,
-  shouldShowMealPhotoPreparing,
 } from "@/features/meal-register/utils/compress-meal-photo";
 import { showMealPhotoPickError } from "@/features/meal-register/utils/meal-photo-feedback";
-import { toast } from "sonner";
+import { cacheRecentMealPhotoThumbnail } from "@/features/meal-register/utils/recent-meal-photo-cache";
 
 export const MEAL_PHOTO_ACCEPT =
   "image/jpeg,image/png,image/webp,image/gif" as const;
@@ -46,6 +46,10 @@ export type MealPhotoPickerActions = {
 export type MealPhotoPickerInitialState = {
   initialFile?: File | null;
   initialRemoteMediaUrl?: string | null;
+  /** Use signed URLs for meal logs; public URLs for recipe covers. */
+  remoteMediaKind?: "meal-photo" | "recipe-cover";
+  /** Defers compression to mount — used when navigating from the FAB launch flow. */
+  prepareInitialFileOnMount?: boolean;
 };
 
 export type MealPhotoPicker = {
@@ -92,6 +96,8 @@ function buildInitialPhotoState(initialFile?: File | null): InitialPhotoState {
   };
 }
 
+const preparedInitialFiles = new WeakSet<File>();
+
 export function useMealPhotoPicker(
   initial?: MealPhotoPickerInitialState,
 ): MealPhotoPicker {
@@ -99,10 +105,21 @@ export function useMealPhotoPicker(
   const initialRemoteMediaUrl = initial?.initialRemoteMediaUrl?.trim()
     ? initial.initialRemoteMediaUrl.trim()
     : null;
+  const remoteMediaKind = initial?.remoteMediaKind ?? "meal-photo";
+  const prepareInitialFileOnMount = initial?.prepareInitialFileOnMount ?? false;
 
-  const [initialPhotoState] = useState(() =>
-    buildInitialPhotoState(initialFile),
-  );
+  const [initialPhotoState] = useState(() => {
+    if (prepareInitialFileOnMount && initialFile) {
+      return {
+        file: null,
+        previewUrl: null,
+        objectUrl: null,
+        pickError: null,
+      };
+    }
+
+    return buildInitialPhotoState(initialFile);
+  });
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const pendingFileRef = useRef<File | null>(initialPhotoState.file);
@@ -113,10 +130,19 @@ export function useMealPhotoPicker(
   const [previewUrl, setPreviewUrl] = useState(initialPhotoState.previewUrl);
   const [hasLocalFile, setHasLocalFile] = useState(Boolean(initialPhotoState.file));
   const [pickError, setPickError] = useState(initialPhotoState.pickError);
-  const [isPreparing, setIsPreparing] = useState(false);
-  const { displayUrl: resolvedRemoteUrl } = useResolvedMealPhotoUrl(
-    initialRemoteMediaUrl ?? undefined,
+  const [isPreparing, setIsPreparing] = useState(
+    prepareInitialFileOnMount && Boolean(initialFile),
   );
+  const { displayUrl: resolvedMealPhotoUrl } = useResolvedMealPhotoUrl(
+    remoteMediaKind === "meal-photo" ? (initialRemoteMediaUrl ?? undefined) : undefined,
+  );
+  const { displayUrl: resolvedRecipeCoverUrl } = useResolvedRecipeCoverUrl(
+    remoteMediaKind === "recipe-cover" ? (initialRemoteMediaUrl ?? undefined) : undefined,
+  );
+  const resolvedRemoteUrl =
+    remoteMediaKind === "recipe-cover"
+      ? resolvedRecipeCoverUrl
+      : resolvedMealPhotoUrl;
   const displayPreviewUrl =
     previewUrl ??
     (initialRemoteMediaUrl && !hasLocalFile ? (resolvedRemoteUrl ?? null) : null);
@@ -152,18 +178,12 @@ export function useMealPhotoPicker(
 
   const applyFile = useCallback(
     async (file: File) => {
-      const shouldShowPreparing = shouldShowMealPhotoPreparing(file);
-      const toastId = shouldShowPreparing
-        ? toast.loading(REGISTER_MEAL_COPY.photo.preparing)
-        : undefined;
-
-      if (shouldShowPreparing) {
-        setIsPreparing(true);
-      }
+      setIsPreparing(true);
 
       try {
         const preparedFile = await prepareMealPhotoFile(file);
         commitPreparedFile(preparedFile);
+        void cacheRecentMealPhotoThumbnail(preparedFile);
         return true;
       } catch (error) {
         const message =
@@ -175,10 +195,6 @@ export function useMealPhotoPicker(
         showMealPhotoPickError(message);
         return false;
       } finally {
-        if (toastId !== undefined) {
-          toast.dismiss(toastId);
-        }
-
         setIsPreparing(false);
       }
     },
@@ -213,6 +229,19 @@ export function useMealPhotoPicker(
     },
     [applyFile],
   );
+
+  useEffect(() => {
+    if (
+      !prepareInitialFileOnMount ||
+      !initialFile ||
+      preparedInitialFiles.has(initialFile)
+    ) {
+      return;
+    }
+
+    preparedInitialFiles.add(initialFile);
+    void applyFile(initialFile);
+  }, [applyFile, initialFile, prepareInitialFileOnMount]);
 
   const getPendingFile = useCallback(() => pendingFileRef.current, []);
 

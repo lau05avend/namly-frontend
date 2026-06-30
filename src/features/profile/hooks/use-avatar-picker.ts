@@ -1,15 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { validateAvatarFile } from "@/features/profile/services/avatar-storage.service";
+import { prepareMealPhotoFile } from "@/features/meal-register/utils/compress-meal-photo";
+import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
+import {
+  AVATAR_IMAGE_ACCEPT,
+} from "@/features/profile/services/avatar-storage.service";
+
+export { AVATAR_IMAGE_ACCEPT };
 
 export function useAvatarPicker() {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const pendingFileRef = useRef<File | null>(null);
   const previewObjectUrlRef = useRef<string | null>(null);
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [pickError, setPickError] = useState<string | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
 
   const revokePreview = useCallback(() => {
     if (previewObjectUrlRef.current) {
@@ -24,9 +32,41 @@ export function useAvatarPicker() {
     };
   }, [revokePreview]);
 
-  const openFilePicker = useCallback(() => {
-    inputRef.current?.click();
+  const openGallery = useCallback(() => {
+    galleryInputRef.current?.click();
   }, []);
+
+  const openCamera = useCallback(() => {
+    cameraInputRef.current?.click();
+  }, []);
+
+  const applyFile = useCallback(
+    async (file: File) => {
+      setIsPreparing(true);
+
+      try {
+        const preparedFile = await prepareMealPhotoFile(file);
+
+        setPickError(null);
+        revokePreview();
+
+        const objectUrl = URL.createObjectURL(preparedFile);
+        previewObjectUrlRef.current = objectUrl;
+        pendingFileRef.current = preparedFile;
+        setPreviewUrl(objectUrl);
+        return true;
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : PROFILE_COPY.uploadError;
+
+        setPickError(message);
+        return false;
+      } finally {
+        setIsPreparing(false);
+      }
+    },
+    [revokePreview],
+  );
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,21 +77,9 @@ export function useAvatarPicker() {
         return;
       }
 
-      const validationError = validateAvatarFile(file);
-      if (validationError) {
-        setPickError(validationError);
-        return;
-      }
-
-      setPickError(null);
-      revokePreview();
-
-      const objectUrl = URL.createObjectURL(file);
-      previewObjectUrlRef.current = objectUrl;
-      pendingFileRef.current = file;
-      setPreviewUrl(objectUrl);
+      void applyFile(file);
     },
-    [revokePreview],
+    [applyFile],
   );
 
   /** Clears a local selection and restores the persisted avatar preview. */
@@ -60,6 +88,7 @@ export function useAvatarPicker() {
     revokePreview();
     setPreviewUrl(null);
     setPickError(null);
+    setIsPreparing(false);
   }, [revokePreview]);
 
   const getPendingFile = useCallback(() => pendingFileRef.current, []);
@@ -69,13 +98,17 @@ export function useAvatarPicker() {
     revokePreview();
     setPreviewUrl(null);
     setPickError(null);
+    setIsPreparing(false);
   }, [revokePreview]);
 
   return {
-    inputRef,
+    galleryInputRef,
+    cameraInputRef,
     previewUrl,
     pickError,
-    openFilePicker,
+    isPreparing,
+    openGallery,
+    openCamera,
     handleFileChange,
     clearSelection,
     getPendingFile,

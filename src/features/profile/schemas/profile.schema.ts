@@ -4,7 +4,7 @@ export const profileFormSchema = z.object({
   displayName: z
     .string()
     .trim()
-    .min(1, "Escribe tu nombre para mostrar")
+    .min(1, "Escribe tu nombre")
     .max(80, "El nombre es demasiado largo"),
   avatarUrl: z.string(),
 });

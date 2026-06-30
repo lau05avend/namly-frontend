@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { PlannerEntryDetailScreen } from "@/features/planner/components/planner-entry-detail/planner-entry-detail-screen";
+import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { parseDateKey } from "@/features/calendar/utils/date";
 import { redirect } from "next/navigation";
 
@@ -13,6 +15,7 @@ type PlannerEntryDetailPageProps = {
   }>;
   searchParams: Promise<{
     date?: string;
+    returnTo?: string;
   }>;
 };
 
@@ -21,7 +24,7 @@ export default async function PlannerEntryDetailPage({
   searchParams,
 }: PlannerEntryDetailPageProps) {
   const { id } = await params;
-  const { date } = await searchParams;
+  const { date, returnTo } = await searchParams;
 
   if (!id.trim()) {
     redirect("/planner");
@@ -31,5 +34,19 @@ export default async function PlannerEntryDetailPage({
     redirect("/planner");
   }
 
-  return <PlannerEntryDetailScreen scheduledMealId={id} dateKey={date} />;
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto min-h-dvh w-full max-w-lg px-4 py-10">
+          <PlannerLoading variant="compact" />
+        </div>
+      }
+    >
+      <PlannerEntryDetailScreen
+        scheduledMealId={id}
+        dateKey={date}
+        returnTo={returnTo}
+      />
+    </Suspense>
+  );
 }

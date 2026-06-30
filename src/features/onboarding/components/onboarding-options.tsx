@@ -54,7 +54,7 @@ export function OnboardingOptions({
   return (
     <div
       className={cn(
-        "grid grid-cols-2",
+        "grid min-w-0 grid-cols-2",
         isEmbedded ? "gap-1.5" : isCompact ? "gap-1.5" : "gap-2",
       )}
     >

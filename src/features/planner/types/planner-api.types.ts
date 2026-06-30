@@ -16,6 +16,7 @@ export type ScheduledMealRecipeApiDto = {
   title: string;
   coverUrl: string | null;
   sortOrder: number;
+  durationMinutes?: number | null;
 };
 
 export type ScheduledMealCompletionMealLogApiDto = {
@@ -36,6 +37,7 @@ export type ScheduledMealApiDto = {
   expressNote: string | null;
   recipes?: ScheduledMealRecipeApiDto[];
   status: ScheduledMealStatusApi;
+  totalDurationMinutes?: number | null;
 };
 
 export type ScheduledMealDetailApiDto = ScheduledMealApiDto & {

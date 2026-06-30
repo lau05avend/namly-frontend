@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 type HistoryMealLogCarouselProps = {
   logIds: string[];
   activeLogId: string;
+  dateKey: string;
+  returnTo?: string;
   onActiveLogChange: (logId: string) => void;
   className?: string;
 };
@@ -14,6 +16,8 @@ type HistoryMealLogCarouselProps = {
 export function HistoryMealLogCarousel({
   logIds,
   activeLogId,
+  dateKey,
+  returnTo,
   onActiveLogChange,
   className,
 }: HistoryMealLogCarouselProps) {
@@ -73,7 +77,11 @@ export function HistoryMealLogCarousel({
           className="w-full shrink-0 snap-center"
           aria-label={`Registro ${index + 1} de ${logIds.length}`}
         >
-          <HistoryMealLogDetailContent logId={logId} />
+          <HistoryMealLogDetailContent
+            logId={logId}
+            dateKey={dateKey}
+            returnTo={returnTo}
+          />
         </section>
       ))}
     </div>

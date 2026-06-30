@@ -31,11 +31,13 @@ export const HOME_COPY = {
         ? "1 comida registrada hoy"
         : `${count} comidas registradas hoy`,
     recommendation: "Recomendación del día",
+    recommendationOpenAria: (title: string) => `Ver receta recomendada: ${title}`,
     upcomingEmptyTitle: "Tu menú del día aún está por descubrirse",
     upcomingEmptyHint:
       "Empieza planeando tus siguientes comidas cuando quieras",
   },
   nextMeal: {
+    label: "Próxima comida",
     ariaLabel: (slotLabel: string) => `Próxima comida: ${slotLabel}`,
     emptyDayAriaLabel: "Próxima comida",
     emptyDay: "Un buen lugar para empezar",
@@ -43,8 +45,10 @@ export const HOME_COPY = {
     plannedMeal: "Comida planeada",
     expressNote: "Nota rápida",
     moreRecipes: (count: number) =>
-      count === 1 ? "+1 más" : `+${count} más`,
-    emptyRecipes: "Agrega recetas y arma algo rico para esta comida",
+      count === 1 ? "+1 receta más" : `+${count} recetas más`,
+    andMoreRecipes: (count: number) =>
+      count === 1 ? "y 1 receta más" : `y ${count} recetas más`,
+    emptyRecipes: "Empieza a planear esta comida.",
   },
   streak: {
     days: (count: number) => {

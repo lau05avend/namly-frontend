@@ -52,8 +52,9 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${plusJakarta.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
         <QueryProvider>
           <AuthProvider>
             <ProfileCacheSync />

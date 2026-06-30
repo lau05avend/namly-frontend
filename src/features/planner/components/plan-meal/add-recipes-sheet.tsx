@@ -30,6 +30,7 @@ function toFormRecipe(recipe: RecipeListItem): PlanRecipeFormValue {
     id: recipe.id,
     title: recipe.title,
     coverUrl: recipe.coverUrl,
+    durationMinutes: recipe.durationMinutes ?? null,
   };
 }
 
@@ -39,6 +40,7 @@ function toDraftSelection(recipes: PlanRecipeFormValue[]): RecipeListItem[] {
     title: recipe.title,
     coverUrl: recipe.coverUrl ?? null,
     rating: null,
+    durationMinutes: recipe.durationMinutes ?? null,
     isFavorite: false,
     isHidden: false,
     isSuggested: false,

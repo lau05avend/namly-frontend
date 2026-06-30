@@ -24,7 +24,7 @@ export function HomeScreen() {
   const [activeTab, setActiveTab] = useState<HomeTabId>("today");
   const { data, isPending, isError } = useHomeSummary();
   const greeting = useHomeGreeting();
-  const { openRegisterWithCamera, cameraInput } = useRegisterMealLaunch();
+  const { openRegisterWithCamera, launchUi } = useRegisterMealLaunch();
 
   const handleFabClick = () => {
     openRegisterWithCamera();
@@ -66,7 +66,7 @@ export function HomeScreen() {
         label={HOME_COPY.fabLabel}
         onClick={handleFabClick}
       />
-      {cameraInput}
+      {launchUi}
       <BottomNav activeId="home" />
     </div>
   );

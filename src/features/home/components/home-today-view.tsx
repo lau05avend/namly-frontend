@@ -1,3 +1,10 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import {
+  buildPlannerEntryPath,
+  HOME_PATH,
+} from "@/lib/navigation/meal-routes";
 import { HomeNextMealCard } from "@/features/home/components/home-next-meal-card";
 import { HomeNextMealEmptyCard } from "@/features/home/components/home-next-meal-empty-card";
 import { HomeDayRecapCard } from "@/features/home/components/home-day-recap-card";
@@ -7,18 +14,23 @@ import { HomeSectionTitle } from "@/features/home/components/home-section-title"
 import { HomeStreakCard } from "@/features/home/components/home-streak-card";
 import { RecommendationCard } from "@/features/home/components/recommendation-card";
 import { HOME_COPY } from "@/features/home/constants/home-copy";
+import { HomeUpcomingMealRow } from "@/features/home/components/home-upcoming-meal-row";
 import { HOME_HERO_CARD_HEIGHT } from "@/features/home/constants/home-hero-surfaces";
-import {
-  mapUpcomingMealToPlannerEntry,
-} from "@/features/home/mappers/home-planner-entry.mapper";
 import type { HomeSummary } from "@/features/home/types/home.types";
-import { PlannedEntryCard } from "@/components/meal/planned-entry-card";
 
 type HomeTodayViewProps = {
   summary: HomeSummary;
 };
 
 export function HomeTodayView({ summary }: HomeTodayViewProps) {
+  const router = useRouter();
+
+  const handlePlannerMealPress = (scheduledMealId: string) => {
+    router.push(
+      buildPlannerEntryPath(scheduledMealId, summary.date, HOME_PATH),
+    );
+  };
+
   const progressPercent =
     summary.streak.mealsGoalToday > 0
       ? Math.round(
@@ -42,6 +54,7 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
               <HomeNextMealCard
                 meal={summary.nextMeal}
                 className={HOME_HERO_CARD_HEIGHT}
+                onPress={() => handlePlannerMealPress(summary.nextMeal!.id)}
               />
             ) : (
               <HomeNextMealEmptyCard className={HOME_HERO_CARD_HEIGHT} />
@@ -63,12 +76,15 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
         </div>
       </section>
 
-      <HomeSection title={HOME_COPY.sections.upcoming}>
+      <HomeSection title={HOME_COPY.sections.upcoming} titleVariant="utility-primary">
         {summary.upcomingMeals.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {summary.upcomingMeals.map((meal) => (
               <li key={meal.id}>
-                <PlannedEntryCard entry={mapUpcomingMealToPlannerEntry(meal)} />
+                <HomeUpcomingMealRow
+                  meal={meal}
+                  onPress={() => handlePlannerMealPress(meal.id)}
+                />
               </li>
             ))}
           </ul>
@@ -77,10 +93,21 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
         )}
       </HomeSection>
 
-      <HomeDayRecapCard registeredToday={summary.registeredToday} />
+      <HomeSection
+        title={HOME_COPY.sections.dayRecap}
+        titleVariant="utility-primary"
+      >
+        <HomeDayRecapCard
+          registeredToday={summary.registeredToday}
+          dateKey={summary.date}
+        />
+      </HomeSection>
 
       {summary.recommendation ? (
-        <HomeSection title={HOME_COPY.sections.recommendation}>
+        <HomeSection
+          title={HOME_COPY.sections.recommendation}
+          titleVariant="utility-accent"
+        >
           <RecommendationCard recommendation={summary.recommendation} />
         </HomeSection>
       ) : null}

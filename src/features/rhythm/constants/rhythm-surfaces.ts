@@ -10,7 +10,7 @@ export const RHYTHM_SURFACES = {
   insightIconCalm: "bg-mint/70 text-primary",
   insightIconPositive: "bg-mint/70 text-primary",
   insightIconNeutral: "bg-foreground/[0.05] text-foreground/45",
-  lifetimeIconStreak: "bg-cta/12 text-cta",
+  lifetimeIconStreak: "bg-highlight/30 text-foreground/70",
   lifetimeIconBestWeek: "bg-highlight/30 text-foreground/70",
   lifetimeIconMeals: "bg-mint/70 text-primary",
 } as const;

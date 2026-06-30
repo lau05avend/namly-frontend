@@ -11,6 +11,9 @@ type OnboardingOptionChipProps = {
   density?: "default" | "compact" | "embedded";
 };
 
+const optionLabelClass =
+  "min-w-0 flex-1 hyphens-auto break-words leading-snug";
+
 export function OnboardingOptionChip({
   label,
   iconName,
@@ -28,7 +31,7 @@ export function OnboardingOptionChip({
         onClick={onSelect}
         aria-pressed={selected}
         className={cn(
-          "flex cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1.5 text-left text-[11px] font-medium transition-colors",
+          "flex min-w-0 w-full cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1.5 text-left text-[11px] font-medium transition-colors",
           selected
             ? "bg-primary/12 text-primary"
             : "bg-foreground/[0.04] text-foreground/60 hover:bg-foreground/[0.06]",
@@ -41,7 +44,7 @@ export function OnboardingOptionChip({
             selected ? "text-primary" : "text-foreground/40",
           )}
         />
-        <span className="min-w-0 leading-snug">{label}</span>
+        <span className={optionLabelClass}>{label}</span>
       </button>
     );
   }
@@ -52,7 +55,7 @@ export function OnboardingOptionChip({
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        "flex cursor-pointer items-center text-left font-medium transition-colors",
+        "flex min-w-0 w-full cursor-pointer items-center text-left font-medium transition-colors",
         isCompact
           ? "gap-2 rounded-xl border px-2.5 py-2 text-xs"
           : "gap-2.5 rounded-full border px-4 py-3 text-sm",
@@ -81,7 +84,7 @@ export function OnboardingOptionChip({
           className={isCompact ? "size-3.5" : "size-4"}
         />
       </span>
-      <span className="min-w-0 flex-1 leading-snug">{label}</span>
+      <span className={optionLabelClass}>{label}</span>
     </button>
   );
 }

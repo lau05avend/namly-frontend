@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FormProvider, type FieldErrors } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FormAlert } from "@/components/ui/form-alert";
 import { CreateRecipeContent } from "@/features/recipes/components/create-recipe-content";
 import { CreateRecipeHeader } from "@/features/recipes/components/create-recipe-header";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
@@ -13,17 +14,27 @@ import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-r
 import { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import { getFirstFieldErrorMessage } from "@/lib/form/get-first-field-error-message";
+import { buildRecipeDetailPath } from "@/lib/navigation/meal-routes";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
 
 type EditRecipeFormProps = {
   recipeId: string;
   initialValues: CreateRecipeFormValues;
+  returnTo?: string;
 };
 
-function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
+function EditRecipeForm({
+  recipeId,
+  initialValues,
+  returnTo,
+}: EditRecipeFormProps) {
   const router = useRouter();
+  const detailReturnPath = useReturnToSearchParam(returnTo);
   const form = useCreateRecipeForm(initialValues);
   const photoPicker = useMealPhotoPicker({
     initialRemoteMediaUrl: initialValues.coverUrl,
+    remoteMediaKind: "recipe-cover",
   });
   const updateMutation = useUpdateRecipe();
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -49,7 +60,10 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
         existingCoverUrl: photoPicker.actions.getExistingMediaUrl() ?? undefined,
       });
 
-      router.replace(`/recipes/${recipeId}`);
+      navigateToInternalPath(
+        router,
+        detailReturnPath ?? buildRecipeDetailPath(recipeId),
+      );
     } catch (error) {
       const message = getUserFacingErrorMessage(
         error,
@@ -71,9 +85,15 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
           title={copy.title}
           saveLabel={copy.save}
           isSaving={updateMutation.isPending}
+          onBack={() =>
+            navigateToInternalPath(
+              router,
+              detailReturnPath ?? buildRecipeDetailPath(recipeId),
+            )
+          }
         />
         {saveError ? (
-          <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
+          <FormAlert message={saveError} centered className="mx-4 mt-3" />
         ) : null}
         <CreateRecipeContent photoPicker={photoPicker} />
       </form>
@@ -84,17 +104,20 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
 type EditRecipeScreenProps = {
   recipeId: string;
   initialValues: CreateRecipeFormValues;
+  returnTo?: string;
 };
 
 export function EditRecipeScreen({
   recipeId,
   initialValues,
+  returnTo,
 }: EditRecipeScreenProps) {
   return (
     <EditRecipeForm
       key={recipeId}
       recipeId={recipeId}
       initialValues={initialValues}
+      returnTo={returnTo}
     />
   );
 }

@@ -71,7 +71,7 @@ export function HistoryTimelineDayCell({
       aria-label={ariaLabel}
       aria-disabled={!hasMeals}
       className={cn(
-        "flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5 transition-colors",
+        "flex flex-col items-center gap-1 rounded-2xl px-1 py-1.5 transition-colors bg-transparent",
         hasMeals && "cursor-pointer active:scale-[0.98]",
         !hasMeals && "cursor-default disabled:opacity-100",
         !isCurrentMonth && "opacity-35",

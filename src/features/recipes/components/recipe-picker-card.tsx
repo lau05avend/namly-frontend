@@ -3,6 +3,7 @@
 import {
   RecipeCardMetadata,
   RecipeCover,
+  RecipeCoverDurationBadge,
   RecipeFavoriteBadge,
   RecipeOriginBadge,
 } from "@/features/recipes/components/recipe-card-visuals";
@@ -53,6 +54,7 @@ export function RecipePickerCard({
     >
       <RecipeCover coverUrl={recipe.coverUrl}>
         <RecipeOriginBadge recipe={recipe} reserveSelectionSpace />
+        <RecipeCoverDurationBadge durationMinutes={recipe.durationMinutes} />
         <RecipeFavoriteBadge isFavorite={recipe.isFavorite} />
         <SelectionCheckIndicator selected={selected} />
       </RecipeCover>

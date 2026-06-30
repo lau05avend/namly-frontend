@@ -6,6 +6,9 @@ export const plannerQueryKeys = {
   monthActivity: (monthKey: string) =>
     [...plannerQueryKeys.all, "month-activity", monthKey] as const,
   mealTypes: () => [...plannerQueryKeys.all, "meal-types"] as const,
+  mealTypesAll: () => [...plannerQueryKeys.mealTypes(), "all"] as const,
+  mealTypesFrequent: (limit: number) =>
+    [...plannerQueryKeys.mealTypes(), "frequent", limit] as const,
   planDefaults: (date?: string, mealTypeId?: string, scheduledMealId?: string) =>
     [
       ...plannerQueryKeys.all,

@@ -14,7 +14,7 @@ export function PlanMealDateSection() {
 
   return (
     <PlannerSection>
-      <SurfaceCard className="flex items-center gap-2.5 px-3.5 py-2.5">
+      <SurfaceCard className="flex min-w-0 items-center gap-2.5 px-3.5 py-2.5">
         <CalendarDays className="size-4 shrink-0 text-primary" aria-hidden />
         <Controller
           name="date"

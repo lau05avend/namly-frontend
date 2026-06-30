@@ -15,19 +15,28 @@ import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { useDeleteScheduledMeal } from "@/features/planner/queries/use-delete-scheduled-meal";
 import { usePlannerScheduledMeal } from "@/features/planner/queries/use-planner-scheduled-meal";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
+import {
+  buildPlanMealEditPath,
+  buildPlannerEntryPath,
+} from "@/lib/navigation/meal-routes";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
 
 type PlannerEntryDetailScreenProps = {
   scheduledMealId: string;
   dateKey: string;
+  returnTo?: string;
 };
 
 export function PlannerEntryDetailScreen({
   scheduledMealId,
   dateKey,
+  returnTo,
 }: PlannerEntryDetailScreenProps) {
   const router = useRouter();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteScheduledMeal();
+  const safeReturnTo = useReturnToSearchParam(returnTo);
   const { data: detail, isPending, isError } = usePlannerScheduledMeal(
     scheduledMealId,
   );
@@ -35,13 +44,22 @@ export function PlannerEntryDetailScreen({
   const plannerDateKey = detail?.entryDate ?? dateKey;
 
   const handleBack = () => {
+    if (safeReturnTo) {
+      navigateToInternalPath(router, safeReturnTo);
+      return;
+    }
+
     router.replace(`/planner?date=${plannerDateKey}`);
   };
 
   const handleEdit = useCallback(() => {
-    const params = new URLSearchParams({ edit: scheduledMealId });
-    router.push(`/planner/plan?${params.toString()}`);
-  }, [router, scheduledMealId]);
+    router.push(
+      buildPlanMealEditPath(
+        scheduledMealId,
+        buildPlannerEntryPath(scheduledMealId, plannerDateKey, safeReturnTo),
+      ),
+    );
+  }, [plannerDateKey, router, safeReturnTo, scheduledMealId]);
 
   const handleDelete = useCallback(async () => {
     if (!detail) {
@@ -55,13 +73,16 @@ export function PlannerEntryDetailScreen({
       });
       setIsDeleteOpen(false);
       toast.success(PLANNER_COPY.detail.deletePlanSuccess);
-      router.replace(`/planner?date=${detail.entryDate}`);
+      navigateToInternalPath(
+        router,
+        safeReturnTo ?? `/planner?date=${detail.entryDate}`,
+      );
     } catch (error) {
       toast.error(
         getUserFacingErrorMessage(error, PLANNER_COPY.detail.deletePlanError),
       );
     }
-  }, [deleteMutation, detail, router]);
+  }, [deleteMutation, detail, router, safeReturnTo]);
 
   return (
     <div className="relative min-h-dvh bg-background pb-28">
@@ -95,7 +116,12 @@ export function PlannerEntryDetailScreen({
           </p>
         ) : null}
 
-        {detail ? <PlannerEntryDetailContent detail={detail} /> : null}
+        {detail ? (
+          <PlannerEntryDetailContent
+            detail={detail}
+            returnTo={safeReturnTo}
+          />
+        ) : null}
       </main>
 
       <BottomNav activeId="planner" />

@@ -3,13 +3,16 @@
 import { useSyncMealTimeOnOpen } from "@/components/meal/hooks/use-sync-meal-time-on-open";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FormAlert } from "@/components/ui/form-alert";
 import { RegisterMealContent } from "@/features/meal-register/components/register-meal-content";
 import { RegisterMealHeader } from "@/features/meal-register/components/register-meal-header";
 import { RegisterPlanDateResetSheet } from "@/features/meal-register/components/register-plan-date-reset-sheet";
 import type { RegisterWhenChangePayload } from "@/features/meal-register/components/sections/register-when-section";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
+import { registerMealQueryKeys } from "@/features/meal-register/constants/query-keys";
 import { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
 import { useRegisterMealForm } from "@/features/meal-register/hooks/use-register-meal-form";
 import {
@@ -32,6 +35,8 @@ import { resolveInitialRegisterPhoto } from "@/features/meal-register/utils/regi
 import { useHistoryMealLog } from "@/features/history/queries/use-history-meal-log";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
+import { fetchRecipes } from "@/features/recipes/services/recipes.service";
+import { enrichRecipesWithDurations } from "@/features/recipes/utils/enrich-recipes-with-durations";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 
 type RegisterMealScreenProps = {
@@ -90,6 +95,7 @@ function RegisterMealForm({
   );
   const photoPicker = useMealPhotoPicker({
     initialFile: initialPhotoFile,
+    prepareInitialFileOnMount: Boolean(initialPhotoFile),
     initialRemoteMediaUrl: isEditing ? initialRemoteMediaUrl : null,
   });
   const form = useRegisterMealForm(defaults);
@@ -252,7 +258,7 @@ function RegisterMealForm({
     setIsDateResetSheetOpen(false);
   }, [pendingDateChange, resetPlanLink, setValue]);
 
-  const handleLinkSuggestion = (
+  const handleLinkSuggestion = async (
     suggestion: ScheduledMealSuggestion,
     planEntryDate: string,
   ) => {
@@ -266,7 +272,15 @@ function RegisterMealForm({
     setValue("planLinkStatus", "linked", { shouldDirty: true });
     setValue("linkedPlanId", suggestion.id, { shouldDirty: true });
     setValue("mealTypeId", suggestion.mealType.id, { shouldDirty: true });
-    setValue("recipes", mapSuggestionRecipesToForm(suggestion), {
+
+    let recipes = mapSuggestionRecipesToForm(suggestion);
+
+    if (recipes.length > 0) {
+      const catalog = await fetchRecipes();
+      recipes = enrichRecipesWithDurations(recipes, catalog);
+    }
+
+    setValue("recipes", recipes, {
       shouldDirty: true,
     });
   };
@@ -358,7 +372,7 @@ function RegisterMealForm({
           }
         />
         {saveError ? (
-          <p className="px-4 pt-3 text-center text-sm text-cta">{saveError}</p>
+          <FormAlert message={saveError} centered className="mx-4 mt-3" />
         ) : null}
         <RegisterMealContent
           photoPicker={photoPicker}
@@ -409,6 +423,24 @@ export function RegisterMealScreen({
     isError: mealTypesError,
   } = useMealTypes();
 
+  const editDefaultsQuery = useQuery({
+    queryKey: registerMealQueryKeys.editDefaults(editLogId ?? ""),
+    queryFn: async () => {
+      const defaults = mapMealLogDetailToFormValues(editLog!);
+
+      if (defaults.recipes.length === 0) {
+        return defaults;
+      }
+
+      const catalog = await fetchRecipes();
+      return {
+        ...defaults,
+        recipes: enrichRecipesWithDurations(defaults.recipes, catalog),
+      };
+    },
+    enabled: isEditing && Boolean(editLog) && Boolean(mealTypes?.length),
+  });
+
   const createDefaults = useMemo(() => {
     if (!mealTypes?.length) {
       return null;
@@ -417,13 +449,7 @@ export function RegisterMealScreen({
     return buildRegisterMealDefaults(mealTypes, { date: initialDate });
   }, [initialDate, mealTypes]);
 
-  const editDefaults = useMemo(() => {
-    if (!isEditing || !editLog || !mealTypes?.length) {
-      return null;
-    }
-
-    return mapMealLogDetailToFormValues(editLog);
-  }, [editLog, isEditing, mealTypes]);
+  const editDefaults = editDefaultsQuery.data ?? null;
 
   const editLinkedSuggestion = useMemo(() => {
     if (!editLog) {
@@ -438,7 +464,9 @@ export function RegisterMealScreen({
 
   const defaults = isEditing ? editDefaults : createDefaults;
   const isLoading =
-    mealTypesPending || (isEditing && editLogPending) || !defaults;
+    mealTypesPending ||
+    (isEditing && (editLogPending || editDefaultsQuery.isPending)) ||
+    !defaults;
 
   if (isLoading) {
     return (
@@ -448,7 +476,7 @@ export function RegisterMealScreen({
     );
   }
 
-  if (mealTypesError || (isEditing && editLogError)) {
+  if (mealTypesError || (isEditing && (editLogError || editDefaultsQuery.isError))) {
     return (
       <p className="px-4 pt-10 text-center text-sm text-foreground/60">
         {REGISTER_MEAL_COPY.errors.load}

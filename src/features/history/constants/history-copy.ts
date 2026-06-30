@@ -36,4 +36,5 @@ export const HISTORY_COPY = {
   deleteMealError: "No pudimos eliminar el registro. Intenta de nuevo.",
   agendaPlaceholder: "La vista de agenda llegará pronto.",
   goToToday: "Ir a hoy",
+  scrollToToday: "",
 } as const;

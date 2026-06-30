@@ -9,9 +9,12 @@ type BottomSheetProps = {
   onOpenChange: (open: boolean) => void;
   title: string;
   description?: string;
+  headerAccessory?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
   className?: string;
+  contentClassName?: string;
+  footerClassName?: string;
   scrollableContent?: boolean;
   compact?: boolean;
 };
@@ -21,9 +24,12 @@ export function BottomSheet({
   onOpenChange,
   title,
   description,
+  headerAccessory,
   children,
   footer,
   className,
+  contentClassName,
+  footerClassName,
   scrollableContent = true,
   compact = false,
 }: BottomSheetProps) {
@@ -39,8 +45,8 @@ export function BottomSheet({
         >
           <div
             className={cn(
-              "flex shrink-0 flex-col items-center px-5 pt-3",
-              compact ? "pb-4" : "pb-2",
+              "relative z-10 flex shrink-0 flex-col items-center bg-background px-5 pt-3",
+              compact ? "pb-3" : "pb-2",
             )}
           >
             <div
@@ -65,6 +71,9 @@ export function BottomSheet({
                 {description}
               </Drawer.Description>
             ) : null}
+            {headerAccessory ? (
+              <div className="mt-2.5 w-full">{headerAccessory}</div>
+            ) : null}
           </div>
 
           {children ? (
@@ -72,8 +81,9 @@ export function BottomSheet({
               className={cn(
                 "min-h-0 flex-1 px-4",
                 scrollableContent
-                  ? "overflow-y-auto"
+                  ? "overflow-y-auto pt-2"
                   : "flex flex-col overflow-hidden",
+                contentClassName,
               )}
             >
               {children}
@@ -85,6 +95,7 @@ export function BottomSheet({
               className={cn(
                 "shrink-0 border-t border-foreground/8 px-4 pb-safe",
                 compact ? "pt-4" : "pt-3",
+                footerClassName,
               )}
             >
               {footer}

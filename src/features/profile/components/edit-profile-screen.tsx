@@ -122,17 +122,23 @@ export function EditProfileScreen() {
 
   return (
     <FormProvider {...form}>
-      <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col bg-background px-4 pb-8">
-        <EditProfileHeader onCancel={handleCancel} />
+      <form
+        className="mx-auto flex min-h-dvh w-full max-w-lg flex-col bg-background"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void handleSave();
+        }}
+        noValidate
+      >
+        <EditProfileHeader onCancel={handleCancel} isSaving={isSubmitting} />
+
         <EditProfileForm
-          email={profile.email}
           persistedAvatarUrl={profile.avatarUrl}
           avatarPicker={avatarPicker}
           isSaving={isSubmitting}
           saveError={saveError}
-          onSubmit={() => void handleSave()}
         />
-      </div>
+      </form>
     </FormProvider>
   );
 }

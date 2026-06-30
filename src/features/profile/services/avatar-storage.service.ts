@@ -14,6 +14,9 @@ const ALLOWED_TYPES = new Set([
   "image/gif",
 ]);
 
+export const AVATAR_IMAGE_ACCEPT =
+  "image/jpeg,image/png,image/webp,image/gif" as const;
+
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 function getFileExtension(file: File): string {

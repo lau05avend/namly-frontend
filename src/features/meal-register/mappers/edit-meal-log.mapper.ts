@@ -23,6 +23,7 @@ export function mapMealLogDetailToFormValues(
       id: recipe.recipeId,
       title: recipe.title,
       coverUrl: recipe.coverUrl,
+      durationMinutes: null,
     })),
     tags: log.tags.map((tag) => ({
       id: tag.id,

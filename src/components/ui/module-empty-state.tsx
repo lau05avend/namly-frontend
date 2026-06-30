@@ -1,8 +1,7 @@
-import type { ModuleId } from "@/constants/module-icons";
-import { getModuleIcon } from "@/constants/module-icons";
+import { MODULE_ICONS, type ModuleId } from "@/constants/module-icons";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { createElement, type ReactNode } from "react";
 
 type ModuleEmptyStateProps = {
   module: ModuleId;
@@ -14,6 +13,14 @@ type ModuleEmptyStateProps = {
   children?: ReactNode;
 };
 
+function renderModuleIcon(Icon: LucideIcon, className: string) {
+  return createElement(Icon, {
+    className,
+    strokeWidth: 2,
+    "aria-hidden": true,
+  });
+}
+
 export function ModuleEmptyState({
   module,
   icon,
@@ -23,53 +30,52 @@ export function ModuleEmptyState({
   className,
   children,
 }: ModuleEmptyStateProps) {
-  const Icon = icon ?? getModuleIcon(module);
+  const moduleIcon = icon ?? MODULE_ICONS[module];
   const isScreen = variant === "screen";
+
+  if (!isScreen) {
+    return (
+      <div
+        className={cn(
+          "grid grid-cols-[auto_1fr] items-start gap-x-3 gap-y-2 py-2",
+          className,
+        )}
+      >
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-mint/70 text-primary">
+          {renderModuleIcon(moduleIcon, "size-4")}
+        </span>
+
+        <div className="flex min-w-0 flex-col gap-1 pt-0.5">
+          <p className="text-sm leading-snug text-foreground/50">{title}</p>
+          {description ? (
+            <p className="text-sm leading-snug text-foreground/45">
+              {description}
+            </p>
+          ) : null}
+        </div>
+
+        {children ? <div className="col-span-full">{children}</div> : null}
+      </div>
+    );
+  }
 
   return (
     <div
       className={cn(
-        "flex flex-col",
-        isScreen
-          ? "items-center gap-3 px-4 py-10 text-center"
-          : "items-start gap-2.5 py-2",
+        "flex flex-col items-center gap-3 px-4 py-10 text-center",
         className,
       )}
     >
-      <span
-        className={cn(
-          "flex shrink-0 items-center justify-center bg-mint/70 text-primary",
-          isScreen ? "size-14 rounded-3xl" : "size-10 rounded-2xl",
-        )}
-      >
-        <Icon
-          className={isScreen ? "size-6" : "size-4"}
-          strokeWidth={2}
-          aria-hidden
-        />
+      <span className="flex size-14 shrink-0 items-center justify-center rounded-3xl bg-mint/70 text-primary">
+        {renderModuleIcon(moduleIcon, "size-6")}
       </span>
 
-      <div
-        className={cn(
-          "flex flex-col gap-1.5",
-          isScreen ? "items-center" : "items-start",
-        )}
-      >
-        <p
-          className={cn(
-            "leading-relaxed text-foreground/70",
-            isScreen ? "text-sm font-medium" : "text-sm text-foreground/50",
-          )}
-        >
+      <div className="flex flex-col items-center gap-1.5">
+        <p className="text-sm font-medium leading-relaxed text-foreground/70">
           {title}
         </p>
         {description ? (
-          <p
-            className={cn(
-              "leading-relaxed text-foreground/45",
-              isScreen ? "max-w-xs text-sm" : "text-sm",
-            )}
-          >
+          <p className="max-w-xs text-sm leading-relaxed text-foreground/45">
             {description}
           </p>
         ) : null}

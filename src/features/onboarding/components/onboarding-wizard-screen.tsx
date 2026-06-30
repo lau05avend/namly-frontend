@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FormAlert } from "@/components/ui/form-alert";
 import { Button } from "@/components/ui/button";
 import { OnboardingEmpty } from "@/features/onboarding/components/onboarding-empty";
 import { OnboardingLoading } from "@/features/onboarding/components/onboarding-loading";
@@ -164,9 +165,7 @@ export function OnboardingWizardScreen() {
         </div>
 
         {submitError ? (
-          <p className="text-center text-sm text-cta" role="alert">
-            {submitError}
-          </p>
+          <FormAlert message={submitError} centered />
         ) : null}
       </div>
     </div>

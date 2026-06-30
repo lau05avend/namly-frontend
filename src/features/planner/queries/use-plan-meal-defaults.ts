@@ -6,7 +6,12 @@ import { useMealTypes } from "@/features/planner/queries/use-meal-types";
 import { fetchPlannerScheduledMeal } from "@/features/planner/services/planner.service";
 import { buildPlanMealDefaults } from "@/features/planner/utils/plan-meal-defaults";
 import { buildPlanMealDefaultsFromDetail } from "@/features/planner/utils/plan-meal-edit-defaults";
-import type { PlanMealDefaultsParams } from "@/features/planner/types/plan-meal.types";
+import type {
+  PlanMealDefaults,
+  PlanMealDefaultsParams,
+} from "@/features/planner/types/plan-meal.types";
+import { fetchRecipes } from "@/features/recipes/services/recipes.service";
+import { enrichRecipesWithDurations } from "@/features/recipes/utils/enrich-recipes-with-durations";
 
 export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
   const mealTypesQuery = useMealTypes();
@@ -22,7 +27,17 @@ export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
     queryFn: async () => {
       if (scheduledMealId) {
         const detail = await fetchPlannerScheduledMeal(scheduledMealId);
-        return buildPlanMealDefaultsFromDetail(detail);
+        const defaults = buildPlanMealDefaultsFromDetail(detail);
+
+        if (defaults.recipes.length === 0) {
+          return defaults;
+        }
+
+        const catalog = await fetchRecipes();
+        return {
+          ...defaults,
+          recipes: enrichRecipesWithDurations(defaults.recipes, catalog),
+        };
       }
 
       return buildPlanMealDefaults(mealTypesQuery.data!, params);

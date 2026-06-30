@@ -13,6 +13,7 @@ export const registerRecipeSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Añade un nombre de receta"),
   coverUrl: z.string().nullable().optional(),
+  durationMinutes: z.number().int().min(0).nullable().optional(),
 });
 
 export const registerTagFormSchema = z.object({

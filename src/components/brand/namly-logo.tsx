@@ -1,26 +1,16 @@
-import Image from "next/image";
+import { NamlyLogoMark } from "@/components/brand/namly-logo-mark";
 import { cn } from "@/lib/utils";
-import { BRAND_ASSETS } from "@/components/brand/brand-assets";
 
 type NamlyLogoProps = {
   className?: string;
   size?: number;
+  /** @deprecated Inline SVG renders immediately; kept for API compatibility. */
   priority?: boolean;
 };
 
 export function NamlyLogo({
   className,
   size = 120,
-  priority = false,
 }: NamlyLogoProps) {
-  return (
-    <Image
-      src={BRAND_ASSETS.logo}
-      alt="Namly"
-      width={size}
-      height={size}
-      priority={priority}
-      className={cn("h-auto object-contain", className)}
-    />
-  );
+  return <NamlyLogoMark className={className} size={size} />;
 }

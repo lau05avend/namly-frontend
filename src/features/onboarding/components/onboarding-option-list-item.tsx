@@ -13,6 +13,9 @@ type OnboardingOptionListItemProps = {
   multiSelect?: boolean;
 };
 
+const optionLabelClass =
+  "min-w-0 flex-1 hyphens-auto break-words leading-snug";
+
 export function OnboardingOptionListItem({
   label,
   iconName,
@@ -31,7 +34,7 @@ export function OnboardingOptionListItem({
         onClick={onSelect}
         aria-pressed={selected}
         className={cn(
-          "flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 text-left text-xs transition-colors",
+          "flex w-full min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 text-left text-xs transition-colors",
           selected
             ? "bg-mint/55 font-medium text-primary"
             : "text-foreground/68 hover:bg-foreground/[0.03]",
@@ -44,7 +47,7 @@ export function OnboardingOptionListItem({
             selected ? "text-primary" : "text-foreground/40",
           )}
         />
-        <span className="min-w-0 flex-1 leading-snug">{label}</span>
+        <span className={optionLabelClass}>{label}</span>
         <span
           className={cn(
             "size-3.5 shrink-0 border",
@@ -65,7 +68,7 @@ export function OnboardingOptionListItem({
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        "flex w-full cursor-pointer items-center text-left font-medium transition-colors",
+        "flex w-full min-w-0 cursor-pointer items-center text-left font-medium transition-colors",
         isCompact
           ? "gap-2.5 rounded-xl border px-2.5 py-2 text-xs"
           : "gap-3 rounded-3xl border px-4 py-3.5 text-sm",
@@ -94,7 +97,7 @@ export function OnboardingOptionListItem({
           className={isCompact ? "size-3.5" : "size-4"}
         />
       </span>
-      <span className="min-w-0 flex-1 leading-snug">{label}</span>
+      <span className={optionLabelClass}>{label}</span>
       {!isCompact ? (
         <ChevronRight
           className={cn(

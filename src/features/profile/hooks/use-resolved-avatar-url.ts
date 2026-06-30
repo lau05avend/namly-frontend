@@ -8,6 +8,7 @@ import {
   extractAvatarStoragePath,
   isRemoteImageUrl,
 } from "@/features/profile/utils/avatar-storage.utils";
+import { getMediaUrlQueryOptions } from "@/lib/media/media-url-query-options";
 
 export function useResolvedAvatarUrl(avatarRef?: string) {
   const trimmed = avatarRef?.trim() ?? "";
@@ -21,7 +22,7 @@ export function useResolvedAvatarUrl(avatarRef?: string) {
     queryKey: profileQueryKeys.avatarDisplayUrl(trimmed),
     queryFn: () => resolveAvatarDisplayUrl(trimmed),
     enabled: needsSignedUrl,
-    staleTime: (AVATAR_SIGNED_URL_TTL_SECONDS - 300) * 1000,
+    ...getMediaUrlQueryOptions((AVATAR_SIGNED_URL_TTL_SECONDS - 300) * 1000),
   });
 
   if (!trimmed) {

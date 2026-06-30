@@ -22,10 +22,10 @@ import {
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { PlannerDashedAddButton } from "@/components/planner/planner-dashed-add-button";
 import { PlannerSection } from "@/components/planner/planner-section";
-import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { RecipePlanCard } from "@/components/planner/recipe-plan-card";
 import { AddRecipesSheet } from "@/features/planner/components/plan-meal/add-recipes-sheet";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
+import { buildMenuSummaryDescription } from "@/features/planner/utils/plan-menu-summary.utils";
 import type { PlanMealFormValues } from "@/features/planner/schemas/plan-meal.schema";
 
 export function PlanMealRecipesSection() {
@@ -43,6 +43,7 @@ export function PlanMealRecipesSection() {
 
   const selectedRecipes = useWatch({ control, name: "recipes" }) ?? [];
   const sortableIds = fields.map((field) => field.fieldKey);
+  const isEmpty = fields.length === 0;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -70,9 +71,20 @@ export function PlanMealRecipesSection() {
 
   return (
     <>
-      <PlannerSection label={PLAN_MEAL_COPY.sections.recipes}>
-        <div className="flex flex-col gap-2">
-          {fields.length > 0 ? (
+      <PlannerSection
+        label={
+          isEmpty
+            ? PLAN_MEAL_COPY.sections.menuEmpty
+            : PLAN_MEAL_COPY.sections.menuFilled
+        }
+        description={
+          isEmpty
+            ? PLAN_MEAL_COPY.recipes.menuEmptyHint
+            : buildMenuSummaryDescription(selectedRecipes)
+        }
+      >
+        <div className="flex flex-col gap-3">
+          {!isEmpty ? (
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -83,13 +95,12 @@ export function PlanMealRecipesSection() {
                 items={sortableIds}
                 strategy={verticalListSortingStrategy}
               >
-                <ul className="relative overflow-hidden rounded-2xl border border-foreground/8 bg-card">
+                <ul className="flex flex-col px-0.5">
                   {fields.map((field, index) => (
                     <RecipePlanCard
                       key={field.fieldKey}
                       sortableId={field.fieldKey}
                       recipe={field}
-                      isFirst={index === 0}
                       isLast={index === fields.length - 1}
                       onRemove={() => remove(index)}
                     />
@@ -97,22 +108,15 @@ export function PlanMealRecipesSection() {
                 </ul>
               </SortableContext>
             </DndContext>
-          ) : (
-            <ModuleEmptyState
-              module="recipes"
-              variant="inline"
-              title={PLAN_MEAL_COPY.recipes.empty}
-            />
-          )}
+          ) : null}
 
           <PlannerDashedAddButton
             label={PLAN_MEAL_COPY.recipes.add}
             onClick={() => setIsPickerOpen(true)}
-            className="py-2.5"
           />
 
           {errors.recipes?.message ? (
-            <p className="text-xs text-cta">
+            <p className="text-xs text-destructive">
               {String(errors.recipes.message)}
             </p>
           ) : null}

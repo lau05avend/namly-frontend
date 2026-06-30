@@ -10,7 +10,7 @@ export const PROFILE_COPY = {
   },
   editProfile: {
     title: "Editar perfil",
-    subtitle: "Nombre y foto",
+    subtitle: "",
   },
   signOut: {
     title: "Cerrar sesión",
@@ -55,8 +55,8 @@ export const PROFILE_COPY = {
     loadError: "No pudimos cargar tus preferencias. Intenta de nuevo.",
   },
   mealTypes: {
-    title: "Gestionar tipos",
-    subtitle: "Crear, ocultar y ordenar",
+    title: "Tipos de comida",
+    subtitle: "Crear, editar y ordenar",
   },
   units: {
     title: "Unidades de medida",
@@ -77,7 +77,7 @@ export const PROFILE_COPY = {
   changePhoto: "Cambiar foto",
   removePhoto: "Eliminar",
   nameSection: "Nombre",
-  displayNameLabel: "Nombre para mostrar",
+  displayNameLabel: "¿Cómo quieres aparecer en Namly?",
   displayNamePlaceholder: "Tu nombre",
   linkedAccountSection: "Cuenta vinculada",
   saveChanges: "Guardar cambios",

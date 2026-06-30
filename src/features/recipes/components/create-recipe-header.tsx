@@ -8,12 +8,14 @@ type CreateRecipeHeaderProps = {
   isSaving?: boolean;
   title?: string;
   saveLabel?: string;
+  onBack?: () => void;
 };
 
 export function CreateRecipeHeader({
   isSaving = false,
   title,
   saveLabel,
+  onBack,
 }: CreateRecipeHeaderProps) {
   const router = useRouter();
   const copy = RECIPES_COPY.create;
@@ -23,7 +25,7 @@ export function CreateRecipeHeader({
       title={title ?? copy.title}
       backLabel={copy.back}
       saveLabel={saveLabel ?? copy.save}
-      onBack={() => router.back()}
+      onBack={onBack ?? (() => router.back())}
       isSaving={isSaving}
       saveType="submit"
     />

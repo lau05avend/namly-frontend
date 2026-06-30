@@ -8,6 +8,7 @@
   --highlight: #ffd166;
   --mint: #eaf4ec;
   --card: #f7f6ee;
+  --destructive: #c45c4a;
 }
 
 @theme inline {
@@ -18,6 +19,7 @@
   --color-highlight: var(--highlight);
   --color-mint: var(--mint);
   --color-card: var(--card);
+  --color-destructive: #c45c4a;
   --font-sans: var(--font-plus-jakarta);
 }
 
@@ -61,4 +63,8 @@ body {
 
 @utility pb-safe {
   padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+}
+
+@utility text-destructive {
+  color: var(--destructive);
 }

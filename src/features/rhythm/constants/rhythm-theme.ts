@@ -42,7 +42,7 @@ export const RHYTHM_TIME_SLOT_DOT_COLORS: Record<
 };
 
 export const RHYTHM_LIFETIME_ICON_COLORS = {
-  streak: "text-cta",
+  streak: "text-highlight",
   bestWeek: "text-highlight",
   totalMeals: "text-primary",
 } as const;

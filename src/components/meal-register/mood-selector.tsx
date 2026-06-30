@@ -12,7 +12,7 @@ type MoodSelectorProps = {
 export function MoodSelector({ value, onChange }: MoodSelectorProps) {
   return (
     <section
-      className="flex justify-between gap-2"
+      className="flex justify-between gap-1.5 px-0.5"
       role="radiogroup"
       aria-label="Estado de ánimo"
     >
@@ -30,7 +30,7 @@ export function MoodSelector({ value, onChange }: MoodSelectorProps) {
             className={cn(
               "flex size-12 cursor-pointer items-center justify-center rounded-full text-2xl transition-all",
               selected
-                ? "bg-mint ring-2 ring-primary ring-offset-2 ring-offset-background"
+                ? "bg-mint ring-2 ring-inset ring-primary"
                 : "bg-card hover:bg-mint/40",
             )}
           >

@@ -1,13 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useResolvedMealPhotoUrl } from "@/features/meal-register/hooks/use-resolved-meal-photo-url";
+import { RecipeCoverImage } from "@/features/recipes/components/recipe-cover-image";
 import { getRecipeOriginBadgeStyles } from "@/features/recipes/constants/recipe-filters";
-import { RecipePlaceholderIcon } from "@/features/recipes/constants/recipe-placeholder";
 import { resolveRecipeOriginBadgeId } from "@/features/recipes/utils/resolve-recipe-origin";
+import {
+  formatRecipeDuration,
+  formatRecipeDurationAriaLabel,
+} from "@/features/recipes/utils/format-recipe-duration";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import { cn } from "@/lib/utils";
-import { Heart, Star } from "lucide-react";
+import { Clock, Heart, Star } from "lucide-react";
 
 export const RECIPE_CARD_METADATA_RATING_HEIGHT = "h-3.5";
 const STAR_COUNT = 5;
@@ -130,38 +133,53 @@ export function RecipeCover({
   children,
 }: RecipeCoverProps) {
   const hasCover = Boolean(coverUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedMealPhotoUrl(
-    coverUrl ?? undefined,
-  );
-  const showImage = Boolean(displayUrl) && !isResolving;
 
   return (
     <div
       className={cn(
         "relative w-full shrink-0 overflow-hidden",
-        hasCover ? "bg-foreground/[0.02]" : "bg-transparent",
+        hasCover ? "bg-card" : "bg-transparent",
         aspectClassName,
         className,
       )}
     >
-      {showImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={displayUrl} alt="" className="size-full object-cover" />
-      ) : hasCover && isResolving ? (
-        <span className="block size-full bg-foreground/5" aria-hidden />
-      ) : (
-        <span
-          className="relative flex size-full items-center justify-center"
-          aria-hidden
-        >
-          <RecipePlaceholderIcon
-            className="size-11 text-foreground/[0.07]"
-            strokeWidth={1}
-          />
-        </span>
-      )}
+      <RecipeCoverImage
+        coverUrl={coverUrl}
+        placeholderIconClassName="size-11 text-foreground/[0.09]"
+        placeholderBackgroundClassName="bg-card"
+      />
       {children}
     </div>
+  );
+}
+
+type RecipeCoverDurationBadgeProps = {
+  durationMinutes: number | null | undefined;
+  className?: string;
+};
+
+export function RecipeCoverDurationBadge({
+  durationMinutes,
+  className,
+}: RecipeCoverDurationBadgeProps) {
+  const label = formatRecipeDuration(durationMinutes);
+  const ariaLabel = formatRecipeDurationAriaLabel(durationMinutes);
+
+  if (!label || !ariaLabel) {
+    return null;
+  }
+
+  return (
+    <span
+      className={cn(
+        "absolute bottom-2.5 left-2.5 z-10 inline-flex max-w-[calc(100%-1.25rem)] items-center gap-1 rounded-full border border-foreground/10 bg-background/88 px-2 py-1 text-[11px] font-semibold text-foreground/70 shadow-sm backdrop-blur-md",
+        className,
+      )}
+      aria-label={ariaLabel}
+    >
+      <Clock className="size-3 shrink-0 text-foreground/50" aria-hidden />
+      <span className="truncate tabular-nums">{label}</span>
+    </span>
   );
 }
 
@@ -172,12 +190,15 @@ type RecipeCardMetadataProps = {
 
 export function RecipeCardMetadata({ title, rating }: RecipeCardMetadataProps) {
   return (
-    <div className="flex flex-col gap-0.5 border-t border-foreground/5 px-2.5 py-2">
+    <div className="flex flex-col gap-1 border-t border-foreground/5 px-2.5 py-2.5">
       <p className="line-clamp-2 text-[13px] leading-tight font-semibold text-foreground">
         {title}
       </p>
       <div
-        className={cn("flex items-center", RECIPE_CARD_METADATA_RATING_HEIGHT)}
+        className={cn(
+          "flex items-center justify-start",
+          RECIPE_CARD_METADATA_RATING_HEIGHT,
+        )}
       >
         {rating != null ? <RecipeRatingStars rating={rating} /> : null}
       </div>
