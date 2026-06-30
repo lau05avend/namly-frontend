@@ -9,6 +9,11 @@ import { FormAlert } from "@/components/ui/form-alert";
 import { PlanMealHeader } from "@/features/planner/components/plan-meal/plan-meal-header";
 import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
+import {
+  buildPlannerEntryPath,
+} from "@/lib/navigation/meal-routes";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
 import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 import { usePlanMealForm } from "@/features/planner/hooks/use-plan-meal-form";
 import { useMealTypes } from "@/features/planner/queries/use-meal-types";
@@ -26,12 +31,14 @@ type PlanMealScreenProps = {
   initialDate?: string;
   initialSlot?: string;
   editId?: string;
+  returnTo?: string;
 };
 
 type PlanMealFormProps = {
   defaults: PlanMealDefaults;
   editId?: string;
   previousEntryDate?: string;
+  returnTo?: string;
 };
 
 function parseMealSlot(value?: string): MealSlot | undefined {
@@ -41,8 +48,14 @@ function parseMealSlot(value?: string): MealSlot | undefined {
     : undefined;
 }
 
-function PlanMealForm({ defaults, editId, previousEntryDate }: PlanMealFormProps) {
+function PlanMealForm({
+  defaults,
+  editId,
+  previousEntryDate,
+  returnTo,
+}: PlanMealFormProps) {
   const router = useRouter();
+  const detailReturnPath = useReturnToSearchParam(returnTo);
   const [saveError, setSaveError] = useState<string | null>(null);
   const form = usePlanMealForm(defaults);
   const isEditMode = Boolean(editId);
@@ -61,7 +74,10 @@ function PlanMealForm({ defaults, editId, previousEntryDate }: PlanMealFormProps
           payload: values,
           previousEntryDate,
         });
-        router.replace(`/planner/${editId}?date=${values.date}`);
+        navigateToInternalPath(
+          router,
+          detailReturnPath ?? buildPlannerEntryPath(editId, values.date),
+        );
         return;
       }
 
@@ -82,6 +98,16 @@ function PlanMealForm({ defaults, editId, previousEntryDate }: PlanMealFormProps
           onSave={handleSave}
           isSaving={isSaving}
           isEditMode={isEditMode}
+          onBack={
+            isEditMode
+              ? () =>
+                  navigateToInternalPath(
+                    router,
+                    detailReturnPath ??
+                      buildPlannerEntryPath(editId!, defaults.date),
+                  )
+              : undefined
+          }
         />
         {saveError ? (
           <FormAlert message={saveError} centered className="mx-4 mt-3" />
@@ -96,6 +122,7 @@ export function PlanMealScreen({
   initialDate,
   initialSlot,
   editId,
+  returnTo,
 }: PlanMealScreenProps) {
   const params: PlanMealDefaultsParams = {
     date: initialDate,
@@ -138,6 +165,7 @@ export function PlanMealScreen({
       defaults={defaults}
       editId={editId}
       previousEntryDate={isEditMode ? defaults.date : undefined}
+      returnTo={returnTo}
     />
   );
 }

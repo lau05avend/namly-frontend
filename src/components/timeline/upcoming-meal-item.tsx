@@ -1,5 +1,4 @@
-import { PlannedEntryCard } from "@/components/meal/planned-entry-card";
-import { mapUpcomingMealToPlannerEntry } from "@/features/home/mappers/home-planner-entry.mapper";
+import { HomeUpcomingMealRow } from "@/features/home/components/home-upcoming-meal-row";
 import type { UpcomingMealItem } from "@/features/home/types/home.types";
 
 type UpcomingMealRowProps = {
@@ -8,10 +7,5 @@ type UpcomingMealRowProps = {
 };
 
 export function UpcomingMealRow({ meal, onSelect }: UpcomingMealRowProps) {
-  return (
-    <PlannedEntryCard
-      entry={mapUpcomingMealToPlannerEntry(meal)}
-      onSelect={onSelect}
-    />
-  );
+  return <HomeUpcomingMealRow meal={meal} onPress={onSelect} />;
 }

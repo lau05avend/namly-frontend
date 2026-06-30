@@ -109,6 +109,7 @@ function mapMealToEntry(
         ? formatCountdown(meal.entryDate, meal.plannedTime)
         : undefined,
     badge: isExpress ? PLANNER_COPY.quickNoteBadge : undefined,
+    totalDurationMinutes: isExpress ? null : (meal.totalDurationMinutes ?? null),
     status,
     variant: isExpress ? (variant === "featured" ? "featured" : "note") : variant,
   };

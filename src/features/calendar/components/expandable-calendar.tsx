@@ -113,7 +113,7 @@ export function ExpandableCalendar({
       >
         <motion.div
           layout
-          className="flex flex-col gap-1"
+          className="flex flex-col"
           transition={CALENDAR_LAYOUT_SPRING}
         >
           {weekRows.map((week, rowIndex) => {

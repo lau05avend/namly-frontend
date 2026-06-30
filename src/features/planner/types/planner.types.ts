@@ -17,8 +17,10 @@ export type PlannerEntry = {
   timeLabel: string;
   title: string;
   items?: PlannerEntryItem[];
+  moreRecipeCount?: number;
   countdownLabel?: string;
   badge?: string;
+  totalDurationMinutes?: number | null;
   status: PlannerEntryStatus;
   variant: "featured" | "default" | "note";
 };

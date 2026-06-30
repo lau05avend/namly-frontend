@@ -33,6 +33,7 @@ export function mapNextMealToPlannerEntry(meal: NextMealDetail): PlannerEntry {
     items: kind === "note" ? undefined : items,
     status: "next",
     variant: kind === "note" ? "featured" : "featured",
+    totalDurationMinutes: meal.totalDurationMinutes ?? null,
   };
 }
 
@@ -49,8 +50,10 @@ export function mapUpcomingMealToPlannerEntry(
     timeLabel: meal.timeLabel,
     title: meal.title,
     items: kind === "note" ? undefined : meal.items,
+    moreRecipeCount: meal.moreCount,
     status: "upcoming",
     variant: kind === "note" ? "note" : "default",
+    totalDurationMinutes: meal.totalDurationMinutes ?? null,
   };
 }
 

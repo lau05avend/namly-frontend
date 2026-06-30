@@ -6,12 +6,14 @@ import { PLAN_MEAL_COPY } from "@/features/planner/constants/plan-meal-copy";
 
 type PlanMealHeaderProps = {
   onSave: () => void;
+  onBack?: () => void;
   isSaving?: boolean;
   isEditMode?: boolean;
 };
 
 export function PlanMealHeader({
   onSave,
+  onBack,
   isSaving = false,
   isEditMode = false,
 }: PlanMealHeaderProps) {
@@ -22,7 +24,7 @@ export function PlanMealHeader({
       title={isEditMode ? PLAN_MEAL_COPY.editTitle : PLAN_MEAL_COPY.title}
       backLabel={PLAN_MEAL_COPY.back}
       saveLabel={isEditMode ? PLAN_MEAL_COPY.update : PLAN_MEAL_COPY.save}
-      onBack={() => router.back()}
+      onBack={onBack ?? (() => router.back())}
       onSave={onSave}
       isSaving={isSaving}
     />

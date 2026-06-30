@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { homeQueryKeys } from "@/features/home/constants/query-keys";
 import {
   plannerQueryKeys,
   toMonthKey,
@@ -14,6 +15,7 @@ export function useSavePlanMeal() {
   return useMutation({
     mutationFn: (payload: SavePlanMealPayload) => savePlanMeal(payload),
     onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: homeQueryKeys.all });
       queryClient.invalidateQueries({
         queryKey: plannerQueryKeys.day(variables.date),
       });

@@ -15,7 +15,12 @@ import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { useDeleteScheduledMeal } from "@/features/planner/queries/use-delete-scheduled-meal";
 import { usePlannerScheduledMeal } from "@/features/planner/queries/use-planner-scheduled-meal";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
-import { resolveInternalReturnPath } from "@/lib/navigation/resolve-internal-return-path";
+import {
+  buildPlanMealEditPath,
+  buildPlannerEntryPath,
+} from "@/lib/navigation/meal-routes";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
 
 type PlannerEntryDetailScreenProps = {
   scheduledMealId: string;
@@ -31,7 +36,7 @@ export function PlannerEntryDetailScreen({
   const router = useRouter();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteScheduledMeal();
-  const safeReturnTo = resolveInternalReturnPath(returnTo);
+  const safeReturnTo = useReturnToSearchParam(returnTo);
   const { data: detail, isPending, isError } = usePlannerScheduledMeal(
     scheduledMealId,
   );
@@ -40,7 +45,7 @@ export function PlannerEntryDetailScreen({
 
   const handleBack = () => {
     if (safeReturnTo) {
-      router.replace(safeReturnTo);
+      navigateToInternalPath(router, safeReturnTo);
       return;
     }
 
@@ -48,9 +53,13 @@ export function PlannerEntryDetailScreen({
   };
 
   const handleEdit = useCallback(() => {
-    const params = new URLSearchParams({ edit: scheduledMealId });
-    router.push(`/planner/plan?${params.toString()}`);
-  }, [router, scheduledMealId]);
+    router.push(
+      buildPlanMealEditPath(
+        scheduledMealId,
+        buildPlannerEntryPath(scheduledMealId, plannerDateKey, safeReturnTo),
+      ),
+    );
+  }, [plannerDateKey, router, safeReturnTo, scheduledMealId]);
 
   const handleDelete = useCallback(async () => {
     if (!detail) {
@@ -64,7 +73,10 @@ export function PlannerEntryDetailScreen({
       });
       setIsDeleteOpen(false);
       toast.success(PLANNER_COPY.detail.deletePlanSuccess);
-      router.replace(safeReturnTo ?? `/planner?date=${detail.entryDate}`);
+      navigateToInternalPath(
+        router,
+        safeReturnTo ?? `/planner?date=${detail.entryDate}`,
+      );
     } catch (error) {
       toast.error(
         getUserFacingErrorMessage(error, PLANNER_COPY.detail.deletePlanError),

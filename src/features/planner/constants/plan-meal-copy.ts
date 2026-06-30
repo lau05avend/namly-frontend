@@ -56,6 +56,7 @@ export const PLAN_MEAL_COPY = {
       `${countLabel} · ${duration} en total`,
     menuSummaryWithPartialDuration: (countLabel: string, duration: string) =>
       `${countLabel} · ${duration} en total`,
+    prepDuration: (duration: string) => `${duration} prep.`,
     noDuration: RECIPE_NO_DURATION_LABEL,
   },
   express: {

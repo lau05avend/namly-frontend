@@ -37,6 +37,7 @@ function buildSummary(referenceDate: Date): HomeSummary {
         { id: "item-11", label: "Plátano" },
       ],
       moreCount: 1,
+      totalDurationMinutes: 45,
     },
     streak: {
       currentDays: 12,
@@ -55,6 +56,7 @@ function buildSummary(referenceDate: Date): HomeSummary {
           { id: "up-1", label: "Sopa de lentejas" },
           { id: "up-2", label: "Pan integral" },
         ],
+        totalDurationMinutes: 35,
       },
       {
         id: "meal-up-2",
@@ -63,6 +65,7 @@ function buildSummary(referenceDate: Date): HomeSummary {
         timeLabel: "5:00 PM",
         title: "Yogurt con frutos rojos",
         items: [{ id: "up-3", label: "Yogurt con frutos rojos" }],
+        totalDurationMinutes: null,
       },
     ],
     registeredToday: {
@@ -91,7 +94,8 @@ function buildSummary(referenceDate: Date): HomeSummary {
     recommendation: {
       id: "rec-1",
       title: "Ensalada de quinoa y aguacate",
-      meta: "Colombiana · Vegetariana · 20 min",
+      meta: "Colombiana · Vegetariana · Sin horno",
+      totalDurationMinutes: 20,
       imageUrl:
         "https://ngixldapgdqvhmznylpw.supabase.co/storage/v1/object/sign/meal-logs-photos/65c752ed-7e71-45d0-9cb8-42b5ea2c3881/ensalada-de-quinoa-con-aguacate-y-cherrys.jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8xMWM0MDA5Yi1hNjE1LTQ0ZjgtYjNkYi04OWU3N2Y0NTVjNGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZWFsLWxvZ3MtcGhvdG9zLzY1Yzc1MmVkLTdlNzEtNDVkMC05Y2I4LTQyYjVlYTJjMzg4MS9lbnNhbGFkYS1kZS1xdWlub2EtY29uLWFndWFjYXRlLXktY2hlcnJ5cy5qcGVnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MjI2NzkwMywiZXhwIjoxODEzODAzOTAzfQ.VfN6NRXAvdC8zGPgTCWwGgXgELlYEyPEqD6PdGJaupQ",
     },

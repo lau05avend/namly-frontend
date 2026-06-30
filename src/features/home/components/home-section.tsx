@@ -9,6 +9,7 @@ import { useState, type ReactNode } from "react";
 type HomeSectionProps = {
   title: string;
   subtitle?: string;
+  titleVariant?: "default" | "utility" | "utility-accent" | "utility-primary";
   collapsible?: boolean;
   defaultExpanded?: boolean;
   children: ReactNode;
@@ -18,6 +19,7 @@ type HomeSectionProps = {
 export function HomeSection({
   title,
   subtitle,
+  titleVariant = "default",
   collapsible = false,
   defaultExpanded = true,
   children,
@@ -31,13 +33,23 @@ export function HomeSection({
 
   const headerContent = (
     <div className="flex min-w-0 flex-1 flex-col gap-1">
-      <HomeSectionTitle title={title} />
+      <HomeSectionTitle title={title} variant={titleVariant} />
       {subtitleNode}
     </div>
   );
 
   return (
-    <section className={cn("flex flex-col gap-3.5", className)}>
+    <section
+      className={cn(
+        "flex flex-col",
+        titleVariant === "utility" ||
+        titleVariant === "utility-accent" ||
+        titleVariant === "utility-primary"
+          ? "gap-2.5"
+          : "gap-3.5",
+        className,
+      )}
+    >
       {collapsible ? (
         <button
           type="button"

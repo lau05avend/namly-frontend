@@ -14,14 +14,23 @@ import type { CreateRecipeFormValues } from "@/features/recipes/schemas/create-r
 import { useMealPhotoPicker } from "@/features/meal-register/hooks/use-meal-photo-picker";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import { getFirstFieldErrorMessage } from "@/lib/form/get-first-field-error-message";
+import { buildRecipeDetailPath } from "@/lib/navigation/meal-routes";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
+import { useReturnToSearchParam } from "@/lib/navigation/use-return-to-search-param";
 
 type EditRecipeFormProps = {
   recipeId: string;
   initialValues: CreateRecipeFormValues;
+  returnTo?: string;
 };
 
-function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
+function EditRecipeForm({
+  recipeId,
+  initialValues,
+  returnTo,
+}: EditRecipeFormProps) {
   const router = useRouter();
+  const detailReturnPath = useReturnToSearchParam(returnTo);
   const form = useCreateRecipeForm(initialValues);
   const photoPicker = useMealPhotoPicker({
     initialRemoteMediaUrl: initialValues.coverUrl,
@@ -51,7 +60,10 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
         existingCoverUrl: photoPicker.actions.getExistingMediaUrl() ?? undefined,
       });
 
-      router.replace(`/recipes/${recipeId}`);
+      navigateToInternalPath(
+        router,
+        detailReturnPath ?? buildRecipeDetailPath(recipeId),
+      );
     } catch (error) {
       const message = getUserFacingErrorMessage(
         error,
@@ -73,6 +85,12 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
           title={copy.title}
           saveLabel={copy.save}
           isSaving={updateMutation.isPending}
+          onBack={() =>
+            navigateToInternalPath(
+              router,
+              detailReturnPath ?? buildRecipeDetailPath(recipeId),
+            )
+          }
         />
         {saveError ? (
           <FormAlert message={saveError} centered className="mx-4 mt-3" />
@@ -86,17 +104,20 @@ function EditRecipeForm({ recipeId, initialValues }: EditRecipeFormProps) {
 type EditRecipeScreenProps = {
   recipeId: string;
   initialValues: CreateRecipeFormValues;
+  returnTo?: string;
 };
 
 export function EditRecipeScreen({
   recipeId,
   initialValues,
+  returnTo,
 }: EditRecipeScreenProps) {
   return (
     <EditRecipeForm
       key={recipeId}
       recipeId={recipeId}
       initialValues={initialValues}
+      returnTo={returnTo}
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { RECIPES_COPY } from "@/features/recipes/constants/recipes-copy";
+import { navigateToInternalPath } from "@/lib/navigation/to-app-navigation-href";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 
@@ -34,7 +35,7 @@ export function RecipeDetailHeader({
     }
 
     if (returnTo) {
-      router.replace(returnTo);
+      navigateToInternalPath(router, returnTo);
       return;
     }
 

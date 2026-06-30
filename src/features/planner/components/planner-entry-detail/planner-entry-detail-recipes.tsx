@@ -6,7 +6,10 @@ import { PLANNER_COPY } from "@/features/planner/constants/planner-copy";
 import { PLANNER_DETAIL_SECTION_CLASS } from "@/features/planner/constants/planner-detail-surfaces";
 import type { PlannerScheduledMealRecipe } from "@/features/planner/types/planner-detail.types";
 import { buildMenuSummaryDescription } from "@/features/planner/utils/plan-menu-summary.utils";
-import { buildPlannerEntryPath } from "@/lib/navigation/meal-routes";
+import {
+  buildPlannerEntryPath,
+  buildRecipeDetailPath,
+} from "@/lib/navigation/meal-routes";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -42,11 +45,9 @@ export function PlannerEntryDetailRecipes({
       return;
     }
 
-    const params = new URLSearchParams({
-      returnTo: plannerReturnTo,
-    });
-
-    router.push(`/recipes/${recipe.recipeId}?${params.toString()}`);
+    router.push(
+      buildRecipeDetailPath(recipe.recipeId, plannerReturnTo),
+    );
   };
 
   const menuSummaryLabel = buildMenuSummaryDescription(recipes);

@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { PlannerEntryDetailScreen } from "@/features/planner/components/planner-entry-detail/planner-entry-detail-screen";
+import { PlannerLoading } from "@/features/planner/components/planner-loading";
 import { parseDateKey } from "@/features/calendar/utils/date";
 import { redirect } from "next/navigation";
 
@@ -33,10 +35,18 @@ export default async function PlannerEntryDetailPage({
   }
 
   return (
-    <PlannerEntryDetailScreen
-      scheduledMealId={id}
-      dateKey={date}
-      returnTo={returnTo}
-    />
+    <Suspense
+      fallback={
+        <div className="mx-auto min-h-dvh w-full max-w-lg px-4 py-10">
+          <PlannerLoading variant="compact" />
+        </div>
+      }
+    >
+      <PlannerEntryDetailScreen
+        scheduledMealId={id}
+        dateKey={date}
+        returnTo={returnTo}
+      />
+    </Suspense>
   );
 }

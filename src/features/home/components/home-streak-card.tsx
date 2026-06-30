@@ -46,10 +46,10 @@ export function HomeStreakCard({
           aria-valuenow={clampedProgress}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="h-2 overflow-hidden rounded-full bg-cta/12"
+          className="h-2 overflow-hidden rounded-full bg-highlight/25"
         >
           <span
-            className="block h-full rounded-full bg-cta/70 transition-all"
+            className="block h-full rounded-full bg-highlight transition-all"
             style={{ width: `${clampedProgress}%` }}
           />
         </div>
