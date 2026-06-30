@@ -53,10 +53,10 @@ export const PLAN_MEAL_COPY = {
     menuSummaryCount: (count: number) =>
       count === 1 ? "1 receta" : `${count} recetas`,
     menuSummaryWithDuration: (countLabel: string, duration: string) =>
-      `${countLabel} · ${duration} en total`,
+      `${countLabel} · ${duration} aproximadamente`,
     menuSummaryWithPartialDuration: (countLabel: string, duration: string) =>
-      `${countLabel} · ${duration} en total`,
-    prepDuration: (duration: string) => `${duration} prep.`,
+      `${countLabel} · ${duration} aproximadamente`,
+    prepDuration: (duration: string) => `${duration} aprox.`,
     noDuration: RECIPE_NO_DURATION_LABEL,
   },
   express: {
