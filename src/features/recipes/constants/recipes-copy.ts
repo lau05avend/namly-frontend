@@ -82,6 +82,19 @@ export const RECIPES_COPY = {
     },
     compatibilityWarning:
       "Esta receta contiene ingredientes que pueden no ser compatibles con tus preferencias.",
+    compatibility: {
+      intro:
+        "Esta receta puede no ser compatible con tus preferencias:",
+      allergen: (label: string, ingredients: string[]) =>
+        ingredients.length > 0
+          ? `Alergia a ${label}: detectado en ${ingredients.join(", ")}`
+          : `Alergia a ${label}`,
+      diet: (label: string) => `No está etiquetada como ${label}`,
+      custom: (label: string, ingredients: string[]) =>
+        ingredients.length > 0
+          ? `${label}: detectado en ${ingredients.join(", ")}`
+          : label,
+    },
     ingredientsEmpty: "Esta receta aún no tiene ingredientes.",
     preparationEmpty: "Esta receta aún no tiene pasos de preparación.",
     ratingOf: (rating: number) => `${rating} de 5`,

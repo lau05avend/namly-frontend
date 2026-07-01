@@ -1,3 +1,12 @@
+export type RecipeCompatibilityConflictType = "allergen" | "diet" | "custom";
+
+export type RecipeCompatibilityConflict = {
+  type: RecipeCompatibilityConflictType;
+  label: string;
+  tagId: string | null;
+  matchedIngredients: string[];
+};
+
 export type RecipeDetailTag = {
   id: string;
   name: string;
@@ -5,6 +14,7 @@ export type RecipeDetailTag = {
 };
 
 export type RecipeDetailIngredient = {
+  id: string;
   name: string;
   quantity: number;
   unitAbbreviation: string;
@@ -27,6 +37,8 @@ export type RecipeDetail = {
   authorAvatarUrl: string | null;
   sourceLabel: string | null;
   hasCompatibilityWarning: boolean;
+  compatibilityConflicts: RecipeCompatibilityConflict[];
+  flaggedIngredientIds: string[];
   canEdit: boolean;
   canDelete: boolean;
   tags: RecipeDetailTag[];

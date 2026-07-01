@@ -66,7 +66,9 @@ export function RecipeDetailHero({
             ) : null}
 
             {recipe.hasCompatibilityWarning ? (
-              <RecipeDetailCompatibilityWarning />
+              <RecipeDetailCompatibilityWarning
+                conflicts={recipe.compatibilityConflicts}
+              />
             ) : null}
 
             {recipe.sourceLabel || recipe.authorName ? (

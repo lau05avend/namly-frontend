@@ -48,7 +48,10 @@ export function RecipeDetailBodyTabs({
 
       {activeTab === "cook" ? (
         <div className="flex flex-col gap-7">
-          <RecipeDetailIngredientsSection ingredients={recipe.ingredients} />
+          <RecipeDetailIngredientsSection
+            ingredients={recipe.ingredients}
+            flaggedIngredientIds={recipe.flaggedIngredientIds}
+          />
           <RecipeDetailPreparationSection steps={recipe.steps} />
         </div>
       ) : (

@@ -2,6 +2,15 @@ import type { RecipeInteractionsApiDto } from "@/features/recipes/types/recipe-i
 import type { RecipeDetail } from "@/features/recipes/types/recipe-detail.types";
 import type { RecipeInteractions } from "@/features/recipes/types/recipe-interactions.types";
 
+export type RecipeCompatibilityConflictType = "allergen" | "diet" | "custom";
+
+export type RecipeCompatibilityConflictApiDto = {
+  type: RecipeCompatibilityConflictType;
+  label: string;
+  tagId: string | null;
+  matchedIngredients: string[];
+};
+
 export type RecipeDetailTagApiDto = {
   id: string;
   category: string;
@@ -49,6 +58,9 @@ export type RecipeDetailApiDto = {
   interaction: RecipeInteractionsApiDto;
   canEdit?: boolean;
   canDelete?: boolean;
+  hasCompatibilityWarning?: boolean;
+  compatibilityConflicts?: RecipeCompatibilityConflictApiDto[];
+  flaggedIngredientIds?: string[];
 };
 
 export type RecipeDetailPage = {

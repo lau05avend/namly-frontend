@@ -16,10 +16,24 @@ function resolveSourceLabel(
   return null;
 }
 
+function mapCompatibilityConflict(
+  dto: NonNullable<RecipeDetailApiDto["compatibilityConflicts"]>[number],
+): RecipeDetail["compatibilityConflicts"][number] {
+  return {
+    type: dto.type,
+    label: dto.label.trim(),
+    tagId: dto.tagId,
+    matchedIngredients: (dto.matchedIngredients ?? []).map((name) =>
+      name.trim(),
+    ),
+  };
+}
+
 function mapIngredient(
   dto: RecipeDetailApiDto["ingredients"][number],
 ): RecipeDetail["ingredients"][number] {
   return {
+    id: dto.id,
     name: dto.name.trim(),
     quantity: dto.quantity ?? 0,
     unitAbbreviation:
@@ -43,7 +57,11 @@ export function mapRecipeDetailApiToPage(dto: RecipeDetailApiDto): RecipeDetailP
     authorName: null,
     authorAvatarUrl: null,
     sourceLabel: resolveSourceLabel(summary),
-    hasCompatibilityWarning: false,
+    hasCompatibilityWarning: dto.hasCompatibilityWarning ?? false,
+    compatibilityConflicts: (dto.compatibilityConflicts ?? []).map(
+      mapCompatibilityConflict,
+    ),
+    flaggedIngredientIds: dto.flaggedIngredientIds ?? [],
     canEdit: summary.canEdit ?? dto.canEdit ?? false,
     canDelete: summary.canDelete ?? dto.canDelete ?? false,
     tags: (dto.tags ?? []).map((tag) => ({
