@@ -16,6 +16,7 @@ import { RecommendationCard } from "@/features/home/components/recommendation-ca
 import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { HomeUpcomingMealRow } from "@/features/home/components/home-upcoming-meal-row";
 import { HOME_HERO_CARD_HEIGHT } from "@/features/home/constants/home-hero-surfaces";
+import { GuestTrialBanner } from "@/features/auth/components/guest-trial-banner";
 import type { HomeSummary } from "@/features/home/types/home.types";
 
 type HomeTodayViewProps = {
@@ -41,6 +42,8 @@ export function HomeTodayView({ summary }: HomeTodayViewProps) {
 
   return (
     <div className="flex flex-col gap-6 pb-2">
+      <GuestTrialBanner />
+
       <section aria-label="Resumen del día">
         <div className="grid grid-cols-5 grid-rows-[auto_1fr] gap-x-3 gap-y-2">
           <div className="col-span-3" aria-hidden />

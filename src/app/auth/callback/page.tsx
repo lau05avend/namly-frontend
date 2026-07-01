@@ -7,6 +7,7 @@ import { BRAND_SPLASH_COPY } from "@/components/brand/brand-assets";
 import { clearOnboardingFlow } from "@/features/onboarding/constants/onboarding-flow-storage";
 import { resolvePostAuthDestination } from "@/features/onboarding/utils/post-auth-redirect";
 import { resolveGoogleDisplayName } from "@/features/profile/utils/resolve-google-display-name";
+import { saveGuestSessionState } from "@/lib/auth/guest-session";
 import { supabase } from "@/lib/supabase/client";
 
 function redirectTo(path: string) {
@@ -68,9 +69,13 @@ function AuthCallbackHandler() {
           const displayName = resolveGoogleDisplayName(
             session.user.user_metadata,
           );
-          const destination = await resolvePostAuthDestination(
+          const { destination, bootstrap } = await resolvePostAuthDestination(
             displayName || undefined,
           );
+          saveGuestSessionState({
+            isGuest: bootstrap.isGuest,
+            guestExpiresAt: bootstrap.guestExpiresAt,
+          });
           redirectTo(destination);
         } catch {
           redirectTo("/home");

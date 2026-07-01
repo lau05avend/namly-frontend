@@ -17,6 +17,7 @@ import {
 } from "@/features/recipes/utils/recipe-tag.utils";
 import { tagQueryKeys } from "@/features/tags/constants/query-keys";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
+import { useAuth } from "@/hooks/use-auth";
 import {
   createRecipeTags,
   RECIPE_TAG_CATEGORY,
@@ -96,6 +97,7 @@ export function RecipeTagPicker({
   isError = false,
 }: RecipeTagPickerProps) {
   const copy = RECIPES_COPY.create.tags;
+  const { isGuest } = useAuth();
   const queryClient = useQueryClient();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -422,18 +424,20 @@ export function RecipeTagPicker({
           </div>
 
           <div className="flex flex-wrap gap-1.5">
-            <CreateTagChip
-              label={creationChipLabel}
-              variant={trimmedSearch && canAddFromSearch ? "create" : "subtle"}
-              disabled={
-                isCreatingTag ||
-                creatingTagName != null ||
-                (Boolean(trimmedSearch) && !canAddFromSearch)
-              }
-              onClick={handleCreateChipClick}
-            />
+            {isGuest ? null : (
+              <CreateTagChip
+                label={creationChipLabel}
+                variant={trimmedSearch && canAddFromSearch ? "create" : "subtle"}
+                disabled={
+                  isCreatingTag ||
+                  creatingTagName != null ||
+                  (Boolean(trimmedSearch) && !canAddFromSearch)
+                }
+                onClick={handleCreateChipClick}
+              />
+            )}
 
-            {creatingTagName != null ? (
+            {!isGuest && creatingTagName != null ? (
               <RecipeTagChip
                 tag={{
                   id: CREATING_TAG_ID,
@@ -458,7 +462,7 @@ export function RecipeTagPicker({
                   key={tag.id}
                   tag={draftTag ?? tag}
                   selected={selected}
-                  editable={selected}
+                  editable={selected && !isGuest}
                   isEditing={editingTagId === tag.id}
                   onEditStart={() => handleEditStart(tag.id)}
                   onEditEnd={handleEditEnd}

@@ -72,6 +72,8 @@ Ninguno de los dos se commitea (están en `.gitignore`). Usa el que prefieras en
 Variables requeridas (ver comentarios en `.env.example`):
 
 - `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` — proyecto Supabase (auth y storage)
+- Modo prueba (7 días sin cuenta): en Supabase → **Authentication → Sign In / Providers → User Signups**, activa **Allow anonymous sign-ins** y **Allow manual linking** (este último es necesario para que un invitado pueda crear cuenta con Google sin perder datos). Pulsa **Save changes** en cada cambio.
+- `NEXT_PUBLIC_GUEST_MODE_ENABLED` — opcional; pon `false` para ocultar el CTA de invitado
 - `NEXT_PUBLIC_SUPABASE_AVATAR_BUCKET` y `NEXT_PUBLIC_SUPABASE_MEAL_PHOTO_BUCKET` — buckets de storage
 - `NEXT_PUBLIC_BACKEND_API_URL` — API NestJS
 - `NEXT_PUBLIC_FRONTEND_URL` — URL pública del frontend (redirects OAuth)

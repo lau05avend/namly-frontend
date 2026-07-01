@@ -7,6 +7,7 @@ export type Profile = {
 
 export type BootstrapUserPayload = {
   displayName?: string;
+  deviceId?: string;
 };
 
 export type BootstrapUserResponse = {
@@ -14,6 +15,9 @@ export type BootstrapUserResponse = {
   displayName: string;
   email: string;
   isNewUser: boolean;
+  isGuest: boolean;
+  guestExpiresAt: string | null;
+  hasCompletedOnboarding: boolean;
 };
 
 export type UpdateProfilePayload = {

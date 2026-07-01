@@ -7,12 +7,13 @@ import { ProfileLoading } from "@/features/profile/components/profile-loading";
 import { ProfileSettingsList } from "@/features/profile/components/profile-settings-list";
 import { ProfileSummary } from "@/features/profile/components/profile-summary";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
+import { GuestTrialBanner } from "@/features/auth/components/guest-trial-banner";
 import { useProfile } from "@/features/profile/queries/use-profile";
 import { useAuth } from "@/hooks/use-auth";
 
 export function ProfileScreen() {
   const router = useRouter();
-  const { signOut } = useAuth();
+  const { signOut, isGuest } = useAuth();
   const { data: profile, isPending, isError, refetch } = useProfile();
   const [isSigningOut, setIsSigningOut] = useState(false);
 
@@ -59,6 +60,7 @@ export function ProfileScreen() {
 
         {profile ? (
           <>
+            <GuestTrialBanner />
             <ProfileSummary profile={profile} />
             <ProfileSettingsList
               onEditProfile={() => router.push("/profile/edit")}
@@ -66,6 +68,7 @@ export function ProfileScreen() {
               onManageMealTypes={() => router.push("/profile/meal-types")}
               onSignOut={() => void handleSignOut()}
               isSigningOut={isSigningOut}
+              showMealTypesManagement={!isGuest}
             />
           </>
         ) : null}

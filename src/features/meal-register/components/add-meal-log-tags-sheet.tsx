@@ -10,6 +10,7 @@ import {
   recipeTagNameExists,
 } from "@/features/recipes/utils/recipe-tag.utils";
 import { REGISTER_MEAL_COPY } from "@/features/meal-register/constants/register-meal-copy";
+import { useAuth } from "@/hooks/use-auth";
 import type { RegisterTagFormValue } from "@/features/meal-register/schemas/register-meal.schema";
 import { createRegisterItemId } from "@/features/meal-register/utils/register-item-id";
 import type { Tag } from "@/features/tags/types/tag.types";
@@ -95,6 +96,7 @@ export function AddMealLogTagsSheet({
   selectedTags,
   onConfirm,
 }: AddMealLogTagsSheetProps) {
+  const { isGuest } = useAuth();
   const [search, setSearch] = useState("");
   const [draftTags, setDraftTags] = useState<RegisterTagFormValue[]>([]);
   const [creatingTagName, setCreatingTagName] = useState<string | null>(null);
@@ -251,17 +253,19 @@ export function AddMealLogTagsSheet({
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          <CreateTagChip
-            label={creationChipLabel}
-            variant={trimmedSearch && canAddFromSearch ? "create" : "subtle"}
-            disabled={
-              creatingTagName != null ||
-              (Boolean(trimmedSearch) && !canAddFromSearch)
-            }
-            onClick={handleCreateChipClick}
-          />
+          {isGuest ? null : (
+            <CreateTagChip
+              label={creationChipLabel}
+              variant={trimmedSearch && canAddFromSearch ? "create" : "subtle"}
+              disabled={
+                creatingTagName != null ||
+                (Boolean(trimmedSearch) && !canAddFromSearch)
+              }
+              onClick={handleCreateChipClick}
+            />
+          )}
 
-          {creatingTagName != null ? (
+          {!isGuest && creatingTagName != null ? (
             <RecipeTagChip
               tag={{
                 id: CREATING_TAG_ID,

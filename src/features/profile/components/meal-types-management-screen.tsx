@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -34,6 +34,7 @@ import {
 } from "@/features/planner/utils/meal-type-order";
 import { EditProfileHeader } from "@/features/profile/components/edit-profile-header";
 import { PROFILE_SURFACES } from "@/features/profile/constants/profile-surfaces";
+import { useAuth } from "@/hooks/use-auth";
 import { getUserFacingErrorMessage } from "@/lib/api/get-user-facing-error-message";
 import {
   resolveMealTypesBackLabel,
@@ -55,6 +56,7 @@ export function MealTypesManagementScreen({
   returnTo,
 }: MealTypesManagementScreenProps) {
   const router = useRouter();
+  const { isGuest, loading: authLoading } = useAuth();
   const safeReturnTo = resolveInternalReturnPath(returnTo);
   const backLabel = resolveMealTypesBackLabel(safeReturnTo);
   const { data: mealTypes, isPending, isError, refetch } = useMealTypes();
@@ -78,6 +80,14 @@ export function MealTypesManagementScreen({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  useEffect(() => {
+    if (authLoading || !isGuest) {
+      return;
+    }
+
+    router.replace("/profile");
+  }, [authLoading, isGuest, router]);
 
   const handleBack = () => {
     if (safeReturnTo) {

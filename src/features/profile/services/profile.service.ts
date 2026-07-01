@@ -8,6 +8,9 @@ import type {
 
 type BootstrapUserApiResponse = BootstrapUserResponse & {
   is_new_user?: boolean;
+  is_guest?: boolean;
+  guest_expires_at?: string | null;
+  has_completed_onboarding?: boolean;
 };
 
 function normalizeBootstrapResponse(
@@ -18,6 +21,10 @@ function normalizeBootstrapResponse(
     displayName: raw.displayName,
     email: raw.email,
     isNewUser: raw.isNewUser ?? raw.is_new_user ?? false,
+    isGuest: raw.isGuest ?? raw.is_guest ?? false,
+    guestExpiresAt: raw.guestExpiresAt ?? raw.guest_expires_at ?? null,
+    hasCompletedOnboarding:
+      raw.hasCompletedOnboarding ?? raw.has_completed_onboarding ?? false,
   };
 }
 

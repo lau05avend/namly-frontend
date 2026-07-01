@@ -19,6 +19,7 @@ type ProfileSettingsListProps = {
   onManageMealTypes: () => void;
   onSignOut: () => void;
   isSigningOut?: boolean;
+  showMealTypesManagement?: boolean;
 };
 
 export function ProfileSettingsList({
@@ -27,6 +28,7 @@ export function ProfileSettingsList({
   onManageMealTypes,
   onSignOut,
   isSigningOut = false,
+  showMealTypesManagement = true,
 }: ProfileSettingsListProps) {
   return (
     <div className="flex flex-col gap-5">
@@ -62,15 +64,17 @@ export function ProfileSettingsList({
         />
       </ProfileSettingsGroup>
 
-      <ProfileSettingsGroup title={PROFILE_COPY.sections.mealTypes}>
-        <ProfileSettingsRow
-          title={PROFILE_COPY.mealTypes.title}
-          subtitle={PROFILE_COPY.mealTypes.subtitle}
-          icon={LayoutList}
-          onSelect={onManageMealTypes}
-          isLast
-        />
-      </ProfileSettingsGroup>
+      {showMealTypesManagement ? (
+        <ProfileSettingsGroup title={PROFILE_COPY.sections.mealTypes}>
+          <ProfileSettingsRow
+            title={PROFILE_COPY.mealTypes.title}
+            subtitle={PROFILE_COPY.mealTypes.subtitle}
+            icon={LayoutList}
+            onSelect={onManageMealTypes}
+            isLast
+          />
+        </ProfileSettingsGroup>
+      ) : null}
 
       <ProfileSettingsGroup title={PROFILE_COPY.sections.appPreferences}>
         <ProfileSettingsRow

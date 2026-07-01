@@ -21,6 +21,7 @@ import {
   buildMealTypesManagementPath,
   resolveFormReturnPath,
 } from "@/lib/navigation/meal-types-return";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { Check, Plus, Search } from "lucide-react";
 
@@ -38,6 +39,7 @@ export function SelectMealTypeSheet({
   onSelect,
 }: SelectMealTypeSheetProps) {
   const router = useRouter();
+  const { isGuest } = useAuth();
   const { data: mealTypes, isPending, isError } = useMealTypes();
   const createMutation = useCreateMealType();
   const [search, setSearch] = useState("");
@@ -166,6 +168,7 @@ export function SelectMealTypeSheet({
   };
 
   const isCreatingChipDisabled =
+    isGuest ||
     createMutation.isPending ||
     creatingMealTypeName != null ||
     (Boolean(trimmedSearch) && !canAddFromSearch);
@@ -177,9 +180,11 @@ export function SelectMealTypeSheet({
       title={MEAL_TYPES_COPY.selectSheet.title}
       description={MEAL_TYPES_COPY.selectSheet.subtitle}
       headerAccessory={
-        <div className="flex justify-center">
-          <MealTypeSettingsLink onPress={handleManageTypes} />
-        </div>
+        isGuest ? null : (
+          <div className="flex justify-center">
+            <MealTypeSettingsLink onPress={handleManageTypes} />
+          </div>
+        )
       }
       compact
       scrollableContent={false}
@@ -200,28 +205,30 @@ export function SelectMealTypeSheet({
             />
           </div>
 
-          <button
-            type="button"
-            disabled={isCreatingChipDisabled}
-            onClick={handleCreateChipClick}
-            className={cn(
-              "inline-flex w-full cursor-pointer items-center gap-2 rounded-2xl border border-dashed px-3 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
-              isCreatingChipDisabled
-                ? "border-foreground/10 bg-card/40 text-foreground/30"
-                : trimmedSearch && canAddFromSearch
-                  ? "border-primary/30 bg-mint/20 text-primary hover:bg-mint/30"
-                  : "border-foreground/12 bg-card/60 text-foreground/50 hover:border-foreground/18 hover:bg-card hover:text-foreground/65",
-            )}
-          >
-            <Plus
+          {isGuest ? null : (
+            <button
+              type="button"
+              disabled={isCreatingChipDisabled}
+              onClick={handleCreateChipClick}
               className={cn(
-                "size-4 shrink-0",
-                isCreatingChipDisabled ? "text-foreground/30" : "text-primary",
+                "inline-flex w-full cursor-pointer items-center gap-2 rounded-2xl border border-dashed px-3 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+                isCreatingChipDisabled
+                  ? "border-foreground/10 bg-card/40 text-foreground/30"
+                  : trimmedSearch && canAddFromSearch
+                    ? "border-primary/30 bg-mint/20 text-primary hover:bg-mint/30"
+                    : "border-foreground/12 bg-card/60 text-foreground/50 hover:border-foreground/18 hover:bg-card hover:text-foreground/65",
               )}
-              aria-hidden
-            />
-            {creationChipLabel}
-          </button>
+            >
+              <Plus
+                className={cn(
+                  "size-4 shrink-0",
+                  isCreatingChipDisabled ? "text-foreground/30" : "text-primary",
+                )}
+                aria-hidden
+              />
+              {creationChipLabel}
+            </button>
+          )}
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto py-3 pb-4">

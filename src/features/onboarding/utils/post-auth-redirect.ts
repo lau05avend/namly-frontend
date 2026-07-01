@@ -1,33 +1,36 @@
-import { bootstrapUser, fetchProfile } from "@/features/profile/services/profile.service";
-import type {
-  BootstrapUserResponse,
-  Profile,
-} from "@/features/profile/types/profile.types";
+import type { BootstrapUserResponse } from "@/features/profile/types/profile.types";
+import { getOrCreateDeviceId } from "@/lib/auth/device-id";
+import { bootstrapUser } from "@/features/profile/services/profile.service";
 
-export type PostAuthDestination =
-  | "/onboarding/welcome"
-  | "/home";
+export type PostAuthDestination = "/onboarding/welcome" | "/home";
 
-export function resolvePostAuthDestinationFromContext(
+export function resolvePostAuthDestinationFromBootstrap(
   bootstrap: BootstrapUserResponse,
-  profile: Profile,
 ): PostAuthDestination {
-  if (!bootstrap.isNewUser) {
+  if (bootstrap.hasCompletedOnboarding) {
     return "/home";
   }
 
-  if (profile.hasCompletedOnboarding) {
-    return "/home";
+  if (bootstrap.isNewUser) {
+    return "/onboarding/welcome";
   }
 
-  return "/onboarding/welcome";
+  return "/home";
 }
 
 export async function resolvePostAuthDestination(
   displayName?: string,
-): Promise<PostAuthDestination> {
-  const bootstrap = await bootstrapUser(displayName ? { displayName } : {});
-  const profile = await fetchProfile();
+): Promise<{
+  destination: PostAuthDestination;
+  bootstrap: BootstrapUserResponse;
+}> {
+  const bootstrap = await bootstrapUser({
+    deviceId: getOrCreateDeviceId(),
+    ...(displayName ? { displayName } : {}),
+  });
 
-  return resolvePostAuthDestinationFromContext(bootstrap, profile);
+  return {
+    destination: resolvePostAuthDestinationFromBootstrap(bootstrap),
+    bootstrap,
+  };
 }
