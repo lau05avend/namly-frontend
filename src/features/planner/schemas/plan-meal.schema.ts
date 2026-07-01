@@ -12,8 +12,11 @@ export const planRecipeSchema = z.object({
 
 export const planReminderSchema = z.object({
   id: z.string(),
-  label: z.string().min(1, "Escribe el recordatorio"),
-  enabled: z.boolean(),
+  offsetMinutes: z
+    .number()
+    .int()
+    .min(0, "El recordatorio debe ser válido")
+    .max(1440, "El recordatorio debe ser válido"),
 });
 
 export const planMealFormSchema = z
@@ -32,6 +35,17 @@ export const planMealFormSchema = z
       ctx.addIssue({
         code: "custom",
         message: "Máximo 3 recordatorios",
+        path: ["reminders"],
+      });
+    }
+
+    const offsets = values.reminders.map((reminder) => reminder.offsetMinutes);
+    const uniqueOffsets = new Set(offsets);
+
+    if (uniqueOffsets.size !== offsets.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "No puedes repetir el mismo recordatorio",
         path: ["reminders"],
       });
     }

@@ -99,6 +99,9 @@ export function mapScheduledMealDetail(
       coverUrl: recipe.coverUrl,
       durationMinutes: recipe.durationMinutes ?? null,
     })),
+    reminders: (meal.reminders ?? []).map((reminder) => ({
+      offsetMinutes: reminder.offsetMinutes,
+    })),
     headline: resolveHeadline(meal),
     completionMealLog: meal.completionMealLog
       ? mapCompletionMealLog(meal.completionMealLog)

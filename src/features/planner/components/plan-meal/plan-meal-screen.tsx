@@ -66,6 +66,7 @@ function PlanMealForm({
 
   const handleSave = form.handleSubmit(async (values) => {
     setSaveError(null);
+    const { dirtyFields } = form.formState;
 
     try {
       if (editId) {
@@ -73,6 +74,10 @@ function PlanMealForm({
           scheduledMealId: editId,
           payload: values,
           previousEntryDate,
+          dirtyFields: {
+            reminders: Boolean(dirtyFields.reminders),
+            remindersEnabled: Boolean(dirtyFields.remindersEnabled),
+          },
         });
         navigateToInternalPath(
           router,

@@ -5,7 +5,7 @@ import { MealDateTimeInputs } from "@/components/meal/meal-date-time-inputs";
 import { PlannerSection } from "@/components/planner/planner-section";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import type { PlanMealFormValues } from "@/features/planner/schemas/plan-meal.schema";
-import { format, parseISO } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { CalendarDays } from "lucide-react";
 
@@ -31,9 +31,11 @@ export function PlanMealDateSection() {
                     onDateChange={dateField.onChange}
                     onTimeChange={timeField.onChange}
                   />
-                  <span className="sr-only">
-                    {format(parseISO(dateField.value), "PPPP", { locale: es })}
-                  </span>
+                  {dateField.value && isValid(parseISO(dateField.value)) ? (
+                    <span className="sr-only">
+                      {format(parseISO(dateField.value), "PPPP", { locale: es })}
+                    </span>
+                  ) : null}
                 </>
               )}
             />

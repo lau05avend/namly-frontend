@@ -18,6 +18,10 @@ export type PlannerCompletionMealLog = {
   tags: string[];
 };
 
+export type PlannerScheduledMealReminder = {
+  offsetMinutes: number;
+};
+
 export type PlannerScheduledMealDetail = {
   id: string;
   mealTypeId: string;
@@ -31,6 +35,7 @@ export type PlannerScheduledMealDetail = {
   isExpress: boolean;
   expressNote: string | null;
   recipes: PlannerScheduledMealRecipe[];
+  reminders: PlannerScheduledMealReminder[];
   headline: string;
   completionMealLog: PlannerCompletionMealLog | null;
 };

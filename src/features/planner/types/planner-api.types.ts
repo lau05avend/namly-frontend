@@ -36,8 +36,13 @@ export type ScheduledMealApiDto = {
   isExpress: boolean;
   expressNote: string | null;
   recipes?: ScheduledMealRecipeApiDto[];
+  reminders?: ScheduledMealReminderApiDto[];
   status: ScheduledMealStatusApi;
   totalDurationMinutes?: number | null;
+};
+
+export type ScheduledMealReminderApiDto = {
+  offsetMinutes: number;
 };
 
 export type ScheduledMealDetailApiDto = ScheduledMealApiDto & {

@@ -1,49 +1,15 @@
-import type {
-  CreateScheduledMealApiPayload,
-  UpdateScheduledMealApiPayload,
-} from "@/features/planner/types/plan-meal-api.types";
-import type {
-  SavePlanMealPayload,
-  SavePlanMealResponse,
-} from "@/features/planner/types/plan-meal.types";
 import { apiClient } from "@/lib/api/api-client";
+import type { SavePlanMealResponse } from "@/features/planner/types/plan-meal.types";
+import type { SavePlanMealPayload } from "@/features/planner/types/plan-meal.types";
+import type { PlanMealReminderDirtyFields } from "@/features/planner/utils/plan-meal-payload.mapper";
+import {
+  toCreateScheduledMealPayload,
+  toUpdateScheduledMealPayload,
+} from "@/features/planner/utils/plan-meal-payload.mapper";
 
-function toScheduledMealPayload(
-  payload: SavePlanMealPayload,
-): CreateScheduledMealApiPayload {
-  const isExpress = payload.entryMode === "express";
-
-  if (isExpress) {
-    return {
-      mealTypeId: payload.mealTypeId,
-      entryDate: payload.date,
-      plannedTime: payload.time,
-      isExpress: true,
-      expressNote: payload.expressNote.trim(),
-      recipeIds: [],
-    };
-  }
-
-  return {
-    mealTypeId: payload.mealTypeId,
-    entryDate: payload.date,
-    plannedTime: payload.time,
-    isExpress: false,
-    recipeIds: payload.recipes.map((recipe) => recipe.id),
-  };
-}
-
-function toCreateScheduledMealPayload(
-  payload: SavePlanMealPayload,
-): CreateScheduledMealApiPayload {
-  return toScheduledMealPayload(payload);
-}
-
-function toUpdateScheduledMealPayload(
-  payload: SavePlanMealPayload,
-): UpdateScheduledMealApiPayload {
-  return toScheduledMealPayload(payload);
-}
+export type UpdatePlanMealOptions = {
+  dirtyFields?: PlanMealReminderDirtyFields;
+};
 
 export async function savePlanMeal(
   payload: SavePlanMealPayload,
@@ -57,12 +23,13 @@ export async function savePlanMeal(
 export async function updatePlanMeal(
   scheduledMealId: string,
   payload: SavePlanMealPayload,
+  options?: UpdatePlanMealOptions,
 ): Promise<SavePlanMealResponse> {
   return apiClient<SavePlanMealResponse>(
     `/api/v1/scheduled-meals/${scheduledMealId}`,
     {
       method: "PATCH",
-      body: toUpdateScheduledMealPayload(payload),
+      body: toUpdateScheduledMealPayload(payload, options?.dirtyFields),
     },
   );
 }

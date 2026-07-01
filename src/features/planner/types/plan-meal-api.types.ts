@@ -1,4 +1,9 @@
-import type { ScheduledMealApiDto } from "@/features/planner/types/planner-api.types";
+import type {
+  ScheduledMealApiDto,
+  ScheduledMealReminderApiDto,
+} from "@/features/planner/types/planner-api.types";
+
+export type { ScheduledMealReminderApiDto };
 
 export type CreateScheduledMealApiPayload = {
   mealTypeId: string;
@@ -7,6 +12,7 @@ export type CreateScheduledMealApiPayload = {
   isExpress: boolean;
   expressNote?: string;
   recipeIds?: string[];
+  reminders?: ScheduledMealReminderApiDto[];
 };
 
 export type CreateScheduledMealApiResponse = ScheduledMealApiDto;
@@ -18,4 +24,5 @@ export type UpdateScheduledMealApiPayload = {
   isExpress?: boolean;
   expressNote?: string | null;
   recipeIds?: string[];
+  reminders?: ScheduledMealReminderApiDto[];
 };
