@@ -8,6 +8,7 @@ import {
 import { AuthProvider } from "@/providers/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { ProfileCacheSync } from "@/features/profile/components/profile-cache-sync";
+import { StackScreenTransition } from "@/components/navigation/stack-screen-transition";
 import "./globals.css";
 
 // Configure the font
@@ -58,7 +59,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <ProfileCacheSync />
-            {children}
+            <StackScreenTransition>{children}</StackScreenTransition>
             <Toaster position="top-center" richColors closeButton />
           </AuthProvider>
         </QueryProvider>
