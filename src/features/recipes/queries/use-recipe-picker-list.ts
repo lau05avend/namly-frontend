@@ -27,6 +27,7 @@ export function useRecipePickerList({
     filter,
     tags,
     title: "",
+    folderId,
   });
 
   const localMatches = useMemo(() => {
