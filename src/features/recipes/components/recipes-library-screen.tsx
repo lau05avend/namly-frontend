@@ -24,6 +24,7 @@ import { useRecipePickerList } from "@/features/recipes/queries/use-recipe-picke
 import type { RecipeListFilter } from "@/features/recipes/types/recipe.types";
 import type { RecipesLibraryView } from "@/features/recipes/types/recipes-library.types";
 import { useRecipeTags } from "@/features/tags/queries/use-recipe-tags";
+import { usePrefetchRecipeCoverUrls } from "@/hooks/use-prefetch-recipe-cover-urls";
 
 type RecipesLibraryScreenProps = {
   initialView?: RecipesLibraryView;
@@ -92,6 +93,11 @@ export function RecipesLibraryScreen({
 
   const { coverUrlByCollectionId } = useCollectionCoverUrls(
     view === "collections" ? collections : [],
+  );
+
+  usePrefetchRecipeCoverUrls(recipes.map((recipe) => recipe.coverUrl));
+  usePrefetchRecipeCoverUrls(
+    [...coverUrlByCollectionId.values()].filter(Boolean),
   );
 
   useEffect(() => {

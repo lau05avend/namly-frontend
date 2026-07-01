@@ -93,6 +93,7 @@ export function HistoryMealLogDetailContent({
           <MealPhotoImage
             mediaRef={log.mediaUrl}
             alt=""
+            priority
             className="aspect-[4/5] w-full"
             imageClassName="size-full"
           />

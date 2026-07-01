@@ -8,6 +8,7 @@ import { HistoryLoading } from "@/features/history/components/history-loading";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { useHistoryDay } from "@/features/history/queries/use-history-day";
 import { formatHistoryDayHeading } from "@/features/history/utils/format-history-date";
+import { usePrefetchMealPhotoUrls } from "@/hooks/use-prefetch-meal-photo-urls";
 import { ArrowLeft } from "lucide-react";
 
 type HistoryDayScreenProps = {
@@ -17,6 +18,7 @@ type HistoryDayScreenProps = {
 export function HistoryDayScreen({ dateKey }: HistoryDayScreenProps) {
   const router = useRouter();
   const { data, isPending, isError } = useHistoryDay(dateKey);
+  usePrefetchMealPhotoUrls(data?.logs.map((log) => log.mediaUrl) ?? []);
   const parsedDate = parseDateKey(dateKey);
   const heading = parsedDate
     ? formatHistoryDayHeading(dateKey)

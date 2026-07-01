@@ -10,6 +10,7 @@ type RecipeCoverImageProps = {
   placeholderIconClassName?: string;
   placeholderBackgroundClassName?: string;
   imageClassName?: string;
+  priority?: boolean;
 };
 
 export function RecipeCoverImage({
@@ -17,6 +18,7 @@ export function RecipeCoverImage({
   placeholderIconClassName = "size-11 text-foreground/[0.09]",
   placeholderBackgroundClassName = "bg-card",
   imageClassName = "size-full object-cover",
+  priority = false,
 }: RecipeCoverImageProps) {
   const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
     coverUrl ?? undefined,
@@ -48,6 +50,7 @@ export function RecipeCoverImage({
         className={cn(
           "absolute inset-0 flex items-center justify-center",
           placeholderBackgroundClassName,
+          isResolving && "animate-pulse",
         )}
         aria-hidden
       >
@@ -62,8 +65,10 @@ export function RecipeCoverImage({
           ref={imageRef}
           src={displayUrl}
           alt=""
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
           className={cn(
-            "absolute inset-0",
+            "absolute inset-0 transition-opacity duration-300",
             imageClassName,
             showImage ? "opacity-100" : "opacity-0",
           )}

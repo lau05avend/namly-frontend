@@ -18,6 +18,7 @@ import { HomeUpcomingMealRow } from "@/features/home/components/home-upcoming-me
 import { HOME_HERO_CARD_HEIGHT } from "@/features/home/constants/home-hero-surfaces";
 import { GuestTrialBanner } from "@/features/auth/components/guest-trial-banner";
 import type { HomeSummary } from "@/features/home/types/home.types";
+import { usePrefetchRecipeCoverUrls } from "@/hooks/use-prefetch-recipe-cover-urls";
 
 type HomeTodayViewProps = {
   summary: HomeSummary;
@@ -25,6 +26,9 @@ type HomeTodayViewProps = {
 
 export function HomeTodayView({ summary }: HomeTodayViewProps) {
   const router = useRouter();
+  usePrefetchRecipeCoverUrls(
+    summary.recommendation?.imageUrl ? [summary.recommendation.imageUrl] : [],
+  );
 
   const handlePlannerMealPress = (scheduledMealId: string) => {
     router.push(

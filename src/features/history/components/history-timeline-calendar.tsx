@@ -5,6 +5,7 @@ import { HistoryScrollToTodayButton } from "@/features/history/components/histor
 import { HistoryTimelineMonth } from "@/features/history/components/history-timeline-month";
 import { HISTORY_COPY } from "@/features/history/constants/history-copy";
 import { useHistoryTimeline } from "@/features/history/queries/use-history-timeline";
+import { usePrefetchMealPhotoUrls } from "@/hooks/use-prefetch-meal-photo-urls";
 import { cn } from "@/lib/utils";
 
 type HistoryTimelineCalendarProps = {
@@ -85,6 +86,11 @@ export const HistoryTimelineCalendar = forwardRef<
 
   const months = data?.pages ?? [];
   const monthsChronological = [...months].reverse();
+  const timelineThumbnailUrls = months.flatMap((month) =>
+    Object.values(month.previewByDate).map((preview) => preview.thumbnailUrl),
+  );
+
+  usePrefetchMealPhotoUrls(timelineThumbnailUrls);
 
   useEffect(() => {
     if (isPending || didInitialScrollRef.current || months.length === 0) {

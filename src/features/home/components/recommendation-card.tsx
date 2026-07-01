@@ -6,7 +6,7 @@ import { HOME_COPY } from "@/features/home/constants/home-copy";
 import { HOME_SECTION_SURFACES } from "@/features/home/constants/home-hero-surfaces";
 import type { HomeRecommendation } from "@/features/home/types/home.types";
 import { getRecommendationHighlightTags } from "@/features/home/utils/recommendation-meta.utils";
-import { useResolvedRecipeCoverUrl } from "@/features/recipes/hooks/use-resolved-recipe-cover-url";
+import { RecipeCoverImage } from "@/features/recipes/components/recipe-cover-image";
 import {
   formatRecipeDuration,
   formatRecipeDurationAriaLabel,
@@ -59,10 +59,6 @@ function RecommendationMetadata({
 export function RecommendationCard({ recommendation }: RecommendationCardProps) {
   const router = useRouter();
   const hasImage = Boolean(recommendation.imageUrl?.trim());
-  const { displayUrl, isResolving } = useResolvedRecipeCoverUrl(
-    recommendation.imageUrl ?? undefined,
-  );
-  const showImage = Boolean(displayUrl) && !isResolving;
   const highlightTags = getRecommendationHighlightTags(recommendation.meta);
   const durationLabel = formatRecipeDuration(recommendation.totalDurationMinutes);
   const durationAria = formatRecipeDurationAriaLabel(
@@ -93,16 +89,14 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
         }
       }}
     >
-      <div className="relative aspect-[11/4] w-full shrink-0 overflow-hidden">
-        {showImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={displayUrl}
-            alt=""
-            className="size-full object-cover"
+      <div className="relative aspect-[11/4] w-full shrink-0 overflow-hidden bg-card">
+        {hasImage ? (
+          <RecipeCoverImage
+            coverUrl={recommendation.imageUrl}
+            priority
+            placeholderBackgroundClassName="bg-card"
+            placeholderIconClassName="size-8 text-foreground/12"
           />
-        ) : hasImage && isResolving ? (
-          <span className="block size-full" aria-hidden />
         ) : (
           <span className="flex size-full items-center justify-center">
             <Sparkles

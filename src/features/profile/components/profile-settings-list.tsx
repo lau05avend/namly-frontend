@@ -4,11 +4,8 @@ import { ProfileSettingsGroup } from "@/features/profile/components/profile-sett
 import { ProfileSettingsRow } from "@/features/profile/components/profile-settings-row";
 import { PROFILE_COPY } from "@/features/profile/constants/profile-copy";
 import {
-  Languages,
   LayoutList,
   LogOut,
-  Palette,
-  Ruler,
   ShieldAlert,
   UserRound,
 } from "lucide-react";
@@ -76,6 +73,8 @@ export function ProfileSettingsList({
         </ProfileSettingsGroup>
       ) : null}
 
+      {/*
+        Preferencias de app — oculto para demo (unidades, idioma y tema sin implementar).
       <ProfileSettingsGroup title={PROFILE_COPY.sections.appPreferences}>
         <ProfileSettingsRow
           title={PROFILE_COPY.units.title}
@@ -94,6 +93,7 @@ export function ProfileSettingsList({
           isLast
         />
       </ProfileSettingsGroup>
+      */}
     </div>
   );
 }
