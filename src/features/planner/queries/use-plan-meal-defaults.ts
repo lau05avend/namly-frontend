@@ -19,11 +19,12 @@ export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
   const isEditMode = Boolean(scheduledMealId);
 
   return useQuery({
-    queryKey: plannerQueryKeys.planDefaults(
-      params?.date,
-      params?.mealTypeId ?? params?.mealSlot,
-      scheduledMealId,
-    ),
+    queryKey: isEditMode
+      ? plannerQueryKeys.planDefaultsEdit(scheduledMealId!)
+      : plannerQueryKeys.planDefaults(
+          params?.date,
+          params?.mealTypeId ?? params?.mealSlot,
+        ),
     queryFn: async () => {
       if (scheduledMealId) {
         const detail = await fetchPlannerScheduledMeal(scheduledMealId);
@@ -43,5 +44,7 @@ export function usePlanMealDefaults(params?: PlanMealDefaultsParams) {
       return buildPlanMealDefaults(mealTypesQuery.data!, params);
     },
     enabled: isEditMode || Boolean(mealTypesQuery.data?.length),
+    staleTime: isEditMode ? 0 : undefined,
+    refetchOnMount: isEditMode ? "always" : undefined,
   });
 }

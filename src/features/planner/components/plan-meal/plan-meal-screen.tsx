@@ -66,7 +66,6 @@ function PlanMealForm({
 
   const handleSave = form.handleSubmit(async (values) => {
     setSaveError(null);
-    const { dirtyFields } = form.formState;
 
     try {
       if (editId) {
@@ -74,10 +73,6 @@ function PlanMealForm({
           scheduledMealId: editId,
           payload: values,
           previousEntryDate,
-          dirtyFields: {
-            reminders: Boolean(dirtyFields.reminders),
-            remindersEnabled: Boolean(dirtyFields.remindersEnabled),
-          },
         });
         navigateToInternalPath(
           router,
@@ -142,11 +137,15 @@ export function PlanMealScreen({
   const {
     data: defaults,
     isPending: defaultsPending,
+    isFetching: defaultsFetching,
     isError: defaultsError,
   } = usePlanMealDefaults(params);
 
-  const isLoading = (mealTypesPending || defaultsPending) && !defaults;
   const isEditMode = Boolean(editId);
+
+  const isLoading = isEditMode
+    ? defaultsPending || defaultsFetching
+    : (mealTypesPending || defaultsPending) && !defaults;
 
   if (isLoading) {
     return (

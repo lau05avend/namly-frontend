@@ -6,11 +6,6 @@ import type {
 import type { ScheduledMealReminderApiDto } from "@/features/planner/types/planner-api.types";
 import { sortRemindersByOffsetDesc } from "@/features/planner/utils/plan-reminder-sort.utils";
 
-export type PlanMealReminderDirtyFields = {
-  reminders?: boolean;
-  remindersEnabled?: boolean;
-};
-
 function toApiReminders(
   values: PlanMealFormValues,
 ): ScheduledMealReminderApiDto[] {
@@ -57,35 +52,11 @@ export function toCreateScheduledMealPayload(
   };
 }
 
-function areRemindersDirty(
-  dirtyFields?: PlanMealReminderDirtyFields,
-): boolean {
-  return Boolean(dirtyFields?.reminders || dirtyFields?.remindersEnabled);
-}
-
 export function toUpdateScheduledMealPayload(
   payload: PlanMealFormValues,
-  dirtyFields?: PlanMealReminderDirtyFields,
 ): UpdateScheduledMealApiPayload {
-  const basePayload = toScheduledMealBasePayload(payload);
-
-  if (!payload.remindersEnabled) {
-    if (!areRemindersDirty(dirtyFields)) {
-      return basePayload;
-    }
-
-    return {
-      ...basePayload,
-      reminders: [],
-    };
-  }
-
-  if (!areRemindersDirty(dirtyFields)) {
-    return basePayload;
-  }
-
   return {
-    ...basePayload,
+    ...toScheduledMealBasePayload(payload),
     reminders: toApiReminders(payload),
   };
 }

@@ -17,6 +17,8 @@ export const plannerQueryKeys = {
       mealTypeId ?? "",
       scheduledMealId ?? "",
     ] as const,
+  planDefaultsEdit: (scheduledMealId: string) =>
+    [...plannerQueryKeys.all, "plan-defaults-edit", scheduledMealId] as const,
   scheduledMeal: (scheduledMealId: string) =>
     [...plannerQueryKeys.all, "scheduled-meal", scheduledMealId] as const,
 };
