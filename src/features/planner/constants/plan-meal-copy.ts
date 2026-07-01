@@ -66,9 +66,19 @@ export const PLAN_MEAL_COPY = {
   reminders: {
     enable: "Activar recordatorios",
     add: "Agregar recordatorio",
-    placeholder: "Recordatorio",
-    maxReached: "Máximo 3 recordatorios",
-    collapsedHint: "Recordatorios opcionales",
+    addAnother: "Añadir otro recordatorio",
+    sheetTitle: "¿Cuándo quieres recibir el recordatorio?",
+    presetAtTime: "A la hora",
+    presetMinutesBefore: (minutes: number) =>
+      minutes === 1 ? "1 minuto antes" : `${minutes} minutos antes`,
+    presetHoursBefore: (hours: number) =>
+      hours === 1 ? "1 hora antes" : `${hours} horas antes`,
+    removeAriaLabel: "Quitar recordatorio",
+    info: {
+      ariaLabel: "Información sobre recordatorios",
+      body: "Recibe un aviso antes de la hora programada para esta comida. Puedes configurar hasta 3 recordatorios.",
+    },
+    // customOption: "Personalizado...", — reserved for a future MVP extension
   },
   errors: {
     loadForm: "No pudimos preparar el formulario. Intenta de nuevo.",

@@ -1,5 +1,5 @@
 import { getCurrentMealTime } from "@/components/meal/meal-datetime";
-import { toDateKey } from "@/features/calendar/utils/date";
+import { parseDateKey, toDateKey } from "@/features/calendar/utils/date";
 import type { MealSlot } from "@/constants/meal-slots";
 import type { MealType } from "@/features/planner/types/meal-type.types";
 import type {
@@ -41,9 +41,11 @@ export function buildPlanMealDefaults(
   params?: PlanMealDefaultsParams,
 ): PlanMealDefaults {
   const today = toDateKey(new Date());
+  const resolvedDate =
+    params?.date && parseDateKey(params.date) ? params.date : today;
 
   return {
-    date: params?.date ?? today,
+    date: resolvedDate,
     time: getCurrentMealTime(),
     mealTypeId: resolveMealTypeId(mealTypes, params),
     entryMode: "recipe",

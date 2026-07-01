@@ -6,8 +6,8 @@ import {
   plannerQueryKeys,
   toMonthKey,
 } from "@/features/planner/constants/query-keys";
-import { updatePlanMeal } from "@/features/planner/services/plan-meal.service";
 import type { SavePlanMealPayload } from "@/features/planner/types/plan-meal.types";
+import { updatePlanMeal } from "@/features/planner/services/plan-meal.service";
 
 type UpdatePlanMealVariables = {
   scheduledMealId: string;
@@ -19,7 +19,10 @@ export function useUpdatePlanMeal() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ scheduledMealId, payload }: UpdatePlanMealVariables) =>
+    mutationFn: ({
+      scheduledMealId,
+      payload,
+    }: UpdatePlanMealVariables) =>
       updatePlanMeal(scheduledMealId, payload),
     onSuccess: async (_data, variables) => {
       const dates = [variables.payload.date, variables.previousEntryDate].filter(
@@ -30,6 +33,9 @@ export function useUpdatePlanMeal() {
         queryClient.invalidateQueries({ queryKey: homeQueryKeys.all }),
         queryClient.invalidateQueries({
           queryKey: plannerQueryKeys.scheduledMeal(variables.scheduledMealId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: plannerQueryKeys.planDefaultsEdit(variables.scheduledMealId),
         }),
         ...dates.map((dateKey) =>
           queryClient.invalidateQueries({

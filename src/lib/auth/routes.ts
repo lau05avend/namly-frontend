@@ -2,6 +2,7 @@ export const PUBLIC_ROUTES = ["/", "/auth/callback"] as const;
 
 export const PROTECTED_ROUTE_PREFIXES = [
   "/home",
+  "/notifications",
   "/planner",
   "/recipes",
   "/history",

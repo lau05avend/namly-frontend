@@ -36,6 +36,12 @@ export const PLANNER_COPY = {
     recipeCount: (count: number) =>
       count === 1 ? "1 receta" : `${count} recetas`,
     noteLabel: "Nota",
+    remindersLabel: "Recordatorios",
+    remindersCount: (count: number) =>
+      count === 1 ? "1 recordatorio" : `${count} recordatorios`,
+    remindersEmpty: "Sin recordatorios configurados",
+    editReminders: "Editar",
+    configureReminders: "Configurar",
     openRecipeAria: (title: string) => `Ver receta ${title}`,
     registeredMealLabel: "",
     registeredMealContextLabel: "Comida registrada",

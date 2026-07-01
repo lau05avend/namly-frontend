@@ -24,7 +24,7 @@ export function MealTypeQuickChip({
       className={cn(
         "inline-flex shrink-0 cursor-pointer rounded-full border px-3.5 py-2 text-sm font-medium transition-colors",
         selected
-          ? "border-primary/25 bg-mint/35 text-primary"
+          ? "border-primary/30 bg-mint/35 text-primary"
           : "border-foreground/10 bg-mint/15 text-foreground/70 hover:border-foreground/15 hover:bg-mint/25",
       )}
     >

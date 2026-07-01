@@ -137,11 +137,15 @@ export function PlanMealScreen({
   const {
     data: defaults,
     isPending: defaultsPending,
+    isFetching: defaultsFetching,
     isError: defaultsError,
   } = usePlanMealDefaults(params);
 
-  const isLoading = (mealTypesPending || defaultsPending) && !defaults;
   const isEditMode = Boolean(editId);
+
+  const isLoading = isEditMode
+    ? defaultsPending || defaultsFetching
+    : (mealTypesPending || defaultsPending) && !defaults;
 
   if (isLoading) {
     return (
