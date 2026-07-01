@@ -8,6 +8,7 @@ import { ScreenTopBar } from "@/components/layout/screen-top-bar";
 import { FloatingActionButton } from "@/components/ui/floating-action-button";
 import { ModuleEmptyState } from "@/components/ui/module-empty-state";
 import { SCREEN_LAYOUT } from "@/constants/screen-layout";
+import { RecipeCollectionEditorSheet } from "@/features/recipes/components/recipe-collection-editor-sheet";
 import { RecipeCollectionCard } from "@/features/recipes/components/recipe-collection-card";
 import { RecipeLibraryCard } from "@/features/recipes/components/recipe-library-card";
 import { RecipesLibraryHeader } from "@/features/recipes/components/recipes-library-header";
@@ -23,7 +24,6 @@ import { useRecipePickerList } from "@/features/recipes/queries/use-recipe-picke
 import type { RecipeListFilter } from "@/features/recipes/types/recipe.types";
 import type { RecipesLibraryView } from "@/features/recipes/types/recipes-library.types";
 import { useRecipeTags } from "@/features/tags/queries/use-recipe-tags";
-import { toast } from "sonner";
 
 type RecipesLibraryScreenProps = {
   initialView?: RecipesLibraryView;
@@ -67,6 +67,7 @@ export function RecipesLibraryScreen({
   const [filter, setFilter] = useState<RecipeListFilter>("all");
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [tagsSheetOpen, setTagsSheetOpen] = useState(false);
+  const [collectionEditorOpen, setCollectionEditorOpen] = useState(false);
 
   const { data: tags = [] } = useRecipeTags(true);
 
@@ -131,9 +132,7 @@ export function RecipesLibraryScreen({
 
   const handleFabClick = () => {
     if (view === "collections") {
-      toast.info(RECIPES_COPY.fab.addCollection, {
-        description: "Muy pronto podrás hacerlo desde aquí.",
-      });
+      setCollectionEditorOpen(true);
       return;
     }
 
@@ -144,6 +143,15 @@ export function RecipesLibraryScreen({
 
   return (
     <div className="relative flex h-dvh flex-col overflow-hidden bg-background pb-18">
+      <RecipeCollectionEditorSheet
+        open={collectionEditorOpen}
+        onOpenChange={setCollectionEditorOpen}
+        mode="create"
+        onCreated={(collection) => {
+          router.push(`/recipes/collections/${collection.id}`);
+        }}
+      />
+
       <ScreenTopBar
         variant="sticky"
         className={view === "recipes" ? "border-b-0" : undefined}
